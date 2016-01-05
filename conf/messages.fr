@@ -1,0 +1,75 @@
+save = Enregistrer
+cancel = Ajouter
+
+# main
+application.name = Idone
+menu.home = Accueil
+menu.myteam = Mon équipe
+menu.about = propos
+menu.contact = Contact
+menu.reports = Rapports
+menu.settings = Paramètres
+menu.logout = Déconnexion
+menu.login = Connexion
+
+# donelist
+finalizesubmit = Finaliser et soumettre
+doneheader = Aujourd''hui J''ai effectué les tâches suivantes
+
+# paramètres
+settings = Paramètres
+general = général
+changepassword = Changer mot de passe
+password = mot de passe
+newpassword = nouveau mot de passe
+newpassword2 = re-entrer le nouveau mot de passe
+exportData = Data Export
+downloadcsv = téléchargement exportation de données dans un fichier CSV
+downloadxml = téléchargement exportation de données dans un fichier XML
+downloadjson = téléchargement exportation de données dans un fichier JSON
+team = équipe
+confirmedtargetslabel = Les utilisateurs suivants recevront les mises à jour:
+unconfirmedtargetslabel = Les utilisateurs suivants ont besoin pour confirmer votre demande (avant de recevoir vos mises à jour):
+confirmedowners = Vous recevrez des mises à jour des utilisateurs suivants:
+unconfirmedowners = Vous devez confirmer que vous souhaitez recevoir des mises à jour par les utilisateurs suivants:
+newteamemail = new membre de l''équipe e-mail
+addnew = Ajouter un nouveau
+comingsoon = Bientôt ....
+integrations = intégrations: github, zenhub, JIRA, Todoist, etc.
+purgedata = de purge: cliquez ici et ne vous connectez pas pendant 120 jours et nous allons purger toutes vos données pour toujours
+
+# login
+invalidlogin = e-mail ou mot de passe invalide
+createuserfailed = Email déjà utilisé ou les mots de passe ne correspondent pas
+email = Email
+rememberme = Se souvenir de moi
+signin = Connexion
+donthaveaccount = ne disposent pas encore de compte? cliquez ici pour
+createfreeaccount = créer un compte gratuit
+
+# create usre
+createnewaccount = Créer un nouveau compte
+reenterpassword = re-entrer le mot de passe
+create = Créez
+passwordsarehashed = noter que les mots de passe sont stockés dans une table de hachage sécurisé, et vous nous ne pouvons vous envoyer un mot de passe oublié.
+
+# contact
+contactus = nous contacter
+contactustext = nous aimerions vraiment avoir de vos nouvelles - envoyez-nous un e-mail à Mike Bochenek point ca
+
+# about
+aboutheader = environ Idone
+aboutmain = Idone vous permet de suivre et de mettre en valeur vos réalisations quotidiennes
+aboutli1 = créer un compte et commencer à écrire en moins d''une minute
+aboutli2 = construit avec la sécurité et la vie privée en tant que principaux objectifs
+aboutli3 = sélection de partage de: privé, part avec le gestionnaire, ou public
+aboutli4 = exporter vos données ou intégrer à des systèmes externes via l''API REST sécurisé ou Webservices
+aboutli5 = entrer articles Idone en ligne, par courriel ou sur votre téléphone intelligent
+aboutli6 = disponible en
+aboutli7 = complètement gratuit pour un usage personnel et une utilisation en entreprise
+aboutclosing = Arrêtez de faire des listes de tâches déprimantes, au lieu de célébrer vos réalisations quotidiennes!
+
+# Index / commercialisation
+addgamification = Ajouter gamification de main-d''œuvre GRATUIT
+welcome = Bienvenue
+usemenu = Utilisez le menu pour naviguer ou

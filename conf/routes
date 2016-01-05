@@ -1,0 +1,48 @@
+# Home page
+GET      /                      controllers.Application.index(any = "none")
+
+# Play routes serving HTML to AngularJS start with /views
+GET      /views/*any            controllers.Application.loadPublicHTML(any)
+
+
+GET      /api/restaurant/:id   controllers.Restaurants.getById(id: Long)
+
+
+# Authentication
+GET     /login                              controllers.Application.login
+GET     /createuser                         controllers.Application.createuser
+GET     /submitcreateuser                   controllers.Application.submitcreateuser
+POST    /login                              controllers.Application.authenticate
+GET     /logout                             controllers.Application.logout
+
+GET     /restaurant                         controllers.Restaurants.index
+GET     /about                              controllers.Restaurants.about
+POST	/about								controllers.Application.upload
+GET     /contact                            controllers.Restaurants.contact
+
+GET     /memory                             controllers.Memory.index
+GET     /memory/:id                         controllers.Memory.get(id: Long)
+POST    /memory                             controllers.Memory.upload
+	
+GET     /reports                            controllers.Reports.load
+GET     /settings                           controllers.Settings.load
+POST    /settings                           controllers.Settings.save
+GET     /settings_csv_export                controllers.Settings.generateCSV
+GET     /settings_xml_export                controllers.Settings.generateXML
+GET     /settings_json_export               controllers.Settings.generateJSON
+
+GET     /iadmin                             controllers.Admin.index
+
+
+#GET      /api/donelist/:id   controllers.DoneList.getByDay(id: Long)
+#POST     /api/donelist/new   controllers.DoneList.create
+#POST     /api/donelist/:id   controllers.DoneList.update(id: Long)
+#DELETE   /api/donelist/:id   controllers.DoneList.delete(id: Long)
+
+
+# Map static resources from the /public folder to the / URL path
+# this breaks the last "redirect all unknown routes..." but I need this for the language selection dropdown
+GET      /*file          controllers.Assets.at(path="/public", file)
+
+# Redirect all unknown routes to the index page
+GET      /*any                  controllers.Application.index(any)

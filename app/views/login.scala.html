@@ -1,0 +1,53 @@
+@(form: Form[(String,String)])(implicit flash: Flash, session: Session, lang: Lang)
+
+@main(title = "contact") {
+
+    <div class="container">
+
+      <div class="starter-template">
+      
+        @helper.form(routes.Application.authenticate) {
+            
+            <h1>Sign in</h1>
+            
+            @form.globalError.map { error =>
+                <p class="bg-danger">
+                <div class="bg-danger col-sm-4 col-md-offset-4">
+                    @Messages(error.message)
+                    </div>
+                </p>
+            }
+            
+            @flash.get("success").map { message =>
+                <p class="success">
+                <div class="col-sm-4 col-md-offset-4">
+                    @message
+                    </div>
+                </p>
+            }
+            
+            <div class="row ">
+              <div class="col-sm-4 col-md-offset-4">
+                <input class="form-control span4" type="email" name="email" placeholder="@Messages("email")" id="email" value="@form("email").value">
+                <input class="form-control span4" type="password" name="password" id="@Messages("password")" placeholder="Password">
+                
+				<div class="checkbox">
+					<label><input type="checkbox"> @Messages("rememberme")</label>
+				</div>
+                <button class="span4 btn btn-primary" type="submit" id="loginbutton">@Messages("signin")</button>
+                
+				<div class="note">
+					<small>@Messages("donthaveaccount") <a href="createuser">@Messages("createfreeaccount")</a>.</small>
+				</div>
+                
+              </div>
+            </div>
+        }
+        
+
+        
+      </div>
+
+    </div><!-- /.container -->
+
+}

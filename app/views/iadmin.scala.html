@@ -1,0 +1,51 @@
+@(stats: String)(implicit session: Session)
+@main(title = "Admin") {
+    <div class="container">
+
+      <div class="starter-template">
+      	<h1>Admin</h1>
+
+      	<h3>Useful commands</h3>
+      	<div><u>git pretty log</u></div>
+      	<pre>git log --graph --abbrev-commit --pretty=oneline</pre>
+
+      	<div><u>run a single test in Scala Play</u></div>
+      	<pre>test-only EmailSpec</pre>
+      	
+      	<div><u>count scala code</u></div>
+      	<pre>cd ~/Dev/play-2.2.3/idonep
+find . -name '*.scala' | xargs wc -l</pre>
+
+      	<div><u>configuring and checking postfix</u></div>
+      	<pre>sudo more /var/log/mail.log
+sudo tail -f /var/log/mail.log
+sudo vi /etc/postfix/main.cf
+sudo service postfix restart</pre>
+      	
+      	<div><u>docean.sh</u></div>
+      	<pre>mysql -u idoneuser -p
+
+cd /usr/bin/play-2.2.5/idonep
+sudo git pull
+
+sudo git fetch --all
+sudo git reset --hard origin/master
+
+more public/javascripts/main.js
+more conf/application.conf
+
+cp public/javascripts/main.js ~
+cp conf/application.conf ~
+
+more /usr/bin/play-2.2.5/idonep/RUNNING_PID
+sudo rm /usr/bin/play-2.2.5/idonep/RUNNING_PID
+
+sudo kill -9 333177777
+sudo ../play start
+      	</pre>
+      	<h3>System Status</h3>
+      	<code>@Html(stats)</code>
+      </div>
+      	
+    </div><!-- /.container -->
+}

@@ -1,0 +1,52 @@
+@(form: Form[(String,String,String)])(implicit flash: Flash, session: Session, lang: Lang)
+
+@main(title = "contact") {
+
+    <div class="container">
+
+      <div class="starter-template">
+      
+        @helper.form(routes.Application.submitcreateuser) {
+            
+            <h1>@Messages("createnewaccount")</h1>
+            
+            @form.globalError.map { error =>
+                <p class="error">
+                    @error.message
+                </p>
+            }
+            
+            @flash.get("success").map { message =>
+                <p class="success">
+                    @message
+                </p>
+            }
+            
+            <div class="row">
+              <div class="col-sm-4" ></div>
+            
+              <div class="col-sm-4">
+                <input class="form-control span4" type="email" name="email" placeholder="@Messages("email")" id="email" value="@form("email").value">
+                <input class="form-control span4" type="password" name="password" id="password" placeholder="@Messages("password")">
+                <input class="form-control span4" type="password2" name="password2" id="password2" placeholder="@Messages("reenterpassword")">
+                <button class="btn btn-primary" type="submit" id="createbutton">@Messages("create")</button>
+              </div>
+            
+              <div class="col-sm-4" ></div>
+            
+            </div>
+            
+            <div class="row mycenter" >
+              <div class="col-sm-8 col-md-offset-2">         
+		        <small>@Messages("passwordsarehashed")</small>
+		      </div>
+            </div>
+        }
+        
+
+        
+      </div>
+
+    </div><!-- /.container -->
+
+}
