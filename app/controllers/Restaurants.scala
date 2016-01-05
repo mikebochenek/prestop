@@ -32,4 +32,12 @@ object Restaurants extends Controller with Secured {
       Ok(Json.toJson(all.map(a => Json.toJson(a))))
     }
   } 
+  
+  def getAll() = IsAuthenticated { username =>
+    implicit request => {
+      val all = Restaurant.findAll()
+      Ok(Json.toJson(all.map(a => Json.toJson(a))))
+    }
+  } 
+
 }

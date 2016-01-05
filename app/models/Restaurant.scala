@@ -92,6 +92,13 @@ object Restaurant {
     }
   }
   
+  def findAll(): Seq[Restaurant] = {
+    DB.withConnection { implicit connection =>
+      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status from restaurant "
+          + " order by id asc").on().as(Restaurant.simple *)
+    }
+  }
+  
   implicit val teamReads = Json.reads[Restaurant]
   implicit val teamWrites = Json.writes[Restaurant]
 

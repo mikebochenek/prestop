@@ -25,5 +25,10 @@ class RestaurantSpec extends Specification {
       val count = Restaurant.countAll()
       println("restaurant count:" + count)
     }
+    
+    "find all restaurants" in new WithApplication {
+      val all = Restaurant.findAll()
+      println("restaurant count:" + all.size)
+    }
   }
 }

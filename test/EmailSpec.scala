@@ -4,7 +4,6 @@ import org.junit.runner._
 import play.api.test._
 import play.api.test.Helpers._
 import models.User
-import models.Done
 import java.util.Date
 import com.typesafe.plugin._
 import play.api.Play.current

@@ -6,6 +6,7 @@ GET      /views/*any            controllers.Application.loadPublicHTML(any)
 
 
 GET      /api/restaurant/:id   controllers.Restaurants.getById(id: Long)
+GET      /api/restaurants      controllers.Restaurants.getAll
 
 
 # Authentication
