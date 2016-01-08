@@ -1,0 +1,66 @@
+@(form: Form[(String,String,String,String,String,String,String,String,String)], restaurant: Restaurant)(implicit flash: Flash, session: Session, lang: Lang)
+
+@main(title = "settings") {
+
+<div class="container">
+
+    @helper.form(routes.Restaurants.save) {
+
+  <div class="starter-template">
+    <h3>@Messages("general")</h3>
+
+      <div class="row ">
+        <div class="col-sm-8 col-md-offset-2">
+          <input class="hidden form-control span4" type="text" name="id" id="id" value="@restaurant.id">
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Name</span>
+            <input class="form-control span4" type="text" name="name" id="name" value="@restaurant.name">
+          </div>
+
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">City</span>
+            <input class="form-control span4" type="text" name="city" id="city" value="@restaurant.city">
+          </div>
+                      
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Address</span>
+            <input class="form-control span4" type="text" name="address" id="address" value="@restaurant.address">
+          </div>
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Longitude</span>
+            <input class="form-control span4" type="text" name="longitude" id="longitude" value="@restaurant.longitude">
+          </div>
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Latitude</span>
+            <input class="form-control span4" type="text" name="latitude" id="latitude" value="@restaurant.latitude">
+          </div>
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Schedule</span>
+            <input class="form-control span4" type="text" name="schedule" id="schedule" value="@restaurant.schedulecron">
+          </div>
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Type</span>
+            <input class="form-control span4" type="text" name="restype" id="restype" value="@restaurant.restype">
+          </div>
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Status</span>
+            <input class="form-control span4" type="text" name="status" id="status" value="@restaurant.status">
+          </div>
+          
+          </br>
+                      
+          <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">@Messages("save")</button>
+          <button class="span4 btn btn-primary" type="reset" id="generalsavebutton">reset</button>
+        </div>
+      </div>
+  </div>
+
+	}
+    </div><!-- /.container -->
+}
