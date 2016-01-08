@@ -117,3 +117,37 @@ app.controller("EditCtrl", ["$scope", "$resource", "$routeParams", "$timeout", "
 		$timeout(function() { $scope.go('/'); }); // go back to public/html/main.html
 	};
 }]);
+
+
+
+
+//MINE:  the dish list controller
+app.controller("ListDishCtrl", ["$scope", "$resource", "$timeout", "apiUrl", 
+                            function($scope, $resource, $timeout, apiUrl) {
+	$scope.init = function() {
+		$scope.show=true;
+	    var Celebrities = $resource(apiUrl + "/dishes/" + $("#id").val()); 
+	    $scope.dishes = Celebrities.query(); 
+	};
+	
+	$scope.init();
+	
+	$scope.add = function() {
+		var create = $resource(apiUrl + "/dishes/new"); // a RESTful-capable resource object
+		create.save({'donetext' : $scope.donetext, 'restaurantID' : $("#id").val()}); 
+		$scope.donetext=''; 
+		$scope.show=false;
+		$timeout(function() { $scope.init();  }, 500); // go back to public/html/main.html
+		//TODO should I implement a success() or simply sleep for 500ms?
+	};
+}]);
+
+// the create dish controller
+app.controller("CreateDishCtrl", ["$scope", "$resource", "$timeout", "apiUrl", function($scope, $resource, $timeout, apiUrl) {
+	// to save a celebrity
+	$scope.save = function() {
+		var CreateCelebrity = $resource(apiUrl + "/dishes/new"); // a RESTful-capable resource object
+		CreateCelebrity.save($scope.celebrity); // $scope.celebrity comes from the detailForm in public/html/detail.html
+		$timeout(function() { $scope.go('/'); }); // go back to public/html/main.html
+	};
+}]);

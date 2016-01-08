@@ -7,6 +7,13 @@ GET      /views/*any            controllers.Application.loadPublicHTML(any)
 GET      /api/restaurant/:id    controllers.Restaurants.getById(id: Long)
 GET      /api/restaurants       controllers.Restaurants.getAll
 POST     /api/restaurants/new   controllers.Restaurants.create
+GET      /api/dishes/:restId    controllers.Dishes.getAll(restId: Long)
+POST     /api/dishes/new        controllers.Dishes.create
+
+GET      /api/dish/:id          controllers.Dishes.getById(id: Long)
+POST     /api/dish              controllers.Dishes.save
+
+
 
 GET     /restaurant                         controllers.Restaurants.index
 GET     /restaurantedit/:id                 controllers.Restaurants.edit(id: Long)
