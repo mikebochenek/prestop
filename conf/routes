@@ -5,8 +5,9 @@ GET      /                      controllers.Application.index(any = "none")
 GET      /views/*any            controllers.Application.loadPublicHTML(any)
 
 
-GET      /api/restaurant/:id   controllers.Restaurants.getById(id: Long)
-GET      /api/restaurants      controllers.Restaurants.getAll
+GET      /api/restaurant/:id    controllers.Restaurants.getById(id: Long)
+GET      /api/restaurants       controllers.Restaurants.getAll
+POST     /api/restaurants/new   controllers.Restaurants.create
 
 
 # Authentication

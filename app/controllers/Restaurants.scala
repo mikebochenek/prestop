@@ -40,4 +40,12 @@ object Restaurants extends Controller with Secured {
     }
   } 
 
+  def create() = IsAuthenticated { username =>
+    implicit request => {
+      val txt = (request.body.asJson.get \ "donetext")
+      val id = Restaurant.create(txt.as[String], "", "", 0.0, 0.0, "", 0);
+      Logger.info("restaurant created with " + txt.as[String] + " with id:" + id)
+      Ok("ok")
+    }
+  }
 }
