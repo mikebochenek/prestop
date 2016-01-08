@@ -13,7 +13,7 @@ GET     /restaurant                         controllers.Restaurants.index
 GET     /restaurantedit/:id                 controllers.Restaurants.edit(id: Long)
 POST    /restaurantedit                     controllers.Restaurants.save
 GET     /about                              controllers.Restaurants.about
-POST	/about								controllers.Application.upload
+POST	/restaurant							controllers.Restaurants.upload(id: Long)
 GET     /contact                            controllers.Restaurants.contact
 
 
@@ -25,9 +25,9 @@ POST    /login                              controllers.Application.authenticate
 GET     /logout                             controllers.Application.logout
 
 
-GET     /memory                             controllers.Memory.index
-GET     /memory/:id                         controllers.Memory.get(id: Long)
-POST    /memory                             controllers.Memory.upload
+#GET     /memory                             controllers.Memory.index
+#GET     /memory/:id                         controllers.Memory.get(id: Long)
+#POST    /memory                             controllers.Memory.upload
 	
 GET     /reports                            controllers.Reports.load
 GET     /settings                           controllers.Settings.load

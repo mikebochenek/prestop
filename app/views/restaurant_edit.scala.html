@@ -7,7 +7,7 @@
     @helper.form(routes.Restaurants.save) {
 
   <div class="starter-template">
-    <h3>@Messages("general")</h3>
+    <h3>Restaurant Info</h3>
 
       <div class="row ">
         <div class="col-sm-8 col-md-offset-2">
@@ -59,8 +59,22 @@
           <button class="span4 btn btn-primary" type="reset" id="generalsavebutton">reset</button>
         </div>
       </div>
+	}      
+      
+      <h2>photo</h2>
+
+      <div class="row ">
+        <div class="col-sm-8 col-md-offset-2">
+                @helper.form(action = routes.Restaurants.upload(restaurant.id), 'enctype -> "multipart/form-data") {
+		   <input type="file" name="picture">
+		   </br>
+           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">upload</button>
+		  }
+        </div>
+      </div>
+      
   </div>
 
-	}
+
     </div><!-- /.container -->
 }

@@ -80,4 +80,17 @@ object Restaurants extends Controller with Secured {
       Ok("ok")
     }
   }
+  
+  def upload(id: Long) = Action(parse.multipartFormData) { request =>
+    request.body.file("picture").map { picture =>
+      import java.io.File
+      val filename = picture.filename
+      val contentType = picture.contentType
+      picture.ref.moveTo(new File(s"/tmp/presto/$filename"))
+      Redirect(routes.Restaurants.edit(id))
+    }.getOrElse {
+      Redirect(routes.Restaurants.about).flashing(
+        "error" -> "Missing file")
+    }
+  }  
 }
