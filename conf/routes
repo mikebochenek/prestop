@@ -4,7 +4,6 @@ GET      /                      controllers.Application.index(any = "none")
 # Play routes serving HTML to AngularJS start with /views
 GET      /views/*any            controllers.Application.loadPublicHTML(any)
 
-
 GET      /api/restaurant/:id    controllers.Restaurants.getById(id: Long)
 GET      /api/restaurants       controllers.Restaurants.getAll
 POST     /api/restaurants/new   controllers.Restaurants.create
@@ -24,11 +23,6 @@ GET     /submitcreateuser                   controllers.Application.submitcreate
 POST    /login                              controllers.Application.authenticate
 GET     /logout                             controllers.Application.logout
 
-
-#GET     /memory                             controllers.Memory.index
-#GET     /memory/:id                         controllers.Memory.get(id: Long)
-#POST    /memory                             controllers.Memory.upload
-	
 GET     /reports                            controllers.Reports.load
 GET     /settings                           controllers.Settings.load
 POST    /settings                           controllers.Settings.save
@@ -36,12 +30,7 @@ GET     /settings_csv_export                controllers.Settings.generateCSV
 GET     /settings_xml_export                controllers.Settings.generateXML
 GET     /settings_json_export               controllers.Settings.generateJSON
 
-GET     /iadmin                             controllers.Admin.index
 
-
-#GET      /api/donelist/:id   controllers.DoneList.getByDay(id: Long)
-#POST     /api/donelist/new   controllers.DoneList.create
-#POST     /api/donelist/:id   controllers.DoneList.update(id: Long)
 #DELETE   /api/donelist/:id   controllers.DoneList.delete(id: Long)
 
 
