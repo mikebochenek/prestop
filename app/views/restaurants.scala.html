@@ -1,0 +1,42 @@
+@()(implicit session: Session, lang: Lang)
+@main(title = "home") {
+<div data-ng-app="app" data-ng-controller="ListCtrl" lang="en">
+    <div class="container">
+
+      <div class="starter-template">
+@session.get("email").map { user =>
+        <p class="lead mycenter">all your restaurants</p>
+        
+        <div class="row mycenter" >
+         <div class="col-sm-8 col-md-offset-2">         
+
+          <ul class="list-group" style="text-align: left;">
+            <li ng-repeat="restaurant in restaurants | orderBy:['id']" 
+                class="list-group-item"><img src="@routes.Assets.at("img/check_box.png")" />{{restaurant.name}}</li>
+            
+            <li class="list-group-item"><span ng-hide="editing" style="text-align: left;">
+            <form role="form" class="animate-show" ng-show="show">
+               <img src="@routes.Assets.at("img/check_box.png")" />
+               <input id="donetext" name="donetext" type="text" data-ng-model="donetext" 
+                      placeholder="task text" size="60" ng-required/>
+               <button data-ng-click="add()" class="btn btn-primary" type="submit">@Messages("add")</button>
+            </form>
+           </span>
+           </li>
+            
+          </ul>
+
+
+           <button type="button" class="btn btn-primary">@Messages("save")</button>
+         </div><!-- /.col-sm-6 -->
+        </div>
+}.getOrElse{
+            <h1>you should probably <a href="login">login</a></h1>
+}          
+
+        
+      </div>
+
+    </div><!-- /.container -->
+</div>
+}

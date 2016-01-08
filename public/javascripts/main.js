@@ -62,18 +62,18 @@ app.controller("ListCtrl", ["$scope", "$resource", "$timeout", "apiUrl",
 
 	$scope.init = function() {
 		$scope.show=true;
-	    var Celebrities = $resource(apiUrl + "/donelist/" + $scope.doneday); 
+	    var Celebrities = $resource(apiUrl + "/restaurants/"); 
 	    $scope.celebrities = Celebrities.query(); 
 	};
 	
 	$scope.init();
 	
 	$scope.add = function() {
-		var create = $resource(apiUrl + "/donelist/new"); // a RESTful-capable resource object
+		var create = $resource(apiUrl + "/restaurants/new"); // a RESTful-capable resource object
 		create.save({'donetext' : $scope.donetext, 'doneday' : $scope.doneday}); 
 		$scope.donetext=''; 
 		$scope.show=false;
-		$timeout(function() { $scope.init();  }, 300); // go back to public/html/main.html
+		$timeout(function() { $scope.init();  }, 500); // go back to public/html/main.html
 		//TODO should I implement a success() or simply sleep for 500ms?
 	};
 }]);

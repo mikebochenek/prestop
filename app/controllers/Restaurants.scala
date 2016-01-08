@@ -14,7 +14,7 @@ object Restaurants extends Controller with Secured {
 
 
   def index = Action { implicit request =>
-    Ok(html.donelist());
+    Ok(html.restaurants());
   }
 
   def about = Action { implicit request =>
