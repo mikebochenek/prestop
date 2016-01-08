@@ -84,14 +84,14 @@ object Settings extends Controller with Secured {
 
   def generateJSON = IsAuthenticated { username =>
     implicit request => {
-      val all = Restaurant.findById("", 1)
+      val all = Restaurant.findAll()
       Ok(Json.toJson(all.map(a => Json.toJson(a))))
     }
   }
 
   def generateCSV = IsAuthenticated { username =>
     implicit request => {
-      val all = Restaurant.findById("", 1)
+      val all = Restaurant.findAll()
       val csvstr = all.mkString("\n")
       val header = "id,owner,donetext,donedate,createdate,deleted,category,doneDay\n"
 
@@ -106,7 +106,7 @@ object Settings extends Controller with Secured {
   def generateXML = IsAuthenticated { username =>
     implicit request => {
       val xstream = new XStream
-      val all = Restaurant.findById("", 1)
+      val all = Restaurant.findAll()
       Ok(xstream.toXML(all))
     }
   }
