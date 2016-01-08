@@ -6,7 +6,7 @@ This is the backend for presto.ch
 * manage restaurants and menus
 * API for mobile apps
 
-You can quickly see a [running demo here](http://107.170.22.233:8069)
+You can quickly see a [running demo here](http://presto.bochenek.ch:8069)
 (the demo environment is maintained manually, which means it's not always the latest greatest code)
 
 ## Technology stack
