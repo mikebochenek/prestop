@@ -63,9 +63,10 @@ object Dish {
       SQL(
         """
          update dish set price = {price}, name = {name}, vegetarian = {vegetarian}, gluton = {gluton}, 
-         diary = {diary}, status = {status} where id = {id}
+         diary = {diary}, greenscore = {greenscore}, lastupdate = {lastupdate}, status = {status} where id = {id}
         """).on(
-          'price -> name,
+          'id -> id,
+          'price -> price,
           'name -> name,
           'vegetarian -> vegetarian,
           'gluton -> gluton,

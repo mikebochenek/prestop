@@ -80,7 +80,7 @@
 
           <ul class="list-group" style="text-align: left;">
             <li ng-repeat="dish in dishes | orderBy:['id']" 
-                class="list-group-item"><a href="dish/{{dish.id}}">
+                class="list-group-item"><a href="/dishedit/{{dish.id}}">
                    <img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" />{{dish.name}} {{dish.price}}</a>
             </li>
             
@@ -88,7 +88,7 @@
             <form role="form" class="animate-show" ng-show="show">
                <img src="@routes.Assets.at("img/restaurant.jpg")" width="25px" />
                <input id="donetext" name="donetext" type="text" data-ng-model="donetext" 
-                      placeholder="restaurant name" size="60" ng-required/>
+                      placeholder="dish name" size="60" ng-required/>
                <button data-ng-click="add()" class="btn btn-primary" type="submit">@Messages("add")</button>
             </form>
            </span>

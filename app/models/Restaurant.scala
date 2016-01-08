@@ -64,7 +64,7 @@ object Restaurant {
         """
          update restaurant set name = {name}, city = {city}, address = {address},
          longitude = {longitude}, latitude = {latitude}, schedulecron = {schedulecron}, 
-         restype = {restype}, status = {status} where id = {id}
+         restype = {restype}, lastupdate = {lastupdate}, status = {status} where id = {id}
         """).on(
           'id -> id,
           'name -> name,

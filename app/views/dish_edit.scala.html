@@ -1,0 +1,80 @@
+@(form: Form[(String,String,String,String,String,String,String,String,String)], dish: Dish)(implicit flash: Flash, session: Session, lang: Lang)
+
+@main(title = "settings") {
+
+<div class="container">
+
+    @helper.form(routes.Dishes.save) {
+
+  <div class="starter-template">
+    <h3>Dish Info</h3>
+
+      <div class="row ">
+        <div class="col-sm-8 col-md-offset-2">
+          <input class="hidden form-control span4" type="text" name="id" id="id" value="@dish.id">
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Name</span>
+            <input class="form-control span4" type="text" name="name" id="name" value="@dish.name">
+          </div>
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Price</span>
+            <input class="form-control span4" type="text" name="price" id="price" value="@dish.price">
+          </div>
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Vegetarian</span>
+            <input class="form-control span4" type="text" name="vegetarian" id="vegetarian" value="@dish.vegetarian">
+          </div>
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Gluton</span>
+            <input class="form-control span4" type="text" name="gluton" id="gluton" value="@dish.gluton">
+          </div>
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Diary</span>
+            <input class="form-control span4" type="text" name="diary" id="diary" value="@dish.diary">
+          </div>
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Greenscore</span>
+            <input class="form-control span4" type="text" name="greenscore" id="greenscore" value="@dish.greenScore">
+          </div>
+          
+          <input class="hidden form-control span4" type="text" name="restaurant_id" id="restaurant_id" value="@dish.restaurant_id">
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Status</span>
+            <input class="form-control span4" type="text" name="status" id="status" value="@dish.status">
+          </div>
+          
+          </br>
+                      
+          <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">@Messages("save")</button>
+          <button class="span4 btn btn-primary" type="reset" id="generalsavebutton">reset</button>
+        </div>
+      </div>
+	}      
+      
+      <h3>Photo</h3>
+
+      <div class="row ">
+        <div class="col-sm-8 col-md-offset-2">
+                @helper.form(action = routes.Dishes.upload(dish.id), 'enctype -> "multipart/form-data") {
+		   <input type="file" name="picture">
+		   </br>
+           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">upload</button>
+		  }
+        </div>
+      </div>
+      
+
+
+      
+  </div>
+
+
+    </div><!-- /.container -->
+}
