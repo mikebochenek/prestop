@@ -12,13 +12,15 @@
 
           <ul class="list-group" style="text-align: left;">
             <li ng-repeat="restaurant in restaurants | orderBy:['id']" 
-                class="list-group-item"><img src="@routes.Assets.at("img/check_box.png")" />{{restaurant.name}}</li>
+                class="list-group-item"><a href="restaurantedit/{{restaurant.id}}">
+                   <img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" />{{restaurant.name}}</a>
+            </li>
             
             <li class="list-group-item"><span ng-hide="editing" style="text-align: left;">
             <form role="form" class="animate-show" ng-show="show">
-               <img src="@routes.Assets.at("img/check_box.png")" />
+               <img src="@routes.Assets.at("img/restaurant.jpg")" width="25px" />
                <input id="donetext" name="donetext" type="text" data-ng-model="donetext" 
-                      placeholder="task text" size="60" ng-required/>
+                      placeholder="restaurant name" size="60" ng-required/>
                <button data-ng-click="add()" class="btn btn-primary" type="submit">@Messages("add")</button>
             </form>
            </span>

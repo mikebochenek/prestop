@@ -9,6 +9,13 @@ GET      /api/restaurant/:id    controllers.Restaurants.getById(id: Long)
 GET      /api/restaurants       controllers.Restaurants.getAll
 POST     /api/restaurants/new   controllers.Restaurants.create
 
+GET     /restaurant                         controllers.Restaurants.index
+GET     /restaurantedit/:id                 controllers.Restaurants.edit(id: Long)
+POST    /restaurantedit                     controllers.Restaurants.save
+GET     /about                              controllers.Restaurants.about
+POST	/about								controllers.Application.upload
+GET     /contact                            controllers.Restaurants.contact
+
 
 # Authentication
 GET     /login                              controllers.Application.login
@@ -17,10 +24,6 @@ GET     /submitcreateuser                   controllers.Application.submitcreate
 POST    /login                              controllers.Application.authenticate
 GET     /logout                             controllers.Application.logout
 
-GET     /restaurant                         controllers.Restaurants.index
-GET     /about                              controllers.Restaurants.about
-POST	/about								controllers.Application.upload
-GET     /contact                            controllers.Restaurants.contact
 
 GET     /memory                             controllers.Memory.index
 GET     /memory/:id                         controllers.Memory.get(id: Long)
