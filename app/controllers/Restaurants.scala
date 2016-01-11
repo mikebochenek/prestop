@@ -37,11 +37,13 @@ object Restaurants extends Controller with Secured {
     }
   } 
 
+  val blankImage = new Image(0, null, null, 0, 0, 0, null)
   def edit(id: Long) = IsAuthenticated { username =>
     implicit request => {
-      val all = Restaurant.findById(username, id)
       Logger.info("calling restaurant edit - load data for id:" + id)
-      Ok(views.html.restaurant_edit(restaurantForm, all(0)))
+      val all = Restaurant.findById(username, id)
+      val url = Image.findByRestaurant(id).headOption.getOrElse(blankImage).asInstanceOf[Image].url
+      Ok(views.html.restaurant_edit(restaurantForm, all(0), url))
     }
   }
 

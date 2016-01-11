@@ -38,14 +38,14 @@ object Image {
 
   def findByRestaurant(id: Long): Seq[Image] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, filename, url, restaurant_id, dish_id, status, lastupdate from image where restaurant_id = {restaurant_id} ")
+      SQL("select id, filename, url, restaurant_id, dish_id, status, lastupdate from image where restaurant_id = {restaurant_id} order by id desc ")
          .on('restaurant_id -> id).as(Image.simple *)
     }
   }
 
   def findByDish(id: Long): Seq[Image] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, filename, url, restaurant_id, dish_id, status, lastupdate from image where dish_id = {dish_id} ")
+      SQL("select id, filename, url, restaurant_id, dish_id, status, lastupdate from image where dish_id = {dish_id} order by id desc ")
          .on('dish_id -> id).as(Image.simple *)
     }
   }
