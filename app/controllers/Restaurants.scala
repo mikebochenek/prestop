@@ -1,6 +1,7 @@
 package controllers
 
 import models.Restaurant
+import models.Image
 import play.api.libs.json.Json
 import play.api.mvc.Action
 import play.api.mvc.Controller
@@ -86,7 +87,11 @@ object Restaurants extends Controller with Secured {
       import java.io.File
       val filename = picture.filename
       val contentType = picture.contentType
-      picture.ref.moveTo(new File(s"/tmp/presto/$filename"))
+      val ts = System.currentTimeMillis()
+      val path = "/home/mike/data/presto/" + ts
+      val file = new File(path + s"/$filename")
+      picture.ref.moveTo(file)
+      Image.create(new Image(0, file.getAbsolutePath, Image.createUrl(ts + "/" + file.getName), id, 0, 0, null))
       Redirect(routes.Restaurants.edit(id))
     }.getOrElse {
       Redirect(routes.Restaurants.about).flashing(

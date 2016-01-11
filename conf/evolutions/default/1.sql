@@ -8,6 +8,7 @@ exit;
 mysql -u prestouser -p
 
 use presto;  
+
 CREATE TABLE IF NOT EXISTS `presto`.`user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `createdate` DATETIME NULL,
@@ -36,7 +37,6 @@ CREATE TABLE IF NOT EXISTS `presto`.`restaurant` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-
 CREATE TABLE IF NOT EXISTS `presto`.`dish` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `price` DOUBLE NULL,
@@ -57,6 +57,17 @@ CREATE TABLE IF NOT EXISTS `presto`.`dish` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+CREATE TABLE IF NOT EXISTS `presto`.`image` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `filename` VARCHAR(255) NULL,
+  `url` VARCHAR(255) NULL,
+  `restaurant_id` INT NOT NULL,
+  `dish_id` INT NOT NULL,
+  `status` INT NULL,
+  `lastupdate` TIMESTAMP NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
 
 exit;
 
