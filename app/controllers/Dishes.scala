@@ -18,11 +18,13 @@ import views._
 
 object Dishes extends Controller with Secured {
   
+  val blankImage = new Image(0, null, null, 0, 0, 0, null)
   def getById(id: Long) = IsAuthenticated { username =>
     implicit request => {
-      val dish = Dish.findById(username, id)
       Logger.info("calling dish edit - load data for id:" + id)
-      Ok(views.html.dish_edit(dishForm, dish(0)))
+      val dish = Dish.findById(username, id)
+      val url = Image.findByDish(id).headOption.getOrElse(blankImage).asInstanceOf[Image].url
+      Ok(views.html.dish_edit(dishForm, dish(0), url))
     }
   } 
 
@@ -70,7 +72,11 @@ object Dishes extends Controller with Secured {
       import java.io.File
       val filename = picture.filename
       val contentType = picture.contentType
-      picture.ref.moveTo(new File(s"/tmp/presto/$filename"))
+      val ts = System.currentTimeMillis()
+      val path = "/home/mike/data/presto/" + ts
+      val file = new File(path + s"/$filename")
+      picture.ref.moveTo(file)
+      Image.create(new Image(0, file.getAbsolutePath, Image.createUrl(ts + "/" + file.getName), 0, id, 0, null))
       Redirect(routes.Dishes.getById(id))
     }.getOrElse {
       Redirect(routes.Restaurants.about).flashing(
