@@ -1,17 +1,45 @@
-@()(implicit session: Session, lang: Lang)
+@(restaurants: Seq[Restaurant], dishes: Seq[Dish], users: Seq[User])(implicit session: Session, lang: Lang)
 @main(title = "reports") {
     <div class="container">
 
       <div class="starter-template">
-      	<h1>@Messages("menu.reports")</h1>
+      	<h3>Restaurants</h3>
       	<table class="table table-striped">
+      	@for((restaurant, index) <- restaurants.zipWithIndex)  {	
 		  <tr>
-		  <td>test</td>
-		  <td>xx</td>
-		  <td>xex</td>
-		  <td style="text-align: left;">blah blah blah/td>
+		  <td>@index</td>
+		  <td>@restaurant.id</td>
+		  <td>@restaurant.lastupdate.format("dd MMM YYYY HH:MM")</td>
+		  <td>@restaurant.name</td>
 		  </tr>
+		  }
 		</table>
+		
+      	<h3>Dishes</h3>
+      	<table class="table table-striped">
+      	@for((dish, index) <- dishes.zipWithIndex)  {	
+		  <tr>
+		  <td>@index</td>
+		  <td>@dish.id</td>
+		  <td>@dish.lastupdate.format("dd MMM YYYY HH:MM")</td>
+		  <td>@dish.name</td>
+		  <td>@("%.2f".format(dish.price))</td>
+		  </tr>
+		  }
+		</table>
+
+      	<h3>Users</h3>
+      	<table class="table table-striped">
+      	@for((user, index) <- users.zipWithIndex)  {	
+		  <tr>
+		  <td>@index</td>
+		  <td>@user.id</td>
+		  <td>@user.email</td>
+		  <td>@user.username</td>
+		  </tr>
+		  }
+		</table>
+		
       </div>
 
     </div><!-- /.container -->

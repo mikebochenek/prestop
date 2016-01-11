@@ -17,8 +17,7 @@ import views._
 object Reports extends Controller with Secured {
   def load() = IsAuthenticated { username =>
     implicit request => {
-      val id = User.findByEmail(username).id
-      Ok(views.html.reports())
+      Ok(views.html.reports(Restaurant.findAll, Dish.findAll, User.findAll))
     }
   }
 }
