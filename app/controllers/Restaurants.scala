@@ -33,7 +33,7 @@ object Restaurants extends Controller with Secured {
   def getById(id: Long) = IsAuthenticated { username =>
     implicit request => {
       val all = Restaurant.findById(username, id)
-      Ok(Json.toJson(all.map(a => Json.toJson(a))))
+      Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
     }
   } 
 
@@ -71,7 +71,7 @@ object Restaurants extends Controller with Secured {
   def getAll() = IsAuthenticated { username =>
     implicit request => {
       val all = Restaurant.findAll()
-      Ok(Json.toJson(all.map(a => Json.toJson(a))))
+      Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
     }
   } 
 

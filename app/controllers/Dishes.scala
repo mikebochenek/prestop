@@ -53,7 +53,7 @@ object Dishes extends Controller with Secured {
   def getAll(restId: Long) = IsAuthenticated { username =>
     implicit request => {
       val dishes = Dish.findAll(restId)
-      Ok(Json.toJson(dishes.map(a => Json.toJson(a))))
+      Ok(Json.prettyPrint(Json.toJson(dishes.map(a => Json.toJson(a)))))
     }
   } 
 
