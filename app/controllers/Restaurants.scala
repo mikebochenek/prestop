@@ -30,9 +30,9 @@ object Restaurants extends Controller with Secured {
   }
 
 
-  def getById(id: Long) = IsAuthenticated { username =>
+  def getById(id: Long) = Action {
     implicit request => {
-      val all = Restaurant.findById(username, id)
+      val all = Restaurant.findById(null, id)
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
     }
   } 
@@ -68,7 +68,7 @@ object Restaurants extends Controller with Secured {
     }
   }
 
-  def getAll() = IsAuthenticated { username =>
+  def getAll() = Action {
     implicit request => {
       val all = Restaurant.findAll()
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
