@@ -1,4 +1,4 @@
-@(restaurants: Seq[Restaurant], dishes: Seq[Dish], users: Seq[User])(implicit session: Session, lang: Lang)
+@(restaurants: Seq[Restaurant], dishes: Seq[Dish], users: Seq[User], adminStats: String)(implicit session: Session, lang: Lang)
 @main(title = "reports") {
     <div class="container">
 
@@ -40,6 +40,8 @@
 		  }
 		</table>
 		
+		<h3>System Info</h3>
+		<pre>@Html(adminStats)</pre>
       </div>
 
     </div><!-- /.container -->

@@ -6,13 +6,11 @@ import scala.sys.process._
 object AdminHelper {
 
   def generateStats(): String = {
-    val usercount = User.countAll
-
-    val maillogcount = MailLog.countAll
 
     (system_date + system_uptime + "<br>" 
-        + "usercount:" + usercount + "<br>" 
-        + "maillogcount:" + maillogcount + "<br>" + "<br><br>"
+        + "usercount:" + User.countAll + "<br>" 
+        + "restaurantcount:" + Restaurant.countAll + "<br>" 
+        + "dishcount:" + Dish.countAll + "<br>" + "<br><br>"
         + system_df + "<br><br>" + system_top + "<br><br>").replaceAll("\n", "<br>")
   }
 
