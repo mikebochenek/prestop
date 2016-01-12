@@ -1,9 +1,11 @@
+package common
+
 import math._
 
 /** 
  *  cut and paste from http://rosettacode.org/wiki/Haversine_formula#Scala
  */
-class Haversine {
+object Haversine {
    val R = 6372.8  //radius in km
  
    def haversine(lat1:Double, lon1:Double, lat2:Double, lon2:Double)={
