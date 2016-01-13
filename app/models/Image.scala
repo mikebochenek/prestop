@@ -68,7 +68,7 @@ object Image {
   }
 
   def createUrl(str: String): String = {
-    "http://localhost/presto/" + str
+    "http://localhost/presto/" + str  //TODO this should be read from application config
   }
   
   implicit val imageReads = Json.reads[Image]

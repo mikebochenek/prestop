@@ -18,6 +18,9 @@ import play.api.Logger
 case class Dish(id: Long, restaurant_id: Long, price: Double, name: String, vegetarian: Int, 
     gluton: Int, diary: Int, greenScore: Double, lastupdate: Date, status: Int)
 
+case class DishRecommendation(id: Long, restaurant_id: Long, price: Double, name: String, vegetarian: Int, 
+    gluton: Int, diary: Int, greenScore: Double, url: String, distance: Double)
+    
 object Dish {
   val simple = {
       get[Long]("dish.id") ~
