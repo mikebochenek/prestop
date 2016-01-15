@@ -43,6 +43,11 @@ object Recommend extends Controller {
     val dishes = Dish.findAll().filter { x => within(maxdist, restaurants, x.restaurant_id, longitude, latitude) }
       //.filter {x => (priceMax >= x.price && priceMin >= x.price) }    
     
+    for (dish <- dishes) {
+      dish.url = Image.findByDish(dish.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+      dish.distance = Haversine.haversine(restaurants.get(dish.restaurant_id).head.latitude, 
+          restaurants.get(dish.restaurant_id).head.longitude, longitude, latitude)
+    }
     val r = new Recommendations(dishes);
     r
   }
