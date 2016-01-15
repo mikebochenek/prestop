@@ -71,6 +71,24 @@ object Image {
     "http://localhost/presto/" + str  //TODO this should be read from application config
   }
   
+  def updateRestaurantImages(restaurantId: Long, status: Int) = {
+    DB.withConnection { implicit connection =>
+      SQL("update image set status = {status} where restaurant_id = {restaurant_id}").on(
+          'restaurant_id -> restaurantId,
+          'lastupdate -> new Date(),
+          'status -> status).executeUpdate
+    }
+  }
+  
+  def updateDishImages(dishId: Long, status: Int) = {
+    DB.withConnection { implicit connection =>
+      SQL("update image set status = {status} where dish_id = {dish_id}").on(
+          'dish_id -> dishId,
+          'lastupdate -> new Date(),
+          'status -> status).executeUpdate
+    }
+  }
+  
   implicit val imageReads = Json.reads[Image]
   implicit val imageWrites = Json.writes[Image]
 

@@ -16,11 +16,8 @@ import play.api.libs.functional.syntax._
 import play.api.Logger
 
 case class Dish(id: Long, restaurant_id: Long, price: Double, name: String, vegetarian: Int, 
-    gluton: Int, diary: Int, greenScore: Double, lastupdate: Date, status: Int)
+    gluten: Int, diary: Int, greenScore: Double, lastupdate: Date, status: Int, url: String, distance: Double)
 
-case class DishRecommendation(id: Long, restaurant_id: Long, price: Double, name: String, vegetarian: Int, 
-    gluton: Int, diary: Int, greenScore: Double, url: String, distance: Double)
-    
 object Dish {
   val simple = {
       get[Long]("dish.id") ~
@@ -34,7 +31,7 @@ object Dish {
       get[Date]("dish.lastupdate") ~
       get[Int]("dish.status") map {
         case id ~ restaurant_id ~ price ~ name ~ vegetarian ~ gluton ~ diary ~ greenscore ~ lastupdate ~ status => 
-          Dish(id, restaurant_id, price, name, vegetarian, gluton, diary, greenscore, lastupdate, status)
+          Dish(id, restaurant_id, price, name, vegetarian, gluton, diary, greenscore, lastupdate, status, null, 0.0)
       }
   }
 
