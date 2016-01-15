@@ -42,6 +42,7 @@ object Recommend extends Controller {
     
     val dishes = Dish.findAll().filter { x => within(maxdist, restaurants, x.restaurant_id, longitude, latitude) }
       //.filter {x => (priceMax >= x.price && priceMin >= x.price) }    
+    
     val r = new Recommendations(dishes);
     r
   }

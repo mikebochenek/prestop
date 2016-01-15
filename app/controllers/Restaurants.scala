@@ -37,12 +37,11 @@ object Restaurants extends Controller with Secured {
     }
   } 
 
-  val blankImage = new Image(0, null, null, 0, 0, 0, null)
   def edit(id: Long) = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling restaurant edit - load data for id:" + id)
       val all = Restaurant.findById(username, id)
-      val url = Image.findByRestaurant(id).headOption.getOrElse(blankImage).asInstanceOf[Image].url
+      val url = Image.findByRestaurant(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       Ok(views.html.restaurant_edit(restaurantForm, all(0), url))
     }
   }
@@ -93,6 +92,7 @@ object Restaurants extends Controller with Secured {
       val path = "/home/mike/data/presto/" + ts
       val file = new File(path + s"/$filename")
       picture.ref.moveTo(file)
+      Image.updateRestaurantImages(id, -1)
       Image.create(new Image(0, file.getAbsolutePath, Image.createUrl(ts + "/" + file.getName), id, 0, 0, null))
       Redirect(routes.Restaurants.edit(id))
     }.getOrElse {
