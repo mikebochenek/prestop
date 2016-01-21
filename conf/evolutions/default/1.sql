@@ -67,7 +67,49 @@ CREATE TABLE IF NOT EXISTS `presto`.`image` (
   `status` INT NULL,
   `lastupdate` TIMESTAMP NULL,
   PRIMARY KEY (`id`))
-ENGINE = InnoDB
+ENGINE = InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS `presto`.`reservation` (
+  `user_id` INT NOT NULL,
+  `restaurant_id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `reservationtime` TIMESTAMP NULL,
+  `guestcount` INT NULL,
+  `special_requests` VARCHAR(255) NULL,
+  `status` INT NULL,
+  `lastupdate` TIMESTAMP NULL,
+  PRIMARY KEY (`id`, `user_id`, `restaurant_id`),
+  INDEX `fk_user_has_restaurant_restaurant1_idx` (`restaurant_id` ASC),
+  INDEX `fk_user_has_restaurant_user1_idx` (`user_id` ASC),
+  CONSTRAINT `fk_user_has_restaurant_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `presto`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_has_restaurant_restaurant1`
+    FOREIGN KEY (`restaurant_id`)
+    REFERENCES `presto`.`restaurant` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS `presto`.`activity_log` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `createdate` TIMESTAMP NULL,
+  `activity_type` INT NULL,
+  `activity_subtype` INT NULL,
+  `activity_details` TEXT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_activity_log_user1_idx` (`user_id` ASC),
+  CONSTRAINT `fk_activity_log_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `presto`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 exit;
 
