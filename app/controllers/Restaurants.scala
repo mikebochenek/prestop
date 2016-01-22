@@ -34,6 +34,9 @@ object Restaurants extends Controller with Secured {
   def getById(id: Long) = Action {
     implicit request => {
       val all = Restaurant.findById(null, id)
+      for (restaurant <- all) {
+        restaurant.tags =  Tag.findByRef(restaurant.id, 12).map(_.name)
+      }
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
     }
   } 
@@ -74,6 +77,9 @@ object Restaurants extends Controller with Secured {
   def getAll() = Action {
     implicit request => {
       val all = Restaurant.findAll()
+      for (restaurant <- all) {
+        restaurant.tags =  Tag.findByRef(restaurant.id, 12).map(_.name)
+      }
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
     }
   } 

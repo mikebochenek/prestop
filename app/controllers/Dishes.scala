@@ -54,6 +54,10 @@ object Dishes extends Controller with Secured {
   def getAll(restId: Long) = Action {
     implicit request => {
       val dishes = Dish.findAll(restId)
+      for (dish <- dishes) {      
+        dish.tags = Tag.findByRef(dish.id, 11).map(_.name)
+      }
+
       Ok(Json.prettyPrint(Json.toJson(dishes.map(a => Json.toJson(a)))))
     }
   } 

@@ -47,6 +47,7 @@ object Recommend extends Controller {
       dish.url = Image.findByDish(dish.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       dish.distance = Haversine.haversine(restaurants.get(dish.restaurant_id).head.latitude, 
           restaurants.get(dish.restaurant_id).head.longitude, longitude, latitude)
+      dish.tags = Tag.findByRef(dish.id, 11).map(_.name)
     }
     val r = new Recommendations(dishes);
     r
