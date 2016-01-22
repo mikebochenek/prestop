@@ -21,7 +21,7 @@ object Friends extends Controller with Secured {
   def getByUser(id: Long) = Action { 
     implicit request => {
       Logger.info("calling Activities get - load data for id:" + id)
-      val all = ActivityLog.findAllByUser(id)
+      val all = Friend.findAllByUser(id)
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(all)))))
     }
   } 

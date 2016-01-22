@@ -94,7 +94,6 @@ CREATE TABLE IF NOT EXISTS `presto`.`reservation` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
 CREATE TABLE IF NOT EXISTS `presto`.`activity_log` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
@@ -106,6 +105,27 @@ CREATE TABLE IF NOT EXISTS `presto`.`activity_log` (
   INDEX `fk_activity_log_user1_idx` (`user_id` ASC),
   CONSTRAINT `fk_activity_log_user1`
     FOREIGN KEY (`user_id`)
+    REFERENCES `presto`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `presto`.`friend` (
+  `user_id` INT NOT NULL,
+  `friend_user_id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `status` INT NULL,
+  `lastupdate` TIMESTAMP NULL,
+  PRIMARY KEY (`id`, `user_id`, `friend_user_id`),
+  INDEX `fk_user_has_user_user2_idx` (`friend_user_id` ASC),
+  INDEX `fk_user_has_user_user1_idx` (`user_id` ASC),
+  CONSTRAINT `fk_user_has_user_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `presto`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_has_user_user2`
+    FOREIGN KEY (`friend_user_id`)
     REFERENCES `presto`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
