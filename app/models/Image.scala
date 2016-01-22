@@ -34,7 +34,7 @@ object Image {
       }
   }
 
-  def findAll(owner: Long): Seq[Image] = {
+  def findAll(): Seq[Image] = {
     DB.withConnection { implicit connection =>
       SQL("select id, filename, url, restaurant_id, dish_id, status, lastupdate from image ").on().as(Image.simple *)
     }

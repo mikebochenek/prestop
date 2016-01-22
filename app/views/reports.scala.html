@@ -1,4 +1,6 @@
-@(restaurants: Seq[Restaurant], dishes: Seq[Dish], users: Seq[User], adminStats: String)(implicit session: Session, lang: Lang)
+@(restaurants: Seq[Restaurant], dishes: Seq[Dish], users: Seq[User], 
+	friends: Seq[Friend], reservations: Seq[Reservation], activities: Seq[ActivityLog], 
+	images: Seq[Image], adminStats: String)(implicit session: Session, lang: Lang)
 @main(title = "reports") {
     <div class="container">
 
@@ -36,6 +38,66 @@
 		  <td>@user.id</td>
 		  <td>@user.email</td>
 		  <td>@user.username</td>
+		  </tr>
+		  }
+		</table>
+
+      	<h3>Friends</h3>
+      	<table class="table table-striped">
+      	@for((friend, index) <- friends.zipWithIndex)  {	
+		  <tr>
+		  <td>@index</td>
+		  <td>@friend.id</td>
+		  <td>@friend.friend_user_id</td>
+		  <td>@friend.user_id</td>
+		  <td>@friend.lastupdate.format("dd MMM YYYY HH:MM")</td>
+		  </tr>
+		  }
+		</table>
+
+      	<h3>Reservations</h3>
+      	<table class="table table-striped">
+      	@for((reservation, index) <- reservations.zipWithIndex)  {	
+		  <tr>
+		  <td>@index</td>
+		  <td>@reservation.user_id</td>
+		  <td>@reservation.restaurant_id</td>
+		  <td>@reservation.id</td>
+		  <td>@reservation.reservationtime.format("dd MMM YYYY HH:MM")</td>
+		  <td>@reservation.guestcount</td>
+		  <td>@reservation.special_requests</td>
+		  <td>@reservation.lastupdate.format("dd MMM YYYY HH:MM")</td>
+		  <td>@reservation.status</td>
+		  </tr>
+		  }
+		</table>
+
+      	<h3>Activities</h3>
+      	<table class="table table-striped">
+      	@for((activity, index) <- activities.zipWithIndex)  {	
+		  <tr>
+		  <td>@index</td>
+		  <td>@activity.id</td>
+		  <td>@activity.user_id</td>
+		  <td>@activity.activity_type</td>
+		  <td>@activity.activity_subtype</td>
+		  <td>@activity.activity_details</td>
+		  <td>@activity.createdate.format("dd MMM YYYY HH:MM")</td>
+		  </tr>
+		  }
+		</table>
+
+      	<h3>Images</h3>
+      	<table class="table table-striped">
+      	@for((image, index) <- images.zipWithIndex)  {	
+		  <tr>
+		  <td>@index</td>
+		  <td>@image.id</td>
+		  <td>@image.filename</td>
+		  <td>@image.url</td>
+		  <td>@image.restaurant_id</td>
+		  <td>@image.dish_id</td>
+		  <td>@image.lastupdate.format("dd MMM YYYY HH:MM")</td>
 		  </tr>
 		  }
 		</table>
