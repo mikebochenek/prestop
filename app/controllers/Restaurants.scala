@@ -42,7 +42,7 @@ object Restaurants extends Controller with Secured {
     implicit request => {
       Logger.info("calling restaurant edit - load data for id:" + id)
       val all = Restaurant.findById(username, id)
-      val tags = Tag.findByRef(id).map(_.name) mkString ", "
+      val tags = Tag.findByRef(id, 12).map(_.name) mkString ", "
       val url = Image.findByRestaurant(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       Ok(views.html.restaurant_edit(restaurantForm, all(0), url, tags))
     }
@@ -65,7 +65,7 @@ object Restaurants extends Controller with Secured {
     implicit request => { 
       val (id, name, city, address, longitude, latitude, schedule, restype, status, tags) = restaurantForm.bindFromRequest.get
       Restaurant.update(id.toLong, name, city, address, longitude.toDouble, latitude.toDouble, schedule, restype.toInt, status.toInt)
-      Tag.updateTags(id.toLong, tags)
+      Tag.updateTags(id.toLong, tags, 12)
       Logger.info("calling restaurant update for id:" + id)
       Redirect(routes.Restaurants.edit(id.toLong))
     }

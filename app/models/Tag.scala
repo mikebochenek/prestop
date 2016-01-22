@@ -13,6 +13,7 @@ import play.api.libs.json.JsObject
 import play.api.libs.json.JsString
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import play.api.Logger
 
 case class Tag(id: Long, name: String, en_text: Option[String], de_text: Option[String], it_text: Option[String], fr_text: Option[String], status: Int, lastupdate: Date)
 
@@ -31,13 +32,13 @@ object Tag {
       }
   }
 
-  def findByRef(id: Long): Seq[Tag] = {
+  def findByRef(id: Long, status: Int): Seq[Tag] = {
     DB.withConnection { implicit connection =>
       SQL("""select t.id, t.name, t.en_text, t.de_text, t.it_text, t.fr_text, t.status, t.lastupdate 
              from tag t 
              join tagref tr on t.id = tr.tagid
-             where tr.refid = {id}
-          """).on('id -> id).as(Tag.simple *)
+             where tr.refid = {id} and tr.status = {status}
+          """).on('id -> id, 'status -> status).as(Tag.simple *)
     }
   }
 
@@ -66,15 +67,15 @@ object Tag {
     }
   }
 
-  def updateTags(id: Long, tags: String) = {
+  def updateTags(id: Long, tags: String, status: Int) = {
 	  val tagsArray = tags.split(",")
-		val oldtags = Tag.findByRef(id.toLong).map(_.name)
+		val oldtags = Tag.findByRef(id.toLong, status).map(_.name)
 		val alltags = Tag.findAll
 		for (tag <- tagsArray) {
 		  if (!oldtags.contains(tag.trim)) {
 		    alltags.find(_.name.equals(tag.trim)) match {
-					case Some(f) => TagRef.create(new TagRef(-1, f.id, id.toLong, 0, null))
-					case None => println (tag + ".. tag ignored...")
+					case Some(f) => TagRef.create(new TagRef(-1, f.id, id, status, null))
+					case None => Logger.warn(tag + ".. tag ignored! id=" + id)
 			  }
 			}
 		}
