@@ -20,24 +20,23 @@ import play.api.mvc.Session
 object LangFromSubdomain extends Filter {
   def apply(next: (RequestHeader) => Future[SimpleResult])(request: RequestHeader): Future[SimpleResult] = {
 
-    val subdomainLanguage = request.headers.get(HeaderNames.ACCEPT_LANGUAGE).get /*.substring(0,2) match {
-      case "it" => "it"
-      case "es" => "es"
-      case "de" => "de"
-      case "fr" => "fr"
-      case _ => "en"
-    }*/
-
-    val newHeaders = new Headers {
-      val data = (request.headers.toMap
-        + (HeaderNames.ACCEPT_LANGUAGE -> Seq(subdomainLanguage))).toList
+    val acceptLang = request.headers.get(HeaderNames.ACCEPT_LANGUAGE)
+    if (acceptLang.isDefined) {
+      val subdomainLanguage = acceptLang.get
+      
+      val newHeaders = new Headers {
+        val data = (request.headers.toMap
+          + (HeaderNames.ACCEPT_LANGUAGE -> Seq(subdomainLanguage))).toList
+      }
+  
+      val newRequestHeader = request.copy(headers = newHeaders)
+  
+      //Logger.info(request.headers.get(HeaderNames.ACCEPT_LANGUAGE) + "---> " + subdomainLanguage)
+  
+      next(newRequestHeader)
+    } else {
+      next(request)
     }
-
-    val newRequestHeader = request.copy(headers = newHeaders)
-
-    //Logger.info(request.headers.get(HeaderNames.ACCEPT_LANGUAGE) + "---> " + subdomainLanguage)
-
-    next(newRequestHeader)
   }
 }
 
