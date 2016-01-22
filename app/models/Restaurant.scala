@@ -16,7 +16,8 @@ import play.api.libs.functional.syntax._
 
 
 case class Restaurant(id: Long, name: String, city: String, address: String, longitude: Double, latitude: Double, 
-    schedulecron: String, restype: Int, lastupdate: Date, status: Int)
+    schedulecron: String, restype: Int, lastupdate: Date, status: Int, 
+    phoneNumber: String, email: String, var tags: Seq[String])
 
 object Restaurant {
   val simple = {
@@ -31,7 +32,7 @@ object Restaurant {
       get[Date]("restaurant.lastupdate") ~
       get[Int]("restaurant.status") map {
         case id ~ name ~ city ~ address ~ longitude ~ latitude ~ schedulecron ~ restype ~ lastupdate ~ status => 
-          Restaurant(id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status)
+          Restaurant(id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, null, null, Seq.empty[String])
       }
   }
 
