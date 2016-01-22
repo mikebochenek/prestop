@@ -14,17 +14,17 @@ import play.api.libs.json.JsString
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-case class Tag(id: Long, name: String, en_text: String, de_text: String, it_text: String, fr_text: String, status: Int, lastupdate: Date)
+case class Tag(id: Long, name: String, en_text: Option[String], de_text: Option[String], it_text: Option[String], fr_text: Option[String], status: Int, lastupdate: Date)
 
 object Tag {
 
   val simple = {
       get[Long]("tag.id") ~
       get[String]("tag.name") ~
-      get[String]("tag.en_text") ~
-      get[String]("tag.de_text") ~
-      get[String]("tag.it_text") ~
-      get[String]("tag.fr_text") ~
+      get[Option[String]]("tag.en_text") ~
+      get[Option[String]]("tag.de_text") ~
+      get[Option[String]]("tag.it_text") ~
+      get[Option[String]]("tag.fr_text") ~
       get[Int]("tag.status") ~
       get[Date]("tag.lastupdate") map {
         case id ~ name ~ en_text ~ de_text ~ it_text ~ fr_text ~ status ~ lastupdate => Tag(id, name, en_text, de_text, it_text, fr_text, status, lastupdate)
@@ -33,8 +33,19 @@ object Tag {
 
   def findByRef(id: Long): Seq[Tag] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, name, en_text, de_text, it_text, fr_text, status, lastupdate from tag where id = {d}").on(
-        'id -> id).as(Tag.simple *)
+      SQL("""select t.id, t.name, t.en_text, t.de_text, t.it_text, t.fr_text, t.status, t.lastupdate 
+             from tag t 
+             join tagref tr on t.id = tr.tagid
+             where tr.refid = {id}
+          """).on('id -> id).as(Tag.simple *)
+    }
+  }
+
+  def findAll(): Seq[Tag] = {
+    DB.withConnection { implicit connection =>
+      SQL("""select t.id, t.name, t.en_text, t.de_text, t.it_text, t.fr_text, t.status, t.lastupdate 
+             from tag t 
+          """).on().as(Tag.simple *)
     }
   }
 
