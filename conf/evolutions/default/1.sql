@@ -131,5 +131,26 @@ CREATE TABLE IF NOT EXISTS `presto`.`friend` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS `presto`.`tagref` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `tagid` INT NOT NULL,
+  `refid` INT NOT NULL,
+  `status` INT NULL,
+  `lastupdate` TIMESTAMP NULL,
+  PRIMARY KEY (`id`, `tagid`, `refid`))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `presto`.`tag` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NULL,
+  `en_text` VARCHAR(255) NULL,
+  `de_text` VARCHAR(255) NULL,
+  `it_text` VARCHAR(255) NULL,
+  `fr_text` VARCHAR(255) NULL,
+  `status` INT NULL,
+  `lastupdate` TIMESTAMP NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
 exit;
 

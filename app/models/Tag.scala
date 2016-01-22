@@ -14,37 +14,27 @@ import play.api.libs.json.JsString
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-/**
- * mysql> describe tag;
- * +------------+--------------+------+-----+-------------------+----------------+
- * | Field      | Type         | Null | Key | Default           | Extra          |
- * +------------+--------------+------+-----+-------------------+----------------+
- * | id         | int(11)      | NO   | PRI | NULL              | auto_increment |
- * | owner      | int(11)      | YES  | MUL | NULL              |                |
- * | tag        | varchar(255) | YES  |     | NULL              |                |
- * | createdate | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
- * | deleted    | tinyint(1)   | YES  |     | NULL              |                |
- * +------------+--------------+------+-----+-------------------+----------------+
- * 5 rows in set (0.03 sec)
- */
-case class Tag(id: Long, owner: Long, tag: String, createdate: Date, deleted: Boolean)
+case class Tag(id: Long, name: String, en_text: String, de_text: String, it_text: String, fr_text: String, status: Int, lastupdate: Date)
 
 object Tag {
 
   val simple = {
-    get[Long]("tag.id") ~
-      get[Long]("tag.owner") ~
-      get[String]("tag.tag") ~
-      get[Date]("tag.createdate") ~
-      get[Boolean]("tag.deleted") map {
-        case id ~ owner ~ tag ~ createdate ~ deleted => Tag(id, owner, tag, createdate, deleted)
+      get[Long]("tag.id") ~
+      get[String]("tag.name") ~
+      get[String]("tag.en_text") ~
+      get[String]("tag.de_text") ~
+      get[String]("tag.it_text") ~
+      get[String]("tag.fr_text") ~
+      get[Int]("tag.status") ~
+      get[Date]("tag.lastupdate") map {
+        case id ~ name ~ en_text ~ de_text ~ it_text ~ fr_text ~ status ~ lastupdate => Tag(id, name, en_text, de_text, it_text, fr_text, status, lastupdate)
       }
   }
 
-  def findAll(owner: Long): Seq[Tag] = {
+  def findByRef(id: Long): Seq[Tag] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, owner, tag, createdate, deleted from tag where owner = {owner}").on(
-        'owner -> owner).as(Tag.simple *)
+      SQL("select id, name, en_text, de_text, it_text, fr_text, status, lastupdate from tag where id = {d}").on(
+        'id -> id).as(Tag.simple *)
     }
   }
 
@@ -52,13 +42,16 @@ object Tag {
     DB.withConnection { implicit connection =>
       SQL(
         """
-          insert into tag (owner, tag, deleted) values (
-          {owner}, {tag}, {deleted}
+          insert into tag (en_text, de_text, it_text, fr_text, status, lastupdate) values (
+          {en_text}, {de_text}, {it_text}, {fr_text}, {status}, {lastupdate}
           )
         """).on(
-          'owner -> tag.owner,
-          'tag -> tag.tag,
-          'deleted -> 0).executeInsert()
+          'en_text -> tag.en_text,
+          'de_text -> tag.de_text,
+          'it_text -> tag.it_text,
+          'fr_text -> tag.fr_text,
+          'lastupdate -> new Date(),
+          'status -> tag.status).executeInsert()
     }
   }
 
