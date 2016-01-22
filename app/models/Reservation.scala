@@ -25,11 +25,11 @@ object Reservation {
       get[Long]("reservation.restaurant_id") ~
       get[Date]("reservation.reservationtime") ~
       get[Int]("reservation.guestcount") ~
-      get[String]("reservation.special_requests") ~
+      get[Option[String]]("reservation.special_requests") ~
       get[Date]("reservation.lastupdate") ~
       get[Int]("reservation.status") map {
         case id ~ user_id ~ restaurant_id ~ reservationtime ~ guestcount ~ special_requests ~ lastupdate ~ status => 
-          Reservation(id, user_id, restaurant_id, reservationtime, guestcount, special_requests, lastupdate, status)
+          Reservation(id, user_id, restaurant_id, reservationtime, guestcount, special_requests.getOrElse(null), lastupdate, status)
       }
   }
 
