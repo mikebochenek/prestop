@@ -12,7 +12,8 @@ POST     /api/friends/new            controllers.Friends.create
 GET      /api/activities/:id         controllers.Activities.getByUser(id: Long)
 GET      /api/reservations/:id       controllers.Reservations.getByUser(id: Long)
 POST     /api/reservations/new       controllers.Reservations.create
-
+GET      /api/settings/:id           controllers.Settings.getByUser(id: Long)
+POST     /api/settings/update        controllers.Settings.updateUser
 
 GET      /api/restaurants            controllers.Restaurants.getAll
 POST     /api/restaurants/new        controllers.Restaurants.create

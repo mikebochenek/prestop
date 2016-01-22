@@ -35,8 +35,6 @@ object Settings extends Controller with Secured {
         Logger.debug("parse ----->" + userSettings)
       }
       
-
-      
       Ok(views.html.settings(settingsForm, me, userSettings))
     }
   }
@@ -110,4 +108,25 @@ object Settings extends Controller with Secured {
       Ok(xstream.toXML(all))
     }
   }
+  
+  
+  def getByUser(id: Long) = Action { 
+    implicit request => {
+      Logger.info("calling Activities get - load data for id:" + id)
+      val all = User.getFullUser(id)
+      all.password = null
+      Ok(Json.prettyPrint(Json.toJson(all)))
+    }
+  } 
+
+  def updateUser() = Action {
+    implicit request => {
+      val txt = (request.body.asJson.get \ "txt")
+      val restId = (request.body.asJson.get \ "restaurantID")
+      //val id = Dish.create(restId.as[String].toLong, 0.0, txt.as[String], 0, 0, 0, 0.0, 0);
+      val id = 13;
+      Logger.info("nothing has been created yet - " + txt.as[String] + " with id:" + id)
+      Ok("ok")
+    }
+  }  
 }

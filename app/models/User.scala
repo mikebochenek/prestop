@@ -7,6 +7,9 @@ import anorm.SqlParser._
 import scala.language.postfixOps
 import java.util.Date
 import play.api.Logger
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
+import java.util.Calendar
 
 /**
  * mysql> describe user
@@ -31,8 +34,8 @@ import play.api.Logger
 
 case class User(id: Long, email: String, username: String, password: String)
 
-case class UserFull(id: Long, createdate: Date, lastlogindate: Date, deleted: Boolean, 
-    password: String, settings: String, email: String, username: String, ttype: String,
+case class UserFull(id: Long, createdate: Date, lastlogindate: Option[Date], deleted: Boolean, 
+    var password: String, settings: String, email: String, username: String, ttype: String,
     openidtoken: String)
 
 
@@ -62,7 +65,7 @@ object User {
       get[Option[String]]("user.type") ~
       get[Option[String]]("user.openidtoken") map {
         case id ~ createdate ~ lastlogindate ~ deleted ~ password ~ settings ~ email ~ username ~ ttype ~ openidtoken => 
-          UserFull(id, createdate.getOrElse(null), lastlogindate.getOrElse(null), deleted.getOrElse(false), 
+          UserFull(id, createdate.getOrElse(null), lastlogindate, deleted.getOrElse(false), 
               password, settings.getOrElse(null), email, username, ttype.getOrElse(null), openidtoken.getOrElse(null))
       }
   }
@@ -71,6 +74,13 @@ object User {
     DB.withConnection { implicit connection =>
       SQL("select id, createdate, lastlogindate, deleted, password, settings, email, username, type, openidtoken from user where email = {email}").on(
         'email -> email).as(User.all.single)
+    }
+  }
+  
+  def getFullUser(id: Long): UserFull = {
+    DB.withConnection { implicit connection =>
+      SQL("select id, createdate, lastlogindate, deleted, password, settings, email, username, type, openidtoken from user where id = {id}").on(
+        'id -> id).as(User.all.single)
     }
   }
 
@@ -180,5 +190,9 @@ object User {
     val ha = new sun.misc.BASE64Encoder().encode(md.digest((str + "x5a.63uwx").getBytes))
     ha.toString()
   }
+}
 
+object UserFull {
+  implicit val userReads = Json.reads[UserFull]
+  implicit val userWrites = Json.writes[UserFull]
 }
