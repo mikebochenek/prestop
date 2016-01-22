@@ -13,6 +13,8 @@ import play.api.libs.json.JsObject
 import play.api.libs.json.JsString
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import play.api.Logger
+
 
 case class Image(id: Long, filename: String, url: String, restaurant_id: Long, dish_id: Long, status: Int, lastupdate: Date)
 
@@ -70,7 +72,9 @@ object Image {
   }
 
   def createUrl(str: String): String = {
-    "http://localhost/presto/" + str  //TODO this should be read from application config
+    val url = current.configuration.getString("image.server.baseurl")
+    Logger.info("Image using base url " + url)
+    url.getOrElse("http://localhost") + str  
   }
   
   def updateRestaurantImages(restaurantId: Long, status: Int) = {
