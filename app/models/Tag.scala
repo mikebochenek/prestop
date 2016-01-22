@@ -66,6 +66,22 @@ object Tag {
     }
   }
 
+  def updateTags(id: Long, tags: String) = {
+	  val tagsArray = tags.split(",")
+		val oldtags = Tag.findByRef(id.toLong).map(_.name)
+		val alltags = Tag.findAll
+		for (tag <- tagsArray) {
+		  if (!oldtags.contains(tag.trim)) {
+		    alltags.find(_.name.equals(tag.trim)) match {
+					case Some(f) => TagRef.create(new TagRef(-1, f.id, id.toLong, 0, null))
+					case None => println (tag + ".. tag ignored...")
+			  }
+			}
+		}
+    
+    //TODO we should also remove tags which are not there anymore
+  }
+        
   implicit val tagReads = Json.reads[Tag]
   implicit val tagWrites = Json.writes[Tag]
 

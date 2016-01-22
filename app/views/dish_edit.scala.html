@@ -55,6 +55,8 @@
             <input class="form-control span4" type="text" name="tags" id="tags" value="@tags">
           </div>
           
+          <div><u>possible tags:</u> @Tag.findAll.map(_.name).mkString(", ")</div>
+          
           </br>
                       
           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">@Messages("save")</button>

@@ -22,7 +22,6 @@ object Dishes extends Controller with Secured {
     implicit request => {
       Logger.info("calling dish edit - load data for id:" + id)
       val dish = Dish.findById(username, id)
-      //TODO load tags and set as string
       val tags = Tag.findByRef(id).map(_.name) mkString ", "
       val url = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       Ok(views.html.dish_edit(dishForm, dish(0), url, tags))
@@ -44,13 +43,12 @@ object Dishes extends Controller with Secured {
       "tags" -> text))
       
   def save = IsAuthenticated { username =>
-    implicit request => { 
+    implicit request =>  
       val (id, price, name, vegetarian, gluton, diary, greenscore, restaurant_id, status, tags) = dishForm.bindFromRequest.get
       Dish.update(id.toLong, price.toDouble, name, vegetarian.toInt, gluton.toInt, diary.toInt, greenscore.toDouble, status.toInt)
-      //TODO update tags DB
+      Tag.updateTags(id.toLong, tags)
       Logger.info("calling restaurant update for id:" + id + " price:" + price + " name:" + name + " tags:" + tags)
       Redirect(routes.Dishes.getById(id.toLong))
-    }
   }
 
   def getAll(restId: Long) = Action {
