@@ -1,4 +1,4 @@
-@(form: Form[(String,String,String,String,String,String,String,String,String)], restaurant: Restaurant, url: String)(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String,String,String,String,String)], restaurant: Restaurant, url: String, tags: String)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -52,6 +52,13 @@
             <span class="input-group-addon" id="basic-addon1">Status</span>
             <input class="form-control span4" type="text" name="status" id="status" value="@restaurant.status">
           </div>
+
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Tags</span>
+            <input class="form-control span4" type="text" name="tags" id="tags" value="@tags">
+          </div>
+          
+          <div><u>possible tags:</u> @Tag.findAll.map(_.name).mkString(", ")</div>
           
           </br>
                       
