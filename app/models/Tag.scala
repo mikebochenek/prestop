@@ -72,8 +72,10 @@ object Tag {
 	  val tagsArray = tags.split(",")
 		val oldtags = Tag.findByRef(id.toLong, status).map(_.name)
 		val alltags = Tag.findAll
+    
+    // add new tags 
 		for (tag <- tagsArray) {
-		  if (!oldtags.contains(tag.trim)) {
+		  if (!oldtags.contains(tag.trim) && tag.trim.length > 0) {
 		    alltags.find(_.name.equals(tag.trim)) match {
 					case Some(f) => TagRef.create(new TagRef(-1, f.id, id, status, null))
 					case None => { 
@@ -86,7 +88,13 @@ object Tag {
 			}
 		}
     
-    //TODO we should also remove tags which are not there anymore
+    // we should also remove tags which are not there anymore
+    for (tag <- oldtags) {
+      if (!tags.contains(tag.trim)) { // NB tagsArray is messy because sometimes it has blanks, and sometimes not
+        val tagid = Tag.findAll().find(_.name.equals(tag)).getOrElse(null).id
+        TagRef.deletesoftly(tagid, id)
+      }
+    }
   }
         
   implicit val tagReads = Json.reads[Tag]
