@@ -54,10 +54,11 @@ object Tag {
     DB.withConnection { implicit connection =>
       SQL(
         """
-          insert into tag (en_text, de_text, it_text, fr_text, status, lastupdate) values (
-          {en_text}, {de_text}, {it_text}, {fr_text}, {status}, {lastupdate}
+          insert into tag (name, en_text, de_text, it_text, fr_text, status, lastupdate) values (
+          {name}, {en_text}, {de_text}, {it_text}, {fr_text}, {status}, {lastupdate}
           )
         """).on(
+          'name -> tag.name,
           'en_text -> tag.en_text,
           'de_text -> tag.de_text,
           'it_text -> tag.it_text,
@@ -75,7 +76,12 @@ object Tag {
 		  if (!oldtags.contains(tag.trim)) {
 		    alltags.find(_.name.equals(tag.trim)) match {
 					case Some(f) => TagRef.create(new TagRef(-1, f.id, id, status, null))
-					case None => Logger.warn(tag + ".. tag ignored! id=" + id)
+					case None => { 
+            // instead of ignoring the tag, we create it!
+            val newId = Tag.create(new Tag(-1, tag.trim, Some(tag.trim), Some(tag.trim), Some(null), Some(null), 0, new Date()))
+            Logger.warn("new tag created:" + tag + " with newId=" + newId)
+            TagRef.create(new TagRef(-1, newId.getOrElse(0), id, status, null))
+          }
 			  }
 			}
 		}
