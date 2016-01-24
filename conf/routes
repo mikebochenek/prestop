@@ -15,6 +15,9 @@ POST     /api/reservations/new       controllers.Reservations.create
 GET      /api/settings/:id           controllers.Settings.getByUser(id: Long)
 POST     /api/settings/update        controllers.Settings.updateUser
 
+GET      /api/tags                   controllers.Dishes.getTags
+POST     /api/invite                 controllers.Friends.invite
+
 GET      /api/restaurants            controllers.Restaurants.getAll
 POST     /api/restaurants/new        controllers.Restaurants.create
 GET      /api/dishes/:restId         controllers.Dishes.getAll(restId: Long)

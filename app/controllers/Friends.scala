@@ -37,4 +37,14 @@ object Friends extends Controller with Secured {
     }
   }
 
+  def invite() = IsAuthenticated { username =>
+    implicit request => {
+      val txt = (request.body.asJson.get \ "donetext")
+      val restId = (request.body.asJson.get \ "restaurantID")
+      val id = 13;
+      Logger.info("nothing has been created yet - " + txt.as[String] + " with id:" + id + " restaurantID:"+ restId.as[String].toLong)
+      Ok("ok")
+    }
+  }
+  
 }

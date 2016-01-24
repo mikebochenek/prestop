@@ -61,6 +61,13 @@ object Dishes extends Controller with Secured {
       Ok(Json.prettyPrint(Json.toJson(dishes.map(a => Json.toJson(a)))))
     }
   } 
+  
+  def getTags() = Action {
+    implicit request => {
+      val all = Tag.findAll()
+      Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
+    }
+  }
 
   def create() = IsAuthenticated { username =>
     implicit request => {
