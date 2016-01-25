@@ -152,5 +152,10 @@ CREATE TABLE IF NOT EXISTS `presto`.`tag` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
+-- below statements are not deployed to digitalocean yet --
+
+ALTER TABLE `presto`.`restaurant` ADD `email` VARCHAR( 45 );
+ALTER TABLE `presto`.`restaurant` ADD `phone` VARCHAR( 45 );
+
 exit;
 
