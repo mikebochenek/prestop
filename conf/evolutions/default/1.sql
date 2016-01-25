@@ -157,5 +157,18 @@ ENGINE = InnoDB;
 ALTER TABLE `presto`.`restaurant` ADD `email` VARCHAR( 45 );
 ALTER TABLE `presto`.`restaurant` ADD `phone` VARCHAR( 45 );
 
+CREATE TABLE IF NOT EXISTS `presto`.`maillog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `recipient` int(11) DEFAULT NULL,
+  `subject` text,
+  `content` text,
+  `createdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `maillog_recipient_idx` (`recipient`),
+  KEY `maillog_status_idx` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
 exit;
 
