@@ -18,7 +18,35 @@ import common.Haversine
 import models._
 import views._
 
-object Recommend extends Controller {
+object Recommend extends Controller with Secured  {
+  def test() = IsAuthenticated { username =>
+    implicit request => {
+      Logger.info("calling recommend test")
+      //val (id, longitude, latitude, jsonoptions, maxdistance, time) = testForm.bindFromRequest.get
+      //Logger.info("id")
+      Ok(views.html.test(testForm, null))
+    }
+  }
+
+  def testsubmit() = IsAuthenticated { username =>
+    implicit request => {
+      Logger.info("calling recommend test submit")
+      val (id, longitude, latitude, jsonoptions, maxdistance, time) = testForm.bindFromRequest.get
+      Logger.info("id: " + id)
+      val response = recommend(User.findByEmail(username), 0, 0)// longitude.toDouble, latitude.toDouble)
+      Ok(views.html.test(testForm, Json.prettyPrint(Json.toJson(response))))
+    }
+  }
+  
+  val testForm = Form(
+    tuple(
+      "id" -> text,
+      "longitude" -> text,
+      "latitude" -> text,
+      "jsonoptions" -> text,
+      "maxdistance" -> text,
+      "time" -> text))  
+  
   def get(id: Long, longitude: String, latitude: String, filter: String) = Action {
     implicit request => {
       Logger.info("calling Recommend.get with id:" + id + " longitude:" + longitude + " latitude:" + latitude + " filter:" + filter)

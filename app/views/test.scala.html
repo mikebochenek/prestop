@@ -1,0 +1,58 @@
+@(form: Form[(String,String,String,String,String,String)], resp: String)(implicit flash: Flash, session: Session, lang: Lang)
+
+@main(title = "settings") {
+
+<div class="container">
+
+    @helper.form(routes.Recommend.testsubmit) {
+
+  <div class="starter-template">
+    <h3>Recommend test</h3>
+
+      <div class="row ">
+        <div class="col-sm-8 col-md-offset-2">
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">ID</span>
+            <input class="form-control span4" type="text" name="id" id="id" value="">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Longitude</span>
+            <input class="form-control span4" type="text" name="longitude" id="longitude" value="">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Latitude</span>
+            <input class="form-control span4" type="text" name="latitude" id="latitude" value="">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">JSON</span>
+            <input class="form-control span4" type="text" name="jsonoptions" id="jsonoptions" value="">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Max distance</span>
+            <input class="form-control span4" type="text" name="maxdistance" id="maxdistance" value="">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Time</span>
+            <input class="form-control span4" type="text" name="time" id="time" value="">
+          </div>
+          
+          </br>
+                      
+          <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">test</button>
+          <button class="span4 btn btn-primary" type="reset" id="generalsavebutton">reset</button>
+        </div>
+      </div>
+	}      
+      
+      <h3>Output</h3>
+      
+      <pre>@resp</pre>
+
+
+      
+  </div>
+
+
+    </div><!-- /.container -->
+}

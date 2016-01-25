@@ -48,6 +48,7 @@
           <ul class="nav navbar-nav navbar-right">
           
 @session.get("email").map { user =>
+            <li><a href="/test">Test!</a></li>
             <li><a href="/reports">@Messages("menu.reports")</a></li>
             <li><a href="/settings">@Messages("menu.settings")</a></li>
             <li><a href="/logout">@Messages("menu.logout")</a></li>
