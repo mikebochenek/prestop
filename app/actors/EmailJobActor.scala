@@ -30,17 +30,17 @@ class EmailJobActor() extends Actor {
 
     val dateStr = prettySdf.format(new Date())
 
-    var html = "<html><body><h1>Done " + dateStr + "</h1>" + "<ul>"
+    var html = "<html><body><h1>Stats " + dateStr + "</h1>" + "<ul>"
 
 
     html += "</ul></body></html>"
 
-    val subject = "Done today: " + dateStr
+    val subject = "backend stats today: " + dateStr
 
     val mail = use[MailerPlugin].email
     mail.setSubject(subject)
     mail.setRecipient(user.email)
-    mail.setFrom("info@idone.ch")
+    mail.setFrom("info@bochenek.ch")
 
     Logger.info("about to send email to: " + user.email + " with " + html)
     if (isValid(user.email)) {

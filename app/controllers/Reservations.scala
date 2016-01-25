@@ -37,4 +37,15 @@ object Reservations extends Controller with Secured {
     }
   }
 
+  def update() = IsAuthenticated { username =>
+    implicit request => {
+      val txt = (request.body.asJson.get \ "donetext")
+      val restId = (request.body.asJson.get \ "restaurantID")
+      //val id = Dish.create(restId.as[String].toLong, 0.0, txt.as[String], 0, 0, 0, 0.0, 0);
+      val id = 13;
+      Logger.info("nothing has been created yet - " + txt.as[String] + " with id:" + id + " restaurantID:"+ restId.as[String].toLong)
+      Ok("ok")
+    }
+  }
+  
 }

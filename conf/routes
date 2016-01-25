@@ -17,6 +17,9 @@ POST     /api/settings/update        controllers.Settings.updateUser
 
 GET      /api/tags                   controllers.Dishes.getTags
 POST     /api/invite                 controllers.Friends.invite
+POST     /api/reservations/update    controllers.Reservations.update
+POST     /api/settings/uploadpic     controllers.Settings.uploadPhoto(id: Long)
+
 
 GET      /api/restaurants            controllers.Restaurants.getAll
 POST     /api/restaurants/new        controllers.Restaurants.create
