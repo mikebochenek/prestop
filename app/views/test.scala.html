@@ -18,11 +18,11 @@
           </div>
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Longitude</span>
-            <input class="form-control span4" type="text" name="longitude" id="longitude" value="">
+            <input class="form-control span4" type="text" placeholder="47.385740" name="longitude" id="longitude" value="">
           </div>
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Latitude</span>
-            <input class="form-control span4" type="text" name="latitude" id="latitude" value="">
+            <input class="form-control span4" type="text" placeholder="8.518084" name="latitude" id="latitude" value="">
           </div>
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">JSON</span>
@@ -44,10 +44,13 @@
         </div>
       </div>
 	}      
-      
+	
+@if(resp!=null) {
       <h3>Output</h3>
       
       <pre>@resp</pre>
+		}
+      
 
 
       

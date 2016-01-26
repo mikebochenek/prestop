@@ -21,9 +21,6 @@ import views._
 object Recommend extends Controller with Secured  {
   def test() = IsAuthenticated { username =>
     implicit request => {
-      Logger.info("calling recommend test")
-      //val (id, longitude, latitude, jsonoptions, maxdistance, time) = testForm.bindFromRequest.get
-      //Logger.info("id")
       Ok(views.html.test(testForm, null))
     }
   }
@@ -32,8 +29,7 @@ object Recommend extends Controller with Secured  {
     implicit request => {
       Logger.info("calling recommend test submit")
       val (id, longitude, latitude, jsonoptions, maxdistance, time) = testForm.bindFromRequest.get
-      Logger.info("id: " + id)
-      val response = recommend(User.findByEmail(username), 0, 0)// longitude.toDouble, latitude.toDouble)
+      val response = recommend(User.getFullUser(id.toLong), 47.385740, 8.518084)// longitude.toDouble, latitude.toDouble)
       Ok(views.html.test(testForm, Json.prettyPrint(Json.toJson(response))))
     }
   }
@@ -47,10 +43,11 @@ object Recommend extends Controller with Secured  {
       "maxdistance" -> text,
       "time" -> text))  
   
+      
   def get(id: Long, longitude: String, latitude: String, filter: String) = Action {
     implicit request => {
       Logger.info("calling Recommend.get with id:" + id + " longitude:" + longitude + " latitude:" + latitude + " filter:" + filter)
-      val user = null //TODO need something like User.findById(id)
+      val user = User.getFullUser(id)
       
       Ok(Json.prettyPrint(Json.toJson(recommend(user, longitude.toDouble, latitude.toDouble).dishes.map(a => Json.toJson(a)))))
     }
@@ -59,7 +56,7 @@ object Recommend extends Controller with Secured  {
   //47.385740, 8.518084 coordinates for Zurich Hardbrucke
   
   val maxdist = 50000 //TODO this should be more like .8
-  def recommend(user: User, longitude: Double, latitude: Double) = {
+  def recommend(user: UserFull, longitude: Double, latitude: Double) = {
     val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*)
     // http://stackoverflow.com/questions/2925041/how-to-convert-a-seqa-to-a-mapint-a-using-a-value-of-a-as-the-key-in-the-ma
     //TODO we can not iterate in a dumb for-loop because this would not scale
