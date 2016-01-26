@@ -25,7 +25,7 @@ class EmailSpec extends Specification {
       mail.setSubject("mailer test")
       mail.setRecipient("mike.bochenek@gmail.com")
       mail.setFrom("mike.bochenek@gmail.com")
-      mail.sendHtml("<html>html</html>")
+      //mail.sendHtml("<html>html</html>")
     }
     
    "check email job" in new WithApplication {

@@ -18,7 +18,7 @@ class IntegrationSpec extends Specification {
 
       browser.goTo("http://localhost:" + port)
 
-      browser.pageSource must contain("iDone")
+      browser.pageSource must contain("presto")
     }
   }
 }
