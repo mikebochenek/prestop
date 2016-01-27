@@ -17,7 +17,8 @@ import play.api.libs.functional.syntax._
 
 case class Restaurant(id: Long, name: String, city: String, address: String, longitude: Double, latitude: Double, 
     schedulecron: String, restype: Int, lastupdate: Date, status: Int, 
-    phoneNumber: String, email: String, var tags: Seq[String])
+    phone: Option[String], email: Option[String], postalcode: Option[String], state: Option[String], 
+    var tags: Seq[String], var cuisines: Seq[String])
 
 object Restaurant {
   val simple = {
@@ -30,9 +31,13 @@ object Restaurant {
       get[String]("restaurant.schedulecron") ~
       get[Int]("restaurant.restype") ~
       get[Date]("restaurant.lastupdate") ~
-      get[Int]("restaurant.status") map {
-        case id ~ name ~ city ~ address ~ longitude ~ latitude ~ schedulecron ~ restype ~ lastupdate ~ status => 
-          Restaurant(id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, null, null, Seq.empty[String])
+      get[Int]("restaurant.status") ~
+      get[Option[String]]("restaurant.phone") ~
+      get[Option[String]]("restaurant.email") ~
+      get[Option[String]]("restaurant.postalcode") ~
+      get[Option[String]]("restaurant.state") map {
+        case id ~ name ~ city ~ address ~ longitude ~ latitude ~ schedulecron ~ restype ~ lastupdate ~ status ~ phone ~ email ~ postalcode ~ state => 
+          Restaurant(id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state, Seq.empty[String], Seq.empty[String])
       }
   }
 
@@ -59,13 +64,15 @@ object Restaurant {
 
 
   def update(id: Long, name: String, city: String, address: String, longitude: Double, latitude: Double, 
-      scheduleCron: String, restype: Int, status: Int) = {
+      scheduleCron: String, restype: Int, status: Int, phone: String, email: String, postalcode: String, state: String) = {
     DB.withConnection { implicit connection =>
       SQL(
         """
          update restaurant set name = {name}, city = {city}, address = {address},
          longitude = {longitude}, latitude = {latitude}, schedulecron = {schedulecron}, 
-         restype = {restype}, lastupdate = {lastupdate}, status = {status} where id = {id}
+         restype = {restype}, lastupdate = {lastupdate}, status = {status},
+         phone = {phone}, email = {email}, postalcode = {postalcode}, state = {state} 
+         where id = {id}
         """).on(
           'id -> id,
           'name -> name,
@@ -75,6 +82,10 @@ object Restaurant {
           'latitude-> latitude,
           'schedulecron-> scheduleCron,
           'restype -> restype,
+          'phone -> phone,
+          'email -> email,
+          'postalcode -> postalcode,
+          'state -> state,
           'lastupdate -> new Date(),
           'status -> status).executeUpdate
     }
@@ -88,19 +99,19 @@ object Restaurant {
 
   def findById(username: String, id: Long): Seq[Restaurant] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status from restaurant where id = {id}").on(
+      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state from restaurant where id = {id}").on(
         'id -> id).as(Restaurant.simple *)
     }
   }
   
   def findAll(): Seq[Restaurant] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status from restaurant "
+      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state from restaurant "
           + " order by id asc").on().as(Restaurant.simple *)
     }
   }
   
-  implicit val teamReads = Json.reads[Restaurant]
-  implicit val teamWrites = Json.writes[Restaurant]
+  implicit val restaurantReads = Json.reads[Restaurant]
+  implicit val restaurantWrites = Json.writes[Restaurant]
 
 }

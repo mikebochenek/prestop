@@ -170,5 +170,10 @@ CREATE TABLE IF NOT EXISTS `presto`.`maillog` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+ALTER TABLE `presto`.`restaurant` ADD `postalcode` VARCHAR( 45 );
+ALTER TABLE `presto`.`restaurant` ADD `state` VARCHAR( 45 );
+
+
+
 exit;
 

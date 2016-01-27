@@ -55,7 +55,7 @@
             <input class="form-control span4" type="text" name="tags" id="tags" value="@tags">
           </div>
           
-          <div><u>possible tags:</u> @Tag.findAll.map(_.name).mkString(", ")</div>
+          <div><u>possible tags:</u> @Tag.findAll.filter(_.status == 11).map(_.name).mkString(", ")</div>
           
           </br>
                       

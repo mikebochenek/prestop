@@ -1,4 +1,4 @@
-@(form: Form[(String,String,String,String,String,String,String,String,String,String)], restaurant: Restaurant, url: String, tags: String)(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String,String,String,String,String,String,String,String,String,String)], restaurant: Restaurant, url: String, tags: String, cuisines: String)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -19,8 +19,13 @@
           </div>
 
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">City</span>
-            <input class="form-control span4" type="text" name="city" id="city" value="@restaurant.city">
+            <span class="input-group-addon" id="basic-addon1">Phone</span>
+            <input class="form-control span4" type="phone" name="phone" id="city" value="@restaurant.phone">
+          </div>
+                      
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Email</span>
+            <input class="form-control span4" type="text" name="email" id="email" value="@restaurant.email">
           </div>
                       
           <div class="input-group">
@@ -28,6 +33,21 @@
             <input class="form-control span4" type="text" name="address" id="address" value="@restaurant.address">
           </div>
           
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">City</span>
+            <input class="form-control span4" type="text" name="city" id="city" value="@restaurant.city">
+          </div>
+                      
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Postal Code</span>
+            <input class="form-control span4" type="text" name="postalcode" id="postalcode" value="@restaurant.postalcode">
+          </div>
+                      
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">State</span>
+            <input class="form-control span4" type="text" name="state" id="state" value="@restaurant.state">
+          </div>
+                      
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Longitude</span>
             <input class="form-control span4" type="text" name="longitude" id="longitude" value="@restaurant.longitude">
@@ -58,7 +78,14 @@
             <input class="form-control span4" type="text" name="tags" id="tags" value="@tags">
           </div>
           
-          <div><u>possible tags:</u> @Tag.findAll.map(_.name).mkString(", ")</div>
+          <div><u>possible tags:</u> @Tag.findAll.filter(_.status == 12).map(_.name).mkString(", ")</div>
+
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Cuisines</span>
+            <input class="form-control span4" type="text" name="cuisines" id="cuisines" value="@cuisines">
+          </div>
+          
+          <div><u>possible cuisines:</u> @Tag.findAll.filter(_.status == 21).map(_.name).mkString(", ")</div>
           
           </br>
                       
