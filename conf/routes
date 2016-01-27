@@ -19,6 +19,7 @@ GET      /api/tags                   controllers.Dishes.getTags
 POST     /api/invite                 controllers.Friends.invite
 POST     /api/reservations/update    controllers.Reservations.update
 POST     /api/settings/uploadpic     controllers.Settings.uploadPhoto(id: Long)
+GET      /api/cuisines               controllers.Settings.cuisines
 
 
 GET      /api/restaurants            controllers.Restaurants.getAll

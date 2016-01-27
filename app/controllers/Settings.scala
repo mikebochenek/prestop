@@ -147,4 +147,12 @@ object Settings extends Controller with Secured {
         "error" -> "Missing file")
     }
   } 
+  
+  def cuisines() = Action { 
+    implicit request => {
+      Logger.info("calling get cuisines")
+      val all = Tag.findAll().filter(_.status == 21)
+      Ok(Json.prettyPrint(Json.toJson(all)))
+    }
+  } 
 }
