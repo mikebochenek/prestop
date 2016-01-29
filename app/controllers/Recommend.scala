@@ -15,6 +15,7 @@ import play.api.libs.json.JsString
 import play.api.libs.json._
 
 import common.Haversine
+import common.Recommendation
 import models._
 import views._
 
@@ -29,7 +30,7 @@ object Recommend extends Controller with Secured  {
     implicit request => {
       Logger.info("calling recommend test submit")
       val (id, longitude, latitude, jsonoptions, maxdistance, time) = testForm.bindFromRequest.get
-      val response = recommend(User.getFullUser(id.toLong), 47.385740, 8.518084)// longitude.toDouble, latitude.toDouble)
+      val response = Recommendation.recommend(User.getFullUser(id.toLong), 47.385740, 8.518084)// longitude.toDouble, latitude.toDouble)
       Ok(views.html.test(testForm, Json.prettyPrint(Json.toJson(response))))
     }
   }
@@ -49,40 +50,7 @@ object Recommend extends Controller with Secured  {
       Logger.info("calling Recommend.get with id:" + id + " longitude:" + longitude + " latitude:" + latitude + " filter:" + filter)
       val user = User.getFullUser(id)
       
-      Ok(Json.prettyPrint(Json.toJson(recommend(user, longitude.toDouble, latitude.toDouble).dishes.map(a => Json.toJson(a)))))
-    }
-  }
-  
-  //47.385740, 8.518084 coordinates for Zurich Hardbrucke
-  
-  val maxdist = 50000 //TODO this should be more like .8
-  def recommend(user: UserFull, longitude: Double, latitude: Double) = {
-    val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*)
-    // http://stackoverflow.com/questions/2925041/how-to-convert-a-seqa-to-a-mapint-a-using-a-value-of-a-as-the-key-in-the-ma
-    //TODO we can not iterate in a dumb for-loop because this would not scale
-    //TODO ideally, we would read the restaurants only once in a while..
-    
-    val priceMin = 0
-    val priceMax = Double.MaxValue
-    
-    val dishes = Dish.findAll().filter { x => within(maxdist, restaurants, x.restaurant_id, longitude, latitude) }
-      //.filter {x => (priceMax >= x.price && priceMin >= x.price) }    
-    
-    for (dish <- dishes) {
-      dish.url = Image.findByDish(dish.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
-      dish.distance = Haversine.haversine(restaurants.get(dish.restaurant_id).head.latitude, 
-          restaurants.get(dish.restaurant_id).head.longitude, longitude, latitude)
-      dish.tags = Tag.findByRef(dish.id, 11).map(_.name)
-    }
-    val r = new Recommendations(dishes);
-    r
-  }
-  
-  def within(max: Double, restaurants: Map[Long, Restaurant], id: Long, longitude: Double, latitude: Double) = {
-    // http://www.cis.upenn.edu/~matuszek/cis554-2011/Pages/scalas-option-type.html
-    restaurants.get(id) match {
-      case Some(f) => Haversine.haversine(f.latitude, f.longitude, longitude, latitude) < max
-      case None => false
+      Ok(Json.prettyPrint(Json.toJson(Recommendation.recommend(user, longitude.toDouble, latitude.toDouble).dishes.map(a => Json.toJson(a)))))
     }
   }
 }
