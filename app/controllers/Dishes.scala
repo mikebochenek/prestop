@@ -34,9 +34,6 @@ object Dishes extends Controller with Secured {
       "id" -> text,
       "price" -> text,
       "name" -> text,
-      "vegetarian" -> text,
-      "gluton" -> text,
-      "diary" -> text,
       "greenscore" -> text,
       "restaurant_id" -> text,
       "status" -> text,
@@ -44,8 +41,8 @@ object Dishes extends Controller with Secured {
       
   def save = IsAuthenticated { username =>
     implicit request =>  
-      val (id, price, name, vegetarian, gluton, diary, greenscore, restaurant_id, status, tags) = dishForm.bindFromRequest.get
-      Dish.update(id.toLong, price.toDouble, name, vegetarian.toInt, gluton.toInt, diary.toInt, greenscore.toDouble, status.toInt)
+      val (id, price, name, greenscore, restaurant_id, status, tags) = dishForm.bindFromRequest.get
+      Dish.update(id.toLong, price.toDouble, name, greenscore.toDouble, status.toInt)
       Tag.updateTags(id.toLong, tags, 11)
       Logger.info("calling restaurant update for id:" + id + " price:" + price + " name:" + name + " tags:" + tags)
       Redirect(routes.Dishes.getById(id.toLong))
@@ -73,7 +70,7 @@ object Dishes extends Controller with Secured {
     implicit request => {
       val txt = (request.body.asJson.get \ "donetext")
       val restId = (request.body.asJson.get \ "restaurantID")
-      val id = Dish.create(restId.as[String].toLong, 0.0, txt.as[String], 0, 0, 0, 0.0, 0);
+      val id = Dish.create(restId.as[String].toLong, 0.0, txt.as[String], 0.0, 0);
       Logger.info("dish created with " + txt.as[String] + " with id:" + id + " restaurantID:"+ restId.as[String].toLong)
       Ok("ok")
     }

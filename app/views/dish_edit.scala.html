@@ -1,4 +1,4 @@
-@(form: Form[(String,String,String,String,String,String,String,String,String,String)], dish: Dish, url: String, tags: String)(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String,String)], dish: Dish, url: String, tags: String)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -21,21 +21,6 @@
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Price</span>
             <input class="form-control span4" type="text" name="price" id="price" value="@dish.price">
-          </div>
-          
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Vegetarian</span>
-            <input class="form-control span4" type="text" name="vegetarian" id="vegetarian" value="@dish.vegetarian">
-          </div>
-          
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Gluten</span>
-            <input class="form-control span4" type="text" name="gluton" id="gluton" value="@dish.gluten">
-          </div>
-          
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Diary</span>
-            <input class="form-control span4" type="text" name="diary" id="diary" value="@dish.diary">
           </div>
           
           <div class="input-group">
