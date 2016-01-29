@@ -19,7 +19,6 @@ import play.api.mvc.Session
 // http://stackoverflow.com/questions/23525022/play-2-2-for-scala-modifying-acceptlanguage-http-request-header-with-scalainte
 object LangFromSubdomain extends Filter {
   def apply(next: (RequestHeader) => Future[SimpleResult])(request: RequestHeader): Future[SimpleResult] = {
-
     val acceptLang = request.headers.get(HeaderNames.ACCEPT_LANGUAGE)
     if (acceptLang.isDefined) {
       val subdomainLanguage = acceptLang.get
@@ -37,13 +36,30 @@ object LangFromSubdomain extends Filter {
     } else {
       next(request)
     }
+    
   }
 }
+
+object LoggingFilter extends Filter {
+  def apply(nextFilter: (RequestHeader) => Future[SimpleResult])
+           (requestHeader: RequestHeader): Future[SimpleResult] = {
+    val startTime = System.currentTimeMillis
+    nextFilter(requestHeader).map { result =>
+      val endTime = System.currentTimeMillis
+      val requestTime = endTime - startTime
+      if (result.header.status != 304) {
+      Logger.info(s"LoggingFilter ${requestHeader.method} ${requestHeader.uri} " +
+        s"took ${requestTime}ms and returned ${result.header.status} remote-address=${requestHeader.remoteAddress}")
+      }
+      result.withHeaders("Request-Time" -> requestTime.toString)
+    }
+  }
+} /* from https://www.playframework.com/documentation/2.2.3/ScalaHttpFilters */
 
 /**
  * Application global object, used here to schedule jobs on application start-up.
  */
-object Global extends WithFilters(LangFromSubdomain) {
+object Global extends WithFilters(LangFromSubdomain, LoggingFilter) {
 
   override def onStart(application: play.api.Application) {
 
