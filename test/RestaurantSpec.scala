@@ -17,7 +17,7 @@ class RestaurantSpec extends Specification {
     }
 
     "update restaurant entry" in new WithApplication {
-      val id = Restaurant.update(1, "burgers", "zurich", "kapstr 4", 32.4, -13.42, "xes", 13, 1);
+      val id = Restaurant.update(2, "burgers", "zurich", "kapstr 4", 32.4, -13.42, "xes", 13, 1, "123", "tat", null, null);
       println ("updating existing restaurant with id:" + id)
     }
 
