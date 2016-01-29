@@ -26,17 +26,29 @@ object Friends extends Controller with Secured {
     }
   } 
 
-  def create() = IsAuthenticated { username =>
+  def create() = Action {
     implicit request => {
-      val txt = (request.body.asJson.get \ "donetext")
-      val restId = (request.body.asJson.get \ "restaurantID")
-      //val id = Dish.create(restId.as[String].toLong, 0.0, txt.as[String], 0, 0, 0, 0.0, 0);
-      val id = 13;
-      Logger.info("nothing has been created yet - " + txt.as[String] + " with id:" + id + " restaurantID:"+ restId.as[String].toLong)
+      val user_id = (request.body.asJson.get \ "user_id").as[String].toLong
+      val friend_user_id = (request.body.asJson.get \ "friend_user_id").as[String].toLong
+      val status = (request.body.asJson.get \ "status").as[String].toInt
+      val id = Friend.create(user_id, friend_user_id, status)
+      Logger.info("Create Friend endity with id: " + id.get + " user_id: " + user_id)
       Ok("ok")
     }
   }
 
+  def update() = Action {
+    implicit request => {
+      val id = (request.body.asJson.get \ "id").as[String].toLong
+      val user_id = (request.body.asJson.get \ "user_id").as[String].toLong
+      val friend_user_id = (request.body.asJson.get \ "friend_user_id").as[String].toLong
+      val status = (request.body.asJson.get \ "status").as[String].toInt
+      Friend.update(id, user_id, friend_user_id, status)
+      Logger.info("Update Friend entity with id: " + id + " user_id: " + user_id)
+      Ok("ok")
+    }
+  }
+  
   def invite() = IsAuthenticated { username =>
     implicit request => {
       val txt = (request.body.asJson.get \ "donetext")

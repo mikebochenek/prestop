@@ -9,6 +9,7 @@ GET      /api/recommend/:id,:longitude,:latitude,:filter    controllers.Recommen
 GET      /api/restaurant/:id         controllers.Restaurants.getById(id: Long)
 GET      /api/friends/:id            controllers.Friends.getByUser(id: Long)
 POST     /api/friends/new            controllers.Friends.create
+POST     /api/friends/update         controllers.Friends.update
 GET      /api/activities/:id         controllers.Activities.getByUser(id: Long)
 GET      /api/reservations/:id       controllers.Reservations.getByUser(id: Long)
 POST     /api/reservations/new       controllers.Reservations.create

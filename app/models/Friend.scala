@@ -43,6 +43,21 @@ object Friend {
           'friend_user_id -> friend_user_id).executeInsert()
     }
   }
+
+  def update(id: Long, user_id: Long, friend_user_id: Long, status: Int) = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          update friend set user_id = {user_id}, friend_user_id = {friend_user_id}, 
+          status = {status}, lastupdate = {lastupdate} where id = {id}
+        """).on(
+          'user_id -> user_id,
+          'lastupdate-> new Date(),
+          'status -> status,
+          'id -> id,
+          'friend_user_id -> friend_user_id).executeUpdate()
+    }
+  }
   
   def countAll(): Long = {
     DB.withConnection { implicit connection =>
