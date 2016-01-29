@@ -86,6 +86,13 @@ object Friend {
     }
   }  
 
+  def findAllFriends(friend_user_id: Long): Seq[Friend] = {
+    DB.withConnection { implicit connection =>
+      SQL("select user_id, friend_user_id, id, status, lastupdate from friend where friend_user_id = {friend_user_id}"
+          + " order by id asc").on('friend_user_id-> friend_user_id).as(Friend.simple *)
+    }
+  }  
+  
   implicit val friendReads = Json.reads[Friend]
   implicit val friendWrites = Json.writes[Friend]
 

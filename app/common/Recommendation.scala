@@ -27,8 +27,8 @@ object Recommendation {
     val priceMax = 40.0
     
     val dishes = Dish.findAll()
-      .filter { x => within(maxdist, restaurants, x.restaurant_id, longitude, latitude) }
-      .filter { x => (priceMax >= x.price && priceMin <= x.price) }    
+      .filter { x => within(maxdist, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
+      .filter { x => (priceMax >= x.price && priceMin <= x.price) } // filter by price
     
     for (dish <- dishes) {
       dish.url = Image.findByDish(dish.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
@@ -40,6 +40,9 @@ object Recommendation {
     r
   }
   
+  /**
+   * check if restaurant location is within the maximum specified distance
+   */
   def within(max: Double, restaurants: Map[Long, Restaurant], id: Long, longitude: Double, latitude: Double) = {
     // http://www.cis.upenn.edu/~matuszek/cis554-2011/Pages/scalas-option-type.html
     restaurants.get(id) match {
@@ -50,4 +53,9 @@ object Recommendation {
       case None => false
     }
   }  
+  
+  /**
+   * check if the restaurant is open
+   * (but how to handle situations when someone is booking a restaurant for next Friday?)
+   */
 }

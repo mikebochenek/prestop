@@ -22,8 +22,9 @@ POST     /api/reservations/update    controllers.Reservations.update
 POST     /api/settings/uploadpic     controllers.Settings.uploadPhoto(id: Long)
 GET      /api/cuisines               controllers.Settings.cuisines
 
+GET      /api/userprofile/:id        controllers.Friends.getUserProfile(id: Long)
 
-POST      /api/activities/create         controllers.Activities.create
+POST     /api/activities/create      controllers.Activities.create
 
 
 GET      /api/restaurants            controllers.Restaurants.getAll

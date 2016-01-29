@@ -38,6 +38,8 @@ case class UserFull(id: Long, createdate: Date, lastlogindate: Option[Date], del
     var password: String, settings: String, email: String, username: String, ttype: String,
     openidtoken: String)
 
+case class UserProfile(id: Long, email: String, username: String, 
+    var following: Int, var followers: Int, var likes: Int, var reservations: Int, var profileImageURL: String)
 
 object User {
 
@@ -190,6 +192,11 @@ object User {
     val ha = new sun.misc.BASE64Encoder().encode(md.digest((str + "x5a.63uwx").getBytes))
     ha.toString()
   }
+}
+
+object UserProfile {
+  implicit val userProfileReads = Json.reads[UserProfile]
+  implicit val userProfileWrites = Json.writes[UserProfile]
 }
 
 object UserFull {
