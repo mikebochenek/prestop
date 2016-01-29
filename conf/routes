@@ -22,6 +22,9 @@ POST     /api/settings/uploadpic     controllers.Settings.uploadPhoto(id: Long)
 GET      /api/cuisines               controllers.Settings.cuisines
 
 
+POST      /api/activities/create         controllers.Activities.create
+
+
 GET      /api/restaurants            controllers.Restaurants.getAll
 POST     /api/restaurants/new        controllers.Restaurants.create
 GET      /api/dishes/:restId         controllers.Dishes.getAll(restId: Long)

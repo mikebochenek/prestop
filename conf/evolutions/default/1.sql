@@ -152,8 +152,6 @@ CREATE TABLE IF NOT EXISTS `presto`.`tag` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
--- below statements are not updated in the mysql DB model 
-
 ALTER TABLE `presto`.`restaurant` ADD `email` VARCHAR( 45 );
 ALTER TABLE `presto`.`restaurant` ADD `phone` VARCHAR( 45 );
 
@@ -169,8 +167,6 @@ CREATE TABLE IF NOT EXISTS `presto`.`maillog` (
   KEY `maillog_status_idx` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- below statements are not deployed to digitalocean yet --
-
 ALTER TABLE `presto`.`restaurant` ADD `postalcode` VARCHAR( 45 );
 ALTER TABLE `presto`.`restaurant` ADD `state` VARCHAR( 45 );
 
@@ -178,6 +174,7 @@ ALTER TABLE `presto`.`dish` DROP COLUMN gluton;
 ALTER TABLE `presto`.`dish` DROP COLUMN diary;
 ALTER TABLE `presto`.`dish` DROP COLUMN vegetarian;
 
+update user set type = 7;
 
 exit;
 

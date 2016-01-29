@@ -26,13 +26,14 @@ object Activities extends Controller with Secured {
     }
   } 
 
-  def create() = IsAuthenticated { username =>
+  def create() = Action {
     implicit request => {
-      val txt = (request.body.asJson.get \ "donetext")
-      val restId = (request.body.asJson.get \ "restaurantID")
-      //val id = Dish.create(restId.as[String].toLong, 0.0, txt.as[String], 0, 0, 0, 0.0, 0);
-      val id = 13;
-      Logger.info("nothing has been created yet - " + txt.as[String] + " with id:" + id + " restaurantID:"+ restId.as[String].toLong)
+      val user_id = (request.body.asJson.get \ "user_id")
+      val activity_type = (request.body.asJson.get \ "activity_type")
+      val activity_subtype = (request.body.asJson.get \ "activity_subtype")
+      val activity_details = (request.body.asJson.get \ "activity_details")
+      val id = ActivityLog.create(user_id.as[String].toLong, activity_type.as[String].toLong, activity_subtype.as[String].toLong, activity_details.as[String])
+      Logger.info("ActivityLog created - id: "+ id.get + " type:" + activity_type.as[String] + " subtype: " + activity_subtype.as[String] +  " user: " + user_id.as[String])
       Ok("ok")
     }
   }
