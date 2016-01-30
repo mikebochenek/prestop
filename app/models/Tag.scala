@@ -75,12 +75,12 @@ object Tag {
     
     // add new tags 
 		for (tag <- tagsArray) {
-		  if (!oldtags.contains(tag.trim) && tag.trim.length > 0) {
-		    alltags.find(_.name.equals(tag.trim)) match {
+		  if (!oldtags.contains(tag.trim.toLowerCase) && tag.trim.length > 0) {
+		    alltags.find(_.name.equals(tag.trim.toLowerCase)) match {
 					case Some(f) => TagRef.create(new TagRef(-1, f.id, id, status, null))
 					case None => { 
             // instead of ignoring the tag, we create it!
-            val newId = Tag.create(new Tag(-1, tag.trim, Some(tag.trim), Some(tag.trim), Some(null), Some(null), status, new Date()))
+            val newId = Tag.create(new Tag(-1, tag.trim.toLowerCase, Some(tag.trim.toLowerCase), Some(tag.trim.toLowerCase), Some(null), Some(null), status, new Date()))
             Logger.warn("new tag created:" + tag + " with newId=" + newId)
             TagRef.create(new TagRef(-1, newId.getOrElse(0), id, status, null))
           }
@@ -90,7 +90,7 @@ object Tag {
     
     // we should also remove tags which are not there anymore
     for (tag <- oldtags) {
-      if (!tags.contains(tag.trim)) { // NB tagsArray is messy because sometimes it has blanks, and sometimes not
+      if (!tags.contains(tag.trim.toLowerCase)) { // NB tagsArray is messy because sometimes it has blanks, and sometimes not
         val tagid = Tag.findAll().find(_.name.equals(tag)).getOrElse(null).id
         TagRef.deletesoftly(tagid, id)
       }
