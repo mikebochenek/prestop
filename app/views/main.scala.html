@@ -41,6 +41,7 @@
           <ul class="nav navbar-nav">
 @session.get("email").map { user =>
             <li><a href="/restaurant">Restaurant Editor</a></li>
+            <li><a href="/tageditor">Tag Editor</a></li>
 }          
             <li><a href="/about">@Messages("menu.about")</a></li>
             <li><a href="/contact">@Messages("menu.contact")</a></li>

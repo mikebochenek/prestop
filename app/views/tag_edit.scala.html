@@ -1,0 +1,48 @@
+@(form: Form[(String,String,String,String,String,String)], tag: Tag)(implicit flash: Flash, session: Session, lang: Lang)
+
+@main(title = "settings") {
+
+<div class="container">
+
+    @helper.form(routes.TagEditor.save) {
+
+  <div class="starter-template">
+    <h3>Tag Info</h3>
+
+      <div class="row ">
+        <div class="col-sm-8 col-md-offset-2">
+          <input class="hidden form-control span4" type="text" name="id" id="id" value="@tag.id">
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Name</span>
+            <input class="form-control span4" type="text" name="name" id="name" value="@tag.name">
+          </div>
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">English</span>
+            <input class="form-control span4" type="text" name="en_text" id="en_text" value="@tag.en_text">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">German</span>
+            <input class="form-control span4" type="text" name="de_text" id="de_text" value="@tag.de_text">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Italian</span>
+            <input class="form-control span4" type="text" name="it_text" id="it_text" value="@tag.it_text">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">French</span>
+            <input class="form-control span4" type="text" name="fr_text" id="fr_text" value="@tag.fr_text">
+          </div>
+                      
+          <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">@Messages("save")</button>
+          <button class="span4 btn btn-primary" type="reset" id="generalsavebutton">reset</button>
+        </div>
+      </div>
+	}      
+      
+  </div>
+
+
+    </div><!-- /.container -->
+}

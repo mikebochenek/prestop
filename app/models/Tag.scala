@@ -45,7 +45,7 @@ object Tag {
   def findAll(): Seq[Tag] = {
     DB.withConnection { implicit connection =>
       SQL("""select t.id, t.name, t.en_text, t.de_text, t.it_text, t.fr_text, t.status, t.lastupdate 
-             from tag t 
+             from tag t order by t.name 
           """).on().as(Tag.simple *)
     }
   }
@@ -68,6 +68,23 @@ object Tag {
     }
   }
 
+  def update(id: Int, name: String, en: String, de: String, it: String, fr: String) = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+         update tag set name = {name}, en_text = {en_text}, de_text = {de_text},
+         it_text = {it_text}, fr_text = {fr_text} where 
+         id = {id} 
+        """).on(
+          'id -> id,
+          'name -> name,
+          'en_text -> en,
+          'de_text -> de,
+          'it_text -> it,
+          'fr_text -> fr).executeUpdate
+    }
+  }  
+  
   def updateTags(id: Long, tags: String, status: Int) = {
 	  val tagsArray = tags.split(",")
 		val oldtags = Tag.findByRef(id.toLong, status).map(_.name)

@@ -1,0 +1,21 @@
+@(tags: Seq[Tag])(implicit session: Session, lang: Lang)
+@main(title = "reports") {
+    <div class="container">
+
+      <div class="starter-template">
+      	<h1>All @tags.size tags</h1>
+      	<table class="table table-striped">
+		@for((tag, index) <- tags.zipWithIndex)  {	
+		  <tr>
+		  <td><a href="tagedit/@tag.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @tag.name</td>
+		  <td>@tag.en_text</td>
+		  <td>@tag.de_text</td>
+		  <td>@tag.it_text</td>
+		  <td>@tag.fr_text</td>
+		  </tr>
+		}
+		</table>
+      </div>
+
+    </div><!-- /.container -->
+}
