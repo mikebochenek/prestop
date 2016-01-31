@@ -119,13 +119,22 @@ object Settings extends Controller with Secured {
     }
   } 
 
+  def createUser() = Action {
+    implicit request => {
+      val email = (request.body.asJson.get \ "email").as[String]
+      val username = (request.body.asJson.get \ "username").as[String]
+      val id = User.create(email, null, null)
+      Ok("ok")
+    }
+  }
+  
   def updateUser() = Action {
     implicit request => {
-      val txt = (request.body.asJson.get \ "txt")
-      val restId = (request.body.asJson.get \ "restaurantID")
-      //val id = Dish.create(restId.as[String].toLong, 0.0, txt.as[String], 0, 0, 0, 0.0, 0);
-      val id = 13;
-      Logger.info("nothing has been created yet - " + txt.as[String] + " with id:" + id)
+      val email = (request.body.asJson.get \ "email").as[String]
+      val username = (request.body.asJson.get \ "username")
+      val id = 13; 
+      User.update(null, email, null) // TODO
+      Logger.info("TODO:  nothing has been created yet - " + email + " with id:" + id)
       Ok("ok")
     }
   }
