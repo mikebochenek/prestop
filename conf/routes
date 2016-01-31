@@ -32,6 +32,9 @@ POST     /api/restaurants/new        controllers.Restaurants.create
 GET      /api/dishes/:restId         controllers.Dishes.getAll(restId: Long)
 POST     /api/dishes/new             controllers.Dishes.create
 
+POST     /api/user/new               controllers.Settings.createUser
+
+
 GET      /dishedit/:id              controllers.Dishes.getById(id: Long)
 POST     /dishedit                  controllers.Dishes.save
 POST	 /dish						controllers.Dishes.upload(id: Long)
