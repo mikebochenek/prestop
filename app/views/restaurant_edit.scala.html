@@ -79,6 +79,7 @@
           </div>
           
           <div><u>possible tags:</u> @Tag.findAll.filter(_.status == 12).map(_.name).mkString(", ")</div>
+          <script>var availableTags = @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 12).map(_.name)).toString) ;</script>
 
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Cuisines</span>

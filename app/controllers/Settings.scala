@@ -124,6 +124,7 @@ object Settings extends Controller with Secured {
       val email = (request.body.asJson.get \ "email").as[String]
       val username = (request.body.asJson.get \ "username").as[String]
       val id = User.create(email, null, null)
+      Logger.info("create user - id: " + id)
       Ok("ok")
     }
   }
