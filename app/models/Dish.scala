@@ -81,14 +81,14 @@ object Dish {
   
   def findAll(): Seq[Dish] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, restaurant_id, price, name, greenscore, lastupdate, status from dish "
+      SQL("select id, restaurant_id, price, name, greenscore, lastupdate, status from dish  where status >= 0 "
           + " order by id asc").on().as(Dish.simple *)
     }
   }
   
   def findAll(restaurant: Long): Seq[Dish] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, restaurant_id, price, name, greenscore, lastupdate, status from dish where restaurant_id = {restaurant_id}"
+      SQL("select id, restaurant_id, price, name, greenscore, lastupdate, status from dish where status >= 0 and restaurant_id = {restaurant_id}"
           + " order by id asc").on('restaurant_id -> restaurant).as(Dish.simple *)
     }
   }  

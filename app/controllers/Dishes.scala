@@ -56,6 +56,7 @@ object Dishes extends Controller with Secured {
       val dishes = Dish.findAll(restId)
       for (dish <- dishes) {      
         dish.tags = Tag.findByRef(dish.id, 11).map(_.name)
+        dish.url = Image.findByDish(dish.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       }
 
       Ok(Json.prettyPrint(Json.toJson(dishes.map(a => Json.toJson(a)))))
