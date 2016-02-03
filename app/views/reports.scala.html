@@ -5,7 +5,7 @@
     <div class="container">
 
       <div class="starter-template">
-      	<h3>Restaurants</h3>
+      	<h3>Restaurants (@restaurants.size)</h3>
       	<table class="table table-striped">
       	@for((restaurant, index) <- restaurants.zipWithIndex)  {	
 		  <tr>
@@ -17,7 +17,7 @@
 		  }
 		</table>
 		
-      	<h3>Dishes</h3>
+      	<h3>Dishes (@dishes.size)</h3>
       	<table class="table table-striped">
       	@for((dish, index) <- dishes.zipWithIndex)  {	
 		  <tr>
@@ -30,7 +30,7 @@
 		  }
 		</table>
 
-      	<h3>Users</h3>
+      	<h3>Users (@users.size)</h3>
       	<table class="table table-striped">
       	@for((user, index) <- users.zipWithIndex)  {	
 		  <tr>
@@ -42,7 +42,7 @@
 		  }
 		</table>
 
-      	<h3>Friends</h3>
+      	<h3>Friends (@friends.size)</h3>
       	<table class="table table-striped">
       	@for((friend, index) <- friends.zipWithIndex)  {	
 		  <tr>
@@ -55,7 +55,7 @@
 		  }
 		</table>
 
-      	<h3>Reservations</h3>
+      	<h3>Reservations (@reservations.size)</h3>
       	<table class="table table-striped">
       	@for((reservation, index) <- reservations.zipWithIndex)  {	
 		  <tr>
@@ -72,7 +72,7 @@
 		  }
 		</table>
 
-      	<h3>Activities</h3>
+      	<h3>Activities (@activities.size)</h3>
       	<table class="table table-striped">
       	@for((activity, index) <- activities.zipWithIndex)  {	
 		  <tr>
@@ -87,14 +87,14 @@
 		  }
 		</table>
 
-      	<h3>Images</h3>
+      	<h3>Images (@images.size)</h3>
       	<table class="table table-striped">
       	@for((image, index) <- images.zipWithIndex)  {	
 		  <tr>
 		  <td>@index</td>
 		  <td>@image.id</td>
 		  <td>@image.filename</td>
-		  <td>@image.url</td>
+		  <td><a href="@image.url">@image.url</a></td>
 		  <td>@image.restaurant_id</td>
 		  <td>@image.dish_id</td>
 		  <td>@image.lastupdate.format("dd MMM YYYY HH:MM")</td>
