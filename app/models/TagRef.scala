@@ -35,6 +35,14 @@ object TagRef {
     }
   }
 
+  def findByTag(tagid: Long): Seq[TagRef] = {
+    DB.withConnection { implicit connection =>
+      SQL("select id, tagid, refid, status, lastupdate from tagref where status > 0 and tagid = {tagid}").on(
+        'tagid -> tagid).as(TagRef.simple *)
+    }
+  }
+
+
   def deletesoftly(tagid: Long, refid: Long) = {
     DB.withConnection { implicit connection =>
       SQL("update tagref set status = -1 where refid = {refid} and tagid = {tagid}").on(

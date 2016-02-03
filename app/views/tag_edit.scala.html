@@ -1,4 +1,4 @@
-@(form: Form[(String,String,String,String,String,String)], tag: Tag)(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String)], tag: Tag, size: Int)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -34,6 +34,12 @@
             <span class="input-group-addon" id="basic-addon1">French</span>
             <input class="form-control span4" type="text" name="fr_text" id="fr_text" value="@tag.fr_text">
           </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">number of assignments</span>
+            <input class="form-control span4" type="text" name="numa" id="numa" value="@size" readonly>
+          </div>
+          
+          <br>
                       
           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">@Messages("save")</button>
           <button class="span4 btn btn-primary" type="reset" id="generalsavebutton">reset</button>

@@ -28,7 +28,7 @@ object TagEditor extends Controller with Secured {
     implicit request => {
       Logger.info("calling Tag edit - for id:" + id)
       val tag = Tag.findAll.filter { _.id == id }.head
-      Ok(views.html.tag_edit(tagForm, tag))
+      Ok(views.html.tag_edit(tagForm, tag, TagRef.findByTag(tag.id).size))
     }
   } 
   
