@@ -30,7 +30,7 @@ object Recommend extends Controller with Secured  {
     implicit request => {
       Logger.info("calling recommend test submit")
       val (id, longitude, latitude, jsonoptions, maxdistance, time) = testForm.bindFromRequest.get
-      val response = Recommendation.recommend(User.getFullUser(id.toLong), 47.385740, 8.518084)// longitude.toDouble, latitude.toDouble)
+      val response = Recommendation.recommend(User.getFullUser(id.toLong), 47.385740, 8.518084, null)// longitude.toDouble, latitude.toDouble)
       Ok(views.html.test(testForm, Json.prettyPrint(Json.toJson(response))))
     }
   }
@@ -50,7 +50,7 @@ object Recommend extends Controller with Secured  {
       Logger.info("calling Recommend.get with id:" + id + " longitude:" + longitude + " latitude:" + latitude + " filter:" + filter)
       val user = User.getFullUser(id)
       
-      val json = Json.prettyPrint(Json.toJson(Recommendation.recommend(user, longitude.toDouble, latitude.toDouble).dishes.map(a => Json.toJson(a))))
+      val json = Json.prettyPrint(Json.toJson(Recommendation.recommend(user, longitude.toDouble, latitude.toDouble, filter).dishes.map(a => Json.toJson(a))))
       ActivityLog.create(user.id, 7, 1, json)
       Ok(json)
     }
