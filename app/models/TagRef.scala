@@ -28,6 +28,12 @@ object TagRef {
       }
   }
 
+  def findAll(): Seq[TagRef] = {
+    DB.withConnection { implicit connection =>
+      SQL("select id, tagid, refid, status, lastupdate from tagref ").as(TagRef.simple *)
+    }
+  }
+
   def findByRef(refid: Long): Seq[TagRef] = {
     DB.withConnection { implicit connection =>
       SQL("select id, tagid, refid, status, lastupdate from tagref where status > 0 and refid = {refid}").on(
