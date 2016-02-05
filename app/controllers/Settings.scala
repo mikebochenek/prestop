@@ -29,7 +29,7 @@ object Settings extends Controller with Secured {
       val subdomainLanguage = request.headers.get(HeaderNames.ACCEPT_LANGUAGE).get/*.substring(0,2)*/
       Logger.debug(" language from request:" + subdomainLanguage)
 
-      var userSettings = new UserSettings(fullUser.id, "en_US", false, "")
+      var userSettings = new UserSettings(fullUser.id, "en_US", false, "", Seq.empty[Tag])
       if (fullUser.settings != null) {
         userSettings = Json.parse(fullUser.settings).validate[UserSettings].get 
         Logger.debug("parse ----->" + userSettings)
@@ -55,14 +55,22 @@ object Settings extends Controller with Secured {
       Logger.debug("email:" + email + " language:" + language)
 
       val fullUser = User.getFullUser(username)
+      
+      if (fullUser.settings == null || !additionalsettings.equals(fullUser.settings)) {
+        Logger.debug("additionalsettings different from what we have in the DB: " + additionalsettings)
+        User.update(fullUser, email, additionalsettings)
+      }
 
-      if (fullUser.settings == null || language != Json.parse(fullUser.settings) \ "language") {
-        Logger.debug("yes, we will save the language:" + language)
+      if (fullUser.settings != null) {
+        val previousSettings = Json.parse(fullUser.settings).validate[UserSettings].get 
+        if (!language.equals(previousSettings.language)) {
+          Logger.debug("yes, we will save the language:" + language + "  was:" + previousSettings.language)
 
-        val userSettings = new UserSettings(fullUser.id, language, false, "")
-        val settingsJson = Json.toJson(userSettings).toString
-        Logger.debug(settingsJson)
-        User.update(fullUser, email, settingsJson)
+          previousSettings.language = language
+          val settingsJson = Json.toJson(previousSettings).toString
+          User.update(fullUser, email, settingsJson)
+          
+        }
       }
       
       //Logger.debug("password:" + password + " passwordnew1:" + passwordnew1 + " passwordnew2:" + passwordnew2)
