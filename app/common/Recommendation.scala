@@ -23,6 +23,8 @@ object Recommendation {
     val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*)
     // http://stackoverflow.com/questions/2925041/how-to-convert-a-seqa-to-a-mapint-a-using-a-value-of-a-as-the-key-in-the-ma
     
+    val likedDishes = Recommendations.getLikedDishes(user.id)
+    
     //TODO we can not iterate in a dumb for-loop because this would not scale
     //TODO ideally, we would read the restaurants only once in a while..
     
