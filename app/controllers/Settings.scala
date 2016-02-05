@@ -46,11 +46,11 @@ object Settings extends Controller with Secured {
       "password" -> text,
       "passwordnew1" -> text,
       "passwordnew2" -> text,
-      "newusertarget" -> text))
+      "additionalsettings" -> text))
 
   def save = IsAuthenticated { username =>
     implicit request => { 
-      val (email, language, password, passwordnew1, passwordnew2, newusertarget) = settingsForm.bindFromRequest.get
+      val (email, language, password, passwordnew1, passwordnew2, additionalsettings) = settingsForm.bindFromRequest.get
 
       Logger.debug("email:" + email + " language:" + language)
 
