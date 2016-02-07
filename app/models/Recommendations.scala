@@ -13,8 +13,18 @@ import play.api.Logger
 import anorm._
 import anorm.SqlParser._
 import java.util.Date
+import scala.collection.mutable.MutableList
 
-case class Recommendations(dishes: Seq[Dish /*Recommendation*/ ])
+case class Recommendations(dishes: MutableList[RecommendationItem])
+
+case class RecommendationItem(id: Long, price: Double, name: String,  
+    greenScore: Double, url: String, distance: Double, tags: Seq[String],
+    var restaurantName: String, var restaurantUrl: String, var friendLikeUrls: Seq[String])
+
+object RecommendationItem {
+  implicit val recommendationItemsReads = Json.reads[RecommendationItem]
+  implicit val recommendationItemsWrites = Json.writes[RecommendationItem]
+}
 
 object Recommendations {
 
@@ -32,9 +42,8 @@ object Recommendations {
     }
   }
   
-  implicit val userSettingsReads = Json.reads[Recommendations]
-  implicit val userSettingsWrites = Json.writes[Recommendations]
-
+  implicit val recommendationsReads = Json.reads[Recommendations]
+  implicit val recommendationsWrites = Json.writes[Recommendations]
 }
 
 case class LikedDishes(createDate: Date, dishId: Long, dishName: String, tagId: Long, tagName: String, friendId: Long)

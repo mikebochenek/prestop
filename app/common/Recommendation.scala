@@ -7,6 +7,9 @@ import models.Dish
 import models.Image
 import models.Tag
 import play.api.Logger
+import models.RecommendationItem
+import scala.collection.mutable.ArraySeq
+import scala.collection.mutable.MutableList
 
 
 object Recommendation {
@@ -33,14 +36,17 @@ object Recommendation {
       .filter { x => within(maxdist, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
       .filter { x => (priceMax >= x.price && priceMin <= x.price) } // filter by price
     
+    val result = new Recommendations(MutableList.empty);
     for (dish <- dishes) {
-      dish.url = Image.findByDish(dish.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
-      dish.distance = Haversine.haversine(restaurants.get(dish.restaurant_id).head.latitude, 
-          restaurants.get(dish.restaurant_id).head.longitude, latitude, longitude)
-      dish.tags = Tag.findByRef(dish.id, 11).map(_.name)
+      val r = restaurants.get(dish.restaurant_id).head
+      val ri = new RecommendationItem(dish.id, dish.price, dish.name, dish.greenScore, 
+        Image.findByDish(dish.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+        Haversine.haversine(r.latitude, r.longitude, latitude, longitude),
+        Tag.findByRef(dish.id, 11).map(_.name),
+        r.name, Image.findByRestaurant(r.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, Seq.empty)
+      result.dishes += ri
     }
-    val r = new Recommendations(dishes);
-    r
+    result
   }
   
   /**
