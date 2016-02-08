@@ -94,7 +94,9 @@ object Dishes extends Controller with Secured {
       
       val img = ImageIO.read(file); // load image
       val resized = Scalr.resize(img, 640); //resize to 150 pixels max
-      //ImageIO.write(resized, ".png", (file.getAbsoluteFile + "640"))
+      val resizeFilename = file.getAbsolutePath + "640.png"
+      Logger.info("==== resized: " + resizeFilename)
+      ImageIO.write(resized, "png", new File(resizeFilename))
       
       Image.updateDishImages(id, -1)
       Image.create(new Image(0, file.getAbsolutePath, Image.createUrl(ts + "/" + file.getName), 0, id, 0, null))
