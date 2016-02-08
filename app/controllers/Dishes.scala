@@ -1,7 +1,6 @@
 package controllers
 
 import java.io.File
-
 import play.Play
 import play.api.mvc.Action
 import play.api.mvc.Session
@@ -12,9 +11,10 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.libs.functional.syntax._
-
 import models._
 import views._
+import javax.imageio.ImageIO
+import org.imgscalr.Scalr
 
 object Dishes extends Controller with Secured {
 
@@ -89,6 +89,13 @@ object Dishes extends Controller with Secured {
       val path = "/home/mike/data/presto/" + ts
       val file = new File(path + s"/$filename")
       picture.ref.moveTo(file)
+      
+      //http://www.htmlgoodies.com/beyond/java/create-high-quality-thumbnails-using-the-imgscalr-library.html
+      
+      val img = ImageIO.read(file); // load image
+      val resized = Scalr.resize(img, 640); //resize to 150 pixels max
+      //ImageIO.write(resized, ".png", (file.getAbsoluteFile + "640"))
+      
       Image.updateDishImages(id, -1)
       Image.create(new Image(0, file.getAbsolutePath, Image.createUrl(ts + "/" + file.getName), 0, id, 0, null))
       Redirect(routes.Dishes.getById(id))
