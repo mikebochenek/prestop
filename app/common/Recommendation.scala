@@ -10,6 +10,7 @@ import play.api.Logger
 import models.RecommendationItem
 import scala.collection.mutable.ArraySeq
 import scala.collection.mutable.MutableList
+import java.text.DecimalFormat
 
 
 object Recommendation {
@@ -39,9 +40,9 @@ object Recommendation {
     val result = new Recommendations(MutableList.empty);
     for (dish <- dishes) {
       val r = restaurants.get(dish.restaurant_id).head
-      val ri = new RecommendationItem(dish.id, dish.price, dish.name, dish.greenScore, 
+      val ri = new RecommendationItem(dish.id, makePriceString(dish.price), dish.name, dish.greenScore, 
         Image.findByDish(dish.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
-        Haversine.haversine(r.latitude, r.longitude, latitude, longitude),
+        makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
         Tag.findByRef(dish.id, 11).map(_.name),
         r.name, Image.findByRestaurant(r.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, Seq.empty)
       result.dishes += ri
@@ -68,4 +69,21 @@ object Recommendation {
    * check if the restaurant is open
    * (but how to handle situations when someone is booking a restaurant for next Friday?)
    */
+  
+  val distanceFormat = new DecimalFormat("#.#")
+  def makeDistanceString(d: Double) = {
+    if (d > 15) {
+      d.toLong + " km"
+    } else if (d > 1) {
+      distanceFormat.format(d) + " km"  
+    } else {
+      val distance50s = (d * 20).toLong
+      ((distance50s / 20.0) * 1000).toLong + " m"
+    }
+  }
+  
+  val priceFormat = new DecimalFormat("#.##")
+  def makePriceString(p: Double) = {
+    priceFormat.format(p) + " CHF"
+  }
 }

@@ -17,8 +17,8 @@ import scala.collection.mutable.MutableList
 
 case class Recommendations(dishes: MutableList[RecommendationItem])
 
-case class RecommendationItem(id: Long, price: Double, name: String,  
-    greenScore: Double, url: String, distance: Double, tags: Seq[String],
+case class RecommendationItem(id: Long, price: String, name: String,  
+    greenScore: Double, url: String, distance: String, tags: Seq[String],
     var restaurantName: String, var restaurantUrl: String, var friendLikeUrls: Seq[String])
 
 object RecommendationItem {
