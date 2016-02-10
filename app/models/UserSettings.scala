@@ -9,7 +9,7 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.Logger
 
-case class UserSettings(id: Long, var language: String, skipDailyEmail: Boolean, timeZone: String, var favCuisines: Seq[Tag])
+case class UserSettings(id: Long, var language: String, skipDailyEmail: Boolean, timeZone: String, screenWidth: Long, var favCuisines: Seq[Tag])
 
 object UserSettings {
 

@@ -104,15 +104,7 @@ object Restaurants extends Controller with Secured {
   
   def upload(id: Long) = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
-      import java.io.File
-      val filename = picture.filename
-      val contentType = picture.contentType
-      val ts = System.currentTimeMillis()
-      val path = "/home/mike/data/presto/" + ts
-      val file = new File(path + s"/$filename")
-      picture.ref.moveTo(file)
-      Image.updateRestaurantImages(id, -1)
-      Image.create(new Image(0, file.getAbsolutePath, Image.createUrl(ts + "/" + file.getName), id, 0, 0, null))
+      Image.saveAndResizeImages(picture, id, "restaurant")
       Redirect(routes.Restaurants.edit(id))
     }.getOrElse {
       Redirect(routes.Restaurants.about).flashing(

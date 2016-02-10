@@ -1,17 +1,13 @@
 package common
 
-import models.UserFull
-import models.Recommendations
-import models.Restaurant
-import models.Dish
-import models.Image
-import models.Tag
+import models._
 import play.api.Logger
 import models.RecommendationItem
 import scala.collection.mutable.ArraySeq
 import scala.collection.mutable.MutableList
 import java.text.DecimalFormat
-
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
 object Recommendation {
   //47.385740, 8.518084 coordinates for Zurich Hardbrucke
@@ -33,6 +29,15 @@ object Recommendation {
     //TODO ideally, we would read the restaurants only once in a while..
     
     
+    var desiredWidth = 750L
+    if (user.settings != null) {
+      desiredWidth = Json.parse(user.settings).validate[UserSettings].get.screenWidth
+      if (!Image.resolutions.contains(desiredWidth)) {
+        desiredWidth = 750L
+      }
+    }
+        
+        
     val dishes = Dish.findAll()
       .filter { x => within(maxdist, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
       .filter { x => (priceMax >= x.price && priceMin <= x.price) } // filter by price
@@ -41,7 +46,7 @@ object Recommendation {
     for (dish <- dishes) {
       val r = restaurants.get(dish.restaurant_id).head
       val ri = new RecommendationItem(dish.id, makePriceString(dish.price), dish.name, dish.greenScore, 
-        Image.findByDish(dish.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+        Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
         makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
         Tag.findByRef(dish.id, 11).map(_.name),
         r.name, Image.findByRestaurant(r.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, Seq.empty)

@@ -15,6 +15,7 @@ import models._
 import views._
 import javax.imageio.ImageIO
 import org.imgscalr.Scalr
+import play.api.libs.Files
 
 object Dishes extends Controller with Secured {
 
@@ -82,24 +83,7 @@ object Dishes extends Controller with Secured {
 
   def upload(id: Long) = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
-      import java.io.File
-      val filename = picture.filename
-      val contentType = picture.contentType
-      val ts = System.currentTimeMillis()
-      val path = "/home/mike/data/presto/" + ts
-      val file = new File(path + s"/$filename")
-      picture.ref.moveTo(file)
-      
-      //http://www.htmlgoodies.com/beyond/java/create-high-quality-thumbnails-using-the-imgscalr-library.html
-      
-      val img = ImageIO.read(file); // load image
-      val resized = Scalr.resize(img, 640); //resize to 150 pixels max
-      val resizeFilename = file.getAbsolutePath + "640.png"
-      Logger.info("==== resized: " + resizeFilename)
-      ImageIO.write(resized, "png", new File(resizeFilename))
-      
-      Image.updateDishImages(id, -1)
-      Image.create(new Image(0, file.getAbsolutePath, Image.createUrl(ts + "/" + file.getName), 0, id, 0, null))
+      Image.saveAndResizeImages(picture, id, "dish")
       Redirect(routes.Dishes.getById(id))
     }.getOrElse {
       Redirect(routes.Restaurants.about).flashing(

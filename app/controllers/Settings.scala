@@ -29,7 +29,7 @@ object Settings extends Controller with Secured {
       val subdomainLanguage = request.headers.get(HeaderNames.ACCEPT_LANGUAGE).get/*.substring(0,2)*/
       Logger.debug(" language from request:" + subdomainLanguage)
 
-      var userSettings = new UserSettings(fullUser.id, "en_US", false, "", Seq.empty[Tag])
+      var userSettings = new UserSettings(fullUser.id, "en_US", false, "", 0, Seq.empty[Tag])
       if (fullUser.settings != null) {
         userSettings = Json.parse(fullUser.settings).validate[UserSettings].get 
         Logger.debug("parse ----->" + userSettings)
@@ -150,15 +150,7 @@ object Settings extends Controller with Secured {
 
   def uploadPhoto(id: Long) = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
-      import java.io.File
-      val filename = picture.filename
-      val contentType = picture.contentType
-      val ts = System.currentTimeMillis()
-      val path = "/home/mike/data/presto/" + ts
-      val file = new File(path + s"/$filename")
-      picture.ref.moveTo(file)
-      //Image.updateDishImages(id, -1)
-      Image.create(new Image(0, file.getAbsolutePath, Image.createUrl(ts + "/" + file.getName), 0, id, 0, null))
+      Image.saveAndResizeImages(picture, id, "user")
       Redirect(routes.Dishes.getById(id))
     }.getOrElse {
       Redirect(routes.Restaurants.about).flashing(
