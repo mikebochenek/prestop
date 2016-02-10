@@ -87,8 +87,8 @@ object Recommendation {
     }
   }
   
-  val priceFormat = new DecimalFormat("#.##")
+  val priceFormat = new DecimalFormat("#.00")
   def makePriceString(p: Double) = {
-    priceFormat.format(p) + " CHF"
+    priceFormat.format(p)// + " CHF"
   }
 }
