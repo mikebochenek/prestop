@@ -102,6 +102,7 @@
         <div class="col-sm-8 col-md-offset-2">
                 @if(url != null) {
                      <img src="@url" alt="restaurant photo" height="100" width="100"></img>
+                     @for(w <- Image.resolutions) { <a href="@url.replace(".", ("-" + w + "."))">@w px wide</a> &nbsp&nbsp }
                 }
                 @helper.form(action = routes.Restaurants.upload(restaurant.id), 'enctype -> "multipart/form-data") {
 		   <input type="file" name="picture">
