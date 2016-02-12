@@ -35,7 +35,9 @@ object Settings extends Controller with Secured {
         Logger.debug("parse ----->" + userSettings)
       }
       
-      Ok(views.html.settings(settingsForm, me, userSettings))
+      val url = Image.findByUser(fullUser.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+
+      Ok(views.html.settings(settingsForm, me, userSettings, url))
     }
   }
 
@@ -150,8 +152,9 @@ object Settings extends Controller with Secured {
 
   def uploadPhoto(id: Long) = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
+      Logger.info("upload user photo " + id)
       Image.saveAndResizeImages(picture, id, "user")
-      Redirect(routes.Dishes.getById(id))
+      Redirect(routes.Settings.load)
     }.getOrElse {
       Redirect(routes.Restaurants.about).flashing(
         "error" -> "Missing file")

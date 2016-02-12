@@ -63,6 +63,13 @@ object Image {
          .on('dish_id -> id).as(Image.simple *)
     }
   }
+
+  def findByUser(id: Long): Seq[Image] = {
+    DB.withConnection { implicit connection =>
+      SQL("select id, filename, url, restaurant_id, dish_id, user_id, width, height, status, lastupdate from image where status >= 0 and user_id = {user_id} order by width desc ")
+         .on('user_id -> id).as(Image.simple *)
+    }
+  }
   
   def create(image: Image): Option[Long] = {
     DB.withConnection { implicit connection =>
