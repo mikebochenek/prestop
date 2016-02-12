@@ -1,4 +1,4 @@
-@(form: Form[(String,String,String,String,String,String,String,String)], dish: Dish, url: String, tags: String, greenscoretags: String)(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String,String,String,String)], dish: Dish, url: String, tags: String, greenscoretags: String, foodCategories: String)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -30,7 +30,7 @@
             <input class="form-control span4" type="text" name="greenscoretags" id="greenscoretags" value="@greenscoretags">
           </div>
           
-          <div><u>possible tags:</u> @Tag.findAll.filter(_.status == 31).map(_.name).mkString(", ")</div>
+          <div><u>possible greenscore tags:</u> @Tag.findAll.filter(_.status == 31).map(_.name).mkString(", ")</div>
           
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Greenscore</span>
@@ -38,6 +38,13 @@
           </div>
           
           <input class="hidden form-control span4" type="text" name="restaurant_id" id="restaurant_id" value="@dish.restaurant_id">
+
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Food Categories</span>
+            <input class="form-control span4" type="text" name="foodcategories" id="foodcategories" value="@foodCategories">
+          </div>
+
+          <div><u>possible food categories:</u> @Tag.findAll.filter(_.status == 34).map(_.name).mkString(", ")</div>
           
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Status</span>
@@ -49,7 +56,7 @@
             <input class="form-control span4" type="text" name="tags" id="tags" value="@tags">
           </div>
           
-          <div><u>possible tags:</u> @Tag.findAll.filter(_.status == 11).map(_.name).mkString(", ")</div>
+          <div><u>possible ingredients:</u> @Tag.findAll.filter(_.status == 11).map(_.name).mkString(", ")</div>
           <script>var availableTags = @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 11).map(_.name)).toString) ;</script>
           
           </br>
