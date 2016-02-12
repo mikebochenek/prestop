@@ -7,10 +7,15 @@ object AdminHelper {
 
   def generateStats(): String = {
 
-    (system_date + system_uptime + "<br>" 
-        + "usercount:" + User.countAll + "<br>" 
-        + "restaurantcount:" + Restaurant.countAll + "<br>" 
-        + "dishcount:" + Dish.countAll + "<br>" + "<br><br>"
+    (system_date + system_uptime + "<br>"
+        + "image storage size: " + image_storage_size + "<br>"
+        + "user count:" + User.countAll + "<br>" 
+        + "restaurant count:" + Restaurant.countAll + "<br>" 
+        + "friend count:" + Friend.countAll + "<br>" 
+        + "reservations:" + Reservation.countAll + "<br>" 
+        + "activitylog count:" + ActivityLog.countAll + "<br>" 
+        + "tag ref count:" + TagRef.findAll.size + "<br>" 
+        + "<br><br>"
         + system_df + "<br><br>" + system_top + "<br><br>").replaceAll("\n", "<br>")
   }
 
@@ -22,5 +27,7 @@ object AdminHelper {
   def system_date(): String = { "date".!! }
 
   def system_uptime(): String = { "uptime".!! }
+  
+  def image_storage_size(): String = { "du -sh /home/mike/data/presto".!! }
 
 }
