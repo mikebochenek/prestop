@@ -117,6 +117,19 @@ object Image {
   
   val resolutions = List(48, 72, 172, 640, 750, 1242)
   
+  def reverseURLGen(url: String, w: Int) = {
+    val urlParts = url.split("/")
+    val filename = urlParts(urlParts.length - 1)
+    var newURL = ""
+    for((x,i) <- urlParts.view.zipWithIndex) {
+      if (i < urlParts.length - 1) {
+        newURL += x + "/"
+      }
+    }
+    newURL += filename.replace(".", ("-" + w + "."))
+    newURL
+  }
+  
   def saveAndResizeImages(picture: MultipartFormData.FilePart[Files.TemporaryFile], id: Long, kind: String) {
     val filename = picture.filename
     val ts = System.currentTimeMillis()
