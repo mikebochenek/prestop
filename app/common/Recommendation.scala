@@ -49,7 +49,7 @@ object Recommendation {
         Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
         makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
         Tag.findByRef(dish.id, 11).map(_.name),
-        r.name, Image.findByRestaurant(r.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, Seq.empty)
+        r.name, Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, Seq.empty)
       result.dishes += ri
     }
     result
