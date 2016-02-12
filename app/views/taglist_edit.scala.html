@@ -38,9 +38,31 @@
 		</table>
 		
 		
-      	<h3>Food categories tags (Dish)</h3>
+      	<h3>Diet tags (Food categories - Dish)</h3>
       	<table class="table table-striped">
 		@for((tag, index) <- tags.filter(_.status == 34).zipWithIndex)  {	
+		  <tr>
+		  <td><a href="tagedit/@tag.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @tag.name</td>
+		  <td>@tag.en_text</td><td>@tag.de_text</td><td>@tag.it_text</td><td>@tag.fr_text</td><td>@tag.status</td>
+		  </tr>
+		}
+		</table>
+
+		
+      	<h3>Dish type (Dish)</h3>
+      	<table class="table table-striped">
+		@for((tag, index) <- tags.filter(_.status == 35).zipWithIndex)  {	
+		  <tr>
+		  <td><a href="tagedit/@tag.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @tag.name</td>
+		  <td>@tag.en_text</td><td>@tag.de_text</td><td>@tag.it_text</td><td>@tag.fr_text</td><td>@tag.status</td>
+		  </tr>
+		}
+		</table>
+
+		
+      	<h3>Meat Origin tags (Dish)</h3>
+      	<table class="table table-striped">
+		@for((tag, index) <- tags.filter(_.status == 36).zipWithIndex)  {	
 		  <tr>
 		  <td><a href="tagedit/@tag.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @tag.name</td>
 		  <td>@tag.en_text</td><td>@tag.de_text</td><td>@tag.it_text</td><td>@tag.fr_text</td><td>@tag.status</td>

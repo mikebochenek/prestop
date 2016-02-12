@@ -25,9 +25,11 @@ object Dishes extends Controller with Secured {
       val dish = Dish.findById(username, id)
       val tags = Tag.findByRef(id, 11).map(_.name).mkString(", ")
       val greenscoretags = Tag.findByRef(id, 31).map(_.name).mkString(", ")
-      val foodCategories = Tag.findByRef(id, 34).map(_.name).mkString(", ")
+      val diet = Tag.findByRef(id, 34).map(_.name).mkString(", ")
+      val dishtype = Tag.findByRef(id, 35).map(_.name).mkString(", ")
+      val meatorigin = Tag.findByRef(id, 36).map(_.name).mkString(", ")
       val url = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
-      Ok(views.html.dish_edit(dishForm, dish(0), url, tags, greenscoretags, foodCategories))
+      Ok(views.html.dish_edit(dishForm, dish(0), url, tags, greenscoretags, diet, dishtype, meatorigin))
     }
   } 
 
@@ -42,15 +44,19 @@ object Dishes extends Controller with Secured {
       "status" -> text,
       "tags" -> text,
       "greenscoretags" -> text,
-      "foodcategories" -> text))
+      "diet" -> text,
+      "dishtype" -> text,
+      "meatorigin" -> text))
       
   def save = IsAuthenticated { username =>
     implicit request =>  
-      val (id, price, name, greenscore, restaurant_id, status, tags, greenscoretags, foodcategories) = dishForm.bindFromRequest.get
+      val (id, price, name, greenscore, restaurant_id, status, tags, greenscoretags, diet, dishtype, meatorigin) = dishForm.bindFromRequest.get
       Dish.update(id.toLong, price.toDouble, name, greenscore.toDouble, status.toInt)
       Tag.updateTags(id.toLong, tags, 11)
       Tag.updateTags(id.toLong, greenscoretags, 31)
-      Tag.updateTags(id.toLong, foodcategories, 34)
+      Tag.updateTags(id.toLong, diet, 34)
+      Tag.updateTags(id.toLong, dishtype, 35)
+      Tag.updateTags(id.toLong, meatorigin, 36)
       Logger.info("calling restaurant update for id:" + id + " price:" + price + " name:" + name + " tags:" + tags + " greenscoretags: " + greenscoretags)
       Redirect(routes.Dishes.getById(id.toLong))
   }
