@@ -37,13 +37,18 @@ object Activities extends Controller with Secured {
   def getByDish(id: Long) = Action { 
     implicit request => {
       Logger.info("calling getlikers (getByDish) id:" + id)
-      val activities = ActivityLog.findAll().filter { x => x.activity_type == 11 && x.activity_subtype == id } // TODO this should be optimized on the DB as well
-      val allUsers = activities.map(a => User.getFullUser(a.user_id)) //TODO this should be optimized as well
-      val all = allUsers.distinct.map(userFull => new UserProfile(userFull.id, userFull.email, userFull.username, 0, 0, 0, 0, null))
-      all.foreach { user => user.profileImageURL = Image.findByUser(user.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url } 
+      val all = getLikeActivitiesByDish(id)
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(all)))))
     }
   } 
+  
+  def getLikeActivitiesByDish(id: Long) = {
+    val activities = ActivityLog.findAll().filter { x => x.activity_type == 11 && x.activity_subtype == id } // TODO this should be optimized on the DB as well
+    val allUsers = activities.map(a => User.getFullUser(a.user_id)) //TODO this should be optimized as well
+    val all = allUsers.distinct.map(userFull => new UserProfile(userFull.id, userFull.email, userFull.username, 0, 0, 0, 0, null))
+    all.foreach { user => user.profileImageURL = Image.findByUser(user.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url } 
+    all
+  }
 
   def like(userId: Long, dishId: Long) = Action { 
     implicit request => {

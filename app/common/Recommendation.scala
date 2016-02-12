@@ -8,6 +8,7 @@ import scala.collection.mutable.MutableList
 import java.text.DecimalFormat
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import controllers.Activities
 
 object Recommendation {
   //47.385740, 8.518084 coordinates for Zurich Hardbrucke
@@ -44,18 +45,22 @@ object Recommendation {
     
     val result = new Recommendations(MutableList.empty);
     
-    val friendLikedDishURLs = Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url  :: Nil
-    // TODO this will change!!
     
     
     for (dish <- dishes) {
+      val friendLikedDishURLs = Activities.getLikeActivitiesByDish(dish.id).map(x => x.profileImageURL)
+      //Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url  :: Nil
+      
       val r = restaurants.get(dish.restaurant_id).head
       val ri = new RecommendationItem(dish.id, makePriceString(dish.price), dish.name, dish.greenScore, 
         Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
         makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
         Tag.findByRef(dish.id, 11).map(_.name),
         r.name, Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
-        friendLikedDishURLs)
+        friendLikedDishURLs,
+        Tag.findByRef(dish.id, 34).map(_.name),
+        Tag.findByRef(dish.id, 35).map(_.name),
+        Tag.findByRef(dish.id, 36).map(_.name))
       result.dishes += ri
     }
     result
