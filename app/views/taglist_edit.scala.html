@@ -4,18 +4,62 @@
 
       <div class="starter-template">
       	<h1>All @tags.size tags</h1>
+      	
+      	<h3>Payment type tags (Restaurant)</h3>
       	<table class="table table-striped">
-		@for((tag, index) <- tags.zipWithIndex)  {	
+		@for((tag, index) <- tags.filter(_.status == 12).zipWithIndex)  {	
 		  <tr>
 		  <td><a href="tagedit/@tag.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @tag.name</td>
-		  <td>@tag.en_text</td>
-		  <td>@tag.de_text</td>
-		  <td>@tag.it_text</td>
-		  <td>@tag.fr_text</td>
-		  <td>@tag.status</td>
+		  <td>@tag.en_text</td><td>@tag.de_text</td><td>@tag.it_text</td><td>@tag.fr_text</td><td>@tag.status</td>
 		  </tr>
 		}
 		</table>
+		
+		
+      	<h3>Cuisine tags (Restaurant)</h3>
+      	<table class="table table-striped">
+		@for((tag, index) <- tags.filter(_.status == 21).zipWithIndex)  {	
+		  <tr>
+		  <td><a href="tagedit/@tag.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @tag.name</td>
+		  <td>@tag.en_text</td><td>@tag.de_text</td><td>@tag.it_text</td><td>@tag.fr_text</td><td>@tag.status</td>
+		  </tr>
+		}
+		</table>
+		
+		
+      	<h3>Greenscore tags (Dish)</h3>
+      	<table class="table table-striped">
+		@for((tag, index) <- tags.filter(_.status == 31).zipWithIndex)  {	
+		  <tr>
+		  <td><a href="tagedit/@tag.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @tag.name</td>
+		  <td>@tag.en_text</td><td>@tag.de_text</td><td>@tag.it_text</td><td>@tag.fr_text</td><td>@tag.status</td>
+		  </tr>
+		}
+		</table>
+		
+		
+      	<h3>Food categories tags (Dish)</h3>
+      	<table class="table table-striped">
+		@for((tag, index) <- tags.filter(_.status == 34).zipWithIndex)  {	
+		  <tr>
+		  <td><a href="tagedit/@tag.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @tag.name</td>
+		  <td>@tag.en_text</td><td>@tag.de_text</td><td>@tag.it_text</td><td>@tag.fr_text</td><td>@tag.status</td>
+		  </tr>
+		}
+		</table>
+		
+		
+      	<h3>Ingredients tags (Dish)</h3>
+      	<table class="table table-striped">
+		@for((tag, index) <- tags.filter(_.status == 11).zipWithIndex)  {	
+		  <tr>
+		  <td><a href="tagedit/@tag.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @tag.name</td>
+		  <td>@tag.en_text</td><td>@tag.de_text</td><td>@tag.it_text</td><td>@tag.fr_text</td><td>@tag.status</td>
+		  </tr>
+		}
+		</table>
+		
+		
       </div>
 
     </div><!-- /.container -->
