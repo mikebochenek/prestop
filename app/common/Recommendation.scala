@@ -43,13 +43,19 @@ object Recommendation {
       .filter { x => (priceMax >= x.price && priceMin <= x.price) } // filter by price
     
     val result = new Recommendations(MutableList.empty);
+    
+    val friendLikedDishURLs = Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url  :: Nil
+    // TODO this will change!!
+    
+    
     for (dish <- dishes) {
       val r = restaurants.get(dish.restaurant_id).head
       val ri = new RecommendationItem(dish.id, makePriceString(dish.price), dish.name, dish.greenScore, 
         Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
         makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
         Tag.findByRef(dish.id, 11).map(_.name),
-        r.name, Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, Seq.empty)
+        r.name, Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
+        friendLikedDishURLs)
       result.dishes += ri
     }
     result
