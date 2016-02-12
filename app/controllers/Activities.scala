@@ -18,13 +18,42 @@ import views._
 
 object Activities extends Controller with Secured {
 
+  def getLikesByUser(id: Long) = Action { 
+    implicit request => {
+      Logger.info("calling getlikes (dish likes - getLikesByUser) id:" + id)
+      val all = ActivityLog.findAllByUser(id).filter { x => x.activity_type == 11 } // TODO this should be optimized on the DB
+      Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(all)))))
+    }
+  } 
+  
   def getByUser(id: Long) = Action { 
     implicit request => {
-      Logger.info("calling Activities get - load data for id:" + id)
+      Logger.info("calling get activities (getByUser) id:" + id)
       val all = ActivityLog.findAllByUser(id)
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(all)))))
     }
   } 
+
+  def getByDish(id: Long) = Action { 
+    implicit request => {
+      Logger.info("calling getlikers (getByDish) id:" + id)
+      val activities = ActivityLog.findAll().filter { x => x.activity_type == 11 && x.activity_subtype == id } // TODO this should be optimized on the DB as well
+      val allUsers = activities.map(a => User.getFullUser(a.user_id)) //TODO this should be optimized as well
+      val all = allUsers.map(userFull => new UserProfile(userFull.id, userFull.email, userFull.username, 0, 0, 0, 0, null))
+      all.foreach { user => user.profileImageURL = Image.findByUser(user.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url} 
+      Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(all)))))
+    }
+  } 
+
+  def like(userId: Long, dishId: Long) = Action { 
+    implicit request => {
+      Logger.info("calling like for dishid:" + dishId + " userid:" + userId)
+      val id = ActivityLog.create(userId, 11, dishId, "")
+      Logger.info("ActivityLog created - id: "+ id.get + " type: 11 and subtype: " + dishId +  " user: " + userId)
+      Ok("ok")
+    }
+  } 
+  
 
   def create() = Action {
     implicit request => {

@@ -25,7 +25,9 @@ GET      /api/cuisines               controllers.Settings.cuisines
 GET      /api/userprofile/:id        controllers.Friends.getUserProfile(id: Long)
 
 POST     /api/activities/create      controllers.Activities.create
-
+GET      /api/getlikes/:id           controllers.Activities.getLikesByUser(id: Long)
+GET      /api/like/:userId,:dishId   controllers.Activities.like(userId: Long, dishId: Long)
+GET      /api/getlikers/:id          controllers.Activities.getByDish(id: Long)
 
 GET      /api/restaurants            controllers.Restaurants.getAll
 POST     /api/restaurants/new        controllers.Restaurants.create
