@@ -65,8 +65,9 @@ object Dishes extends Controller with Secured {
     implicit request => {
       val dishes = Dish.findAll(restId)
       for (dish <- dishes) {      
-        dish.tags = Tag.findByRef(dish.id, 11).map(_.name)
-        dish.url = Image.findByDish(dish.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+        //dish.tags = Tag.findByRef(dish.id, 11).map(_.name)
+        //TODO should we return and populate the other tags..?
+        dish.url = Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       }
 
       Ok(Json.prettyPrint(Json.toJson(dishes.map(a => Json.toJson(a)))))
