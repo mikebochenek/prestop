@@ -48,14 +48,19 @@ object Recommendation {
     
     
     for (dish <- dishes) {
-      val friendLikedDishURLs = Activities.getLikeActivitiesByDish(dish.id).map(x => x.profileImageURL)
+      val allLikes = Activities.getLikeActivitiesByDish(dish.id)
+      val like = !(allLikes.find { x => x.id == user.id }.isEmpty)
+      
+      val friendLikedDishURLs = allLikes.map(x => x.profileImageURL)
       //Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url  :: Nil
       
       val r = restaurants.get(dish.restaurant_id).head
-      val ri = new RecommendationItem(dish.id, makePriceString(dish.price), dish.name, dish.greenScore, 
+      val ri = new RecommendationItem(dish.id, makePriceString(dish.price), dish.name, like, dish.greenScore, 
+        Tag.findByRef(dish.id, 31).map(_.name),
         Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
         makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
         Tag.findByRef(dish.id, 11).map(_.name),
+        r.id,
         r.name, Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
         friendLikedDishURLs,
         Tag.findByRef(dish.id, 34).map(_.name),
