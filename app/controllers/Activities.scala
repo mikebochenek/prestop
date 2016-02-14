@@ -61,9 +61,9 @@ object Activities extends Controller with Secured {
   
   def unlike(userId: Long, dishId: Long) = Action { 
     implicit request => {
-      Logger.info("calling unlike for dishid:" + dishId + " userid:" + userId)
-      //val id = ActivityLog.create(userId, 11, dishId, "")
-      //Logger.info("ActivityLog created - id: "+ id.get + " type: 11 and subtype: " + dishId +  " user: " + userId)
+      Logger.info("calling unlike/delete for dishid:" + dishId + " userid:" + userId)
+      val id = ActivityLog.delete(userId, dishId)
+      Logger.info("ActivityLog deleted count: "+ id + " dishId: " + dishId +  " user: " + userId)
       Ok("ok")
     }
   } 
