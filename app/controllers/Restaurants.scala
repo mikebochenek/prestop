@@ -35,7 +35,8 @@ object Restaurants extends Controller with Secured {
     implicit request => {
       val all = Restaurant.findById(null, id)
       for (restaurant <- all) {
-        restaurant.tags =  Tag.findByRef(restaurant.id, 12).map(_.name)
+        restaurant.paymentoptions =  Tag.findByRef(restaurant.id, 12).map(_.name)
+        restaurant.cuisines =  Tag.findByRef(restaurant.id, 21).map(_.name)
         restaurant.url = Image.findByRestaurant(restaurant.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       }
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
@@ -86,7 +87,8 @@ object Restaurants extends Controller with Secured {
     implicit request => {
       val all = Restaurant.findAll()
       for (restaurant <- all) {
-        restaurant.tags =  Tag.findByRef(restaurant.id, 12).map(_.name)
+        restaurant.paymentoptions =  Tag.findByRef(restaurant.id, 12).map(_.name)
+        restaurant.cuisines =  Tag.findByRef(restaurant.id, 21).map(_.name)
         restaurant.url = Image.findByRestaurant(restaurant.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       }
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))

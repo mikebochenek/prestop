@@ -16,9 +16,9 @@ import play.api.libs.functional.syntax._
 
 
 case class Restaurant(id: Long, name: String, city: String, address: String, longitude: Double, latitude: Double, 
-    schedulecron: String, restype: Int, lastupdate: Date, status: Int, 
+    schedule: String, restype: Int, lastupdate: Date, status: Int, 
     phone: Option[String], email: Option[String], postalcode: Option[String], state: Option[String], 
-    var url: String, var tags: Seq[String], var cuisines: Seq[String])
+    var url: String, var paymentoptions: Seq[String], var cuisines: Seq[String])
 
 object Restaurant {
   val simple = {
