@@ -55,7 +55,7 @@ object Activities extends Controller with Secured {
       Logger.info("calling like for dishid:" + dishId + " userid:" + userId)
       val id = ActivityLog.create(userId, 11, dishId, "")
       Logger.info("ActivityLog created - id: "+ id.get + " type: 11 and subtype: " + dishId +  " user: " + userId)
-      Ok("ok")
+      Ok(Json.toJson(CommonJSONResponse.OK))
     }
   } 
   
@@ -64,7 +64,7 @@ object Activities extends Controller with Secured {
       Logger.info("calling unlike/delete for dishid:" + dishId + " userid:" + userId)
       val id = ActivityLog.delete(userId, dishId)
       Logger.info("ActivityLog deleted count: "+ id + " dishId: " + dishId +  " user: " + userId)
-      Ok("ok")
+      Ok(Json.toJson(CommonJSONResponse.OK))
     }
   } 
 
@@ -76,7 +76,7 @@ object Activities extends Controller with Secured {
       val activity_details = (request.body.asJson.get \ "activity_details")
       val id = ActivityLog.create(user_id.as[String].toLong, activity_type.as[String].toLong, activity_subtype.as[String].toLong, activity_details.as[String])
       Logger.info("ActivityLog created - id: "+ id.get + " type:" + activity_type.as[String] + " subtype: " + activity_subtype.as[String] +  " user: " + user_id.as[String])
-      Ok("ok")
+      Ok(Json.toJson(CommonJSONResponse.OK))
     }
   }
 }
