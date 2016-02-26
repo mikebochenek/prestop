@@ -20,7 +20,7 @@ import play.api.mvc.Session
 object LangFromSubdomain extends Filter {
   def apply(next: (RequestHeader) => Future[SimpleResult])(request: RequestHeader): Future[SimpleResult] = {
     val acceptLang = request.headers.get(HeaderNames.ACCEPT_LANGUAGE)
-    if (acceptLang.isDefined) {
+    if (acceptLang != null && acceptLang.isDefined) {
       val subdomainLanguage = acceptLang.get
       
       val newHeaders = new Headers {
