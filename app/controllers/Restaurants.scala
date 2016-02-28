@@ -14,6 +14,7 @@ import play.api.libs.functional.syntax._
 import java.util.Date
 import play.api.Logger
 import models.Tag
+import models.RestaurantFriends
 
 object Restaurants extends Controller with Secured {
 
@@ -39,6 +40,13 @@ object Restaurants extends Controller with Secured {
         restaurant.cuisines =  Tag.findByRef(restaurant.id, 21).map(_.name)
         restaurant.url = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
         restaurant.smallurl = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+        
+        restaurant.schedule_text = restaurant.schedule.split("\r\n")
+        restaurant.open_now = true; //TODO!!
+        
+        //TODO!
+        val friends = List(new RestaurantFriends(1, "Mike Bochenek", Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url))
+        restaurant.friendsWhoBooked = friends;
       }
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
     }

@@ -14,11 +14,18 @@ import play.api.libs.json.JsString
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
+case class RestaurantFriends(id: Long, name: String, var url: String)
+
+object RestaurantFriends {
+  implicit val recommendationFriendsReads = Json.reads[RestaurantFriends]
+  implicit val recommendationFriendsWrites = Json.writes[RestaurantFriends]
+}
 
 case class Restaurant(id: Long, name: String, city: String, address: String, longitude: Double, latitude: Double, 
-    schedule: String, restype: Int, lastupdate: Date, status: Int, 
+    schedule: String, var schedule_text: Seq[String], var open_now: Boolean, restype: Int, lastupdate: Date, status: Int, 
     phone: Option[String], email: Option[String], postalcode: Option[String], state: Option[String], 
-    var url: String, var smallurl: String, var paymentoptions: Seq[String], var cuisines: Seq[String])
+    var url: String, var smallurl: String, var paymentoptions: Seq[String], var cuisines: Seq[String],
+    var friendsWhoBooked: Seq[RestaurantFriends])
 
 object Restaurant {
   val simple = {
@@ -37,7 +44,9 @@ object Restaurant {
       get[Option[String]]("restaurant.postalcode") ~
       get[Option[String]]("restaurant.state") map {
         case id ~ name ~ city ~ address ~ longitude ~ latitude ~ schedulecron ~ restype ~ lastupdate ~ status ~ phone ~ email ~ postalcode ~ state => 
-          Restaurant(id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state, null, null, Seq.empty[String], Seq.empty[String])
+          Restaurant(id, name, city, address, longitude, latitude, schedulecron, Seq.empty[String], true, 
+              restype, lastupdate, status, phone, email, postalcode, state, null, null, 
+              Seq.empty[String], Seq.empty[String], Seq.empty[RestaurantFriends])
       }
   }
 
