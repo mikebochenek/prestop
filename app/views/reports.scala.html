@@ -73,8 +73,9 @@
 		</table>
 
       	<h3>Activities (@activities.size)</h3>
+      	<div>(here we don't show the values for activity_type == 7, because there are too many)</div>
       	<table class="table table-striped">
-      	@for((activity, index) <- activities.zipWithIndex)  {	
+      	@for((activity, index) <- activities.filter{x => x.activity_type != 7}.zipWithIndex)  {	
 		  <tr>
 		  <td>@index</td>
 		  <td>@activity.id</td>
