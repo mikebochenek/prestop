@@ -38,6 +38,7 @@ object Restaurants extends Controller with Secured {
         restaurant.paymentoptions =  Tag.findByRef(restaurant.id, 12).map(_.name)
         restaurant.cuisines =  Tag.findByRef(restaurant.id, 21).map(_.name)
         restaurant.url = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+        restaurant.smallurl = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       }
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
     }
