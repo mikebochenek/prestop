@@ -36,8 +36,8 @@ object Restaurants extends Controller with Secured {
     implicit request => {
       val all = Restaurant.findById(null, id)
       for (restaurant <- all) {
-        restaurant.paymentoptions =  Tag.findByRef(restaurant.id, 12).map(_.name)
-        restaurant.cuisines =  Tag.findByRef(restaurant.id, 21).map(_.name)
+        restaurant.paymentoptions =  Tag.findByRef(restaurant.id, 12).map(_.en_text.get) //TODO good, but this has to be dynamic somehow
+        restaurant.cuisines =  Tag.findByRef(restaurant.id, 21).map(_.en_text.get) //TODO should be dynamic
         restaurant.url = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
         restaurant.smallurl = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
         
