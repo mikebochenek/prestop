@@ -16,6 +16,8 @@ import views._
 import javax.imageio.ImageIO
 import org.imgscalr.Scalr
 import play.api.libs.Files
+import scala.collection.mutable.MutableList
+import common.Recommendation
 
 object Dishes extends Controller with Secured {
 
@@ -64,13 +66,35 @@ object Dishes extends Controller with Secured {
   def getAll(restId: Long) = Action {
     implicit request => {
       val dishes = Dish.findAll(restId)
-      for (dish <- dishes) {      
-        //dish.tags = Tag.findByRef(dish.id, 11).map(_.name)
-        //TODO should we return and populate the other tags..?
-        dish.url = Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
-      }
 
-      Ok(Json.prettyPrint(Json.toJson(dishes.map(a => Json.toJson(a)))))
+      //TODO all the below is way too similar to Recommendation.recommend and should be refactored into a common method
+      val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*)
+
+      val result = new Recommendations(MutableList.empty);
+    
+      for (dish <- dishes) {
+        val allLikes = Activities.getLikeActivitiesByDish(dish.id)
+        val like = false //TODO? !(allLikes.find { x => x.id == user.id }.isEmpty)
+      
+        val friendLikedDishURLs = allLikes.map(x => x.profileImageURL)
+        //Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url  :: Nil
+      
+        val r = restaurants.get(dish.restaurant_id).head
+        val ri = new RecommendationItem(dish.id, Recommendation.makePriceString(dish.price), dish.name, like, dish.greenScore, 
+          Tag.findByRef(dish.id, 31).map(_.name),
+          Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+          null,
+          Tag.findByRef(dish.id, 11).map(_.name),
+          r.id,
+          r.name, Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
+          friendLikedDishURLs,
+          Tag.findByRef(dish.id, 34).map(_.name),
+          Tag.findByRef(dish.id, 35).map(_.name),
+          Tag.findByRef(dish.id, 36).map(_.name))
+        result.dishes += ri
+      }
+      
+      Ok(Json.prettyPrint(Json.toJson(result.dishes.map(a => Json.toJson(a)))))
     }
   } 
   
