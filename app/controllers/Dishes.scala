@@ -83,6 +83,7 @@ object Dishes extends Controller with Secured {
         val ri = new RecommendationItem(dish.id, Recommendation.makePriceString(dish.price), dish.name, like, dish.greenScore, 
           Tag.findByRef(dish.id, 31).map(_.name),
           Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+          Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
           null,
           Tag.findByRef(dish.id, 11).map(_.name),
           r.id,

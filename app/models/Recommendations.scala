@@ -18,7 +18,7 @@ import scala.collection.mutable.MutableList
 case class Recommendations(dishes: MutableList[RecommendationItem])
 
 case class RecommendationItem(id: Long, price: String, name: String, liked: Boolean, 
-    greenScore: Double, greenScoreTags: Seq[String], url: String, distance: String, ingredients: Seq[String],
+    greenScore: Double, greenScoreTags: Seq[String], url: String, url_large: String, distance: String, ingredients: Seq[String],
     restaurantID: Long, var restaurantName: String, var restaurantUrl: String, 
     var friendLikeUrls: Seq[String],
     diet: Seq[String], dishType: Seq[String], meatOrigin: Seq[String])

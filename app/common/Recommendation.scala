@@ -58,6 +58,7 @@ object Recommendation {
       val ri = new RecommendationItem(dish.id, makePriceString(dish.price), dish.name, like, dish.greenScore, 
         Tag.findByRef(dish.id, 31).map(_.name),
         Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+        Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
         makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
         Tag.findByRef(dish.id, 11).map(_.name),
         r.id,
