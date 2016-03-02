@@ -20,7 +20,7 @@ object Recommendation {
   val priceMin = 0
   val priceMax = 40.0
 
-  def recommend(user: UserFull, longitude: Double, latitude: Double, options: String) = {
+  def recommend(user: UserFull, latitude: Double, longitude: Double, options: String) = {
     val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*)
     // http://stackoverflow.com/questions/2925041/how-to-convert-a-seqa-to-a-mapint-a-using-a-value-of-a-as-the-key-in-the-ma
     
