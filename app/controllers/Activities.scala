@@ -43,7 +43,7 @@ object Activities extends Controller with Secured {
       val all = allUsers.distinct.map(userFull => new UserProfile(userFull.id, userFull.email, userFull.username, 0, 0, 0, 0, null))
       all.foreach { user => user.profileImageURL = Image.findByUser(user.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url } 
       
-      val dishLikes = all.map { user => new DishLikers(user.id, user.profileImageURL, user.username, "Zurich", id)}
+      val dishLikes = all.map { user => new DishLikers(user.id, user.profileImageURL, user.username, "Zurich, Switzerland", id)}
       
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(dishLikes)))))
     }
