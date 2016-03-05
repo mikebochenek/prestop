@@ -14,15 +14,17 @@ import play.api.libs.functional.syntax._
 import models._
 import views._
 import models.json.DishLikers
+import models.json.DishLikes
 
 object Activities extends Controller with Secured {
 
   def getLikesByUser(id: Long) = Action { 
     implicit request => {
-      Logger.info("calling getlikes (dish likes - getLikesByUser) id:" + id)
-      val all = ActivityLog.findAllByUser(id).filter { x => x.activity_type == 11 } // TODO this should be optimized on the DB
-      Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(all)))))
-    }
+	    Logger.info("calling get activities (getByUser) id:" + id)
+	    val activities = ActivityLog.findAllByUser(id).filter { x => x.activity_type == 11} //TODO needs to be optimized
+	    val all = activities.map (d => new DishLikes(d.activity_subtype, Image.findByDish(d.activity_subtype).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, id))
+	    Ok(Json.prettyPrint(Json.toJson(all)))
+	  }
   } 
   
   def getByUser(id: Long) = Action { 
