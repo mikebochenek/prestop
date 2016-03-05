@@ -1,7 +1,6 @@
 package controllers
 
 import java.io.File
-
 import play.Play
 import play.api.mvc.Action
 import play.api.mvc.Session
@@ -12,9 +11,9 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.libs.functional.syntax._
-
 import models._
 import views._
+import models.json.DishLikes
 
 object Activities extends Controller with Secured {
 
@@ -37,8 +36,14 @@ object Activities extends Controller with Secured {
   def getByDish(id: Long) = Action { 
     implicit request => {
       Logger.info("calling getlikers (getByDish) id:" + id)
-      val all = getLikeActivitiesByDish(id)
-      Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(all)))))
+      val activities = ActivityLog.findAll().filter { x => x.activity_type == 11 && x.activity_subtype == id } // TODO this should be optimized on the DB as well
+      val allUsers = activities.map(a => User.getFullUser(a.user_id)) //TODO this should be optimized as well
+      val all = allUsers.distinct.map(userFull => new UserProfile(userFull.id, userFull.email, userFull.username, 0, 0, 0, 0, null))
+      all.foreach { user => user.profileImageURL = Image.findByUser(user.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url } 
+      
+      val dishLikes = all.map { user => new DishLikes(user.id, user.profileImageURL, user.username, "Zurich", id)}
+      
+      Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(dishLikes)))))
     }
   } 
   
