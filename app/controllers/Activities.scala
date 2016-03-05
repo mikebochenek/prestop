@@ -21,7 +21,7 @@ object Activities extends Controller with Secured {
   def getLikesByUser(id: Long) = Action { 
     implicit request => {
 	    Logger.info("calling get activities (getByUser) id:" + id)
-	    val activities = ActivityLog.findAllByUser(id).filter { x => x.activity_type == 11} //TODO needs to be optimized
+	    val activities = ActivityLog.findAllByUserType(id, 11).filter { x => x.activity_type == 11} //still needs to be optimized
 	    val all = activities.map (d => new DishLikes(d.activity_subtype, Image.findByDish(d.activity_subtype).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, id))
 	    Ok(Json.prettyPrint(Json.toJson(all)))
 	  }
