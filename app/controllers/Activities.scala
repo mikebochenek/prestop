@@ -13,7 +13,7 @@ import play.api.libs.json.Json
 import play.api.libs.functional.syntax._
 import models._
 import views._
-import models.json.DishLikes
+import models.json.DishLikers
 
 object Activities extends Controller with Secured {
 
@@ -41,7 +41,7 @@ object Activities extends Controller with Secured {
       val all = allUsers.distinct.map(userFull => new UserProfile(userFull.id, userFull.email, userFull.username, 0, 0, 0, 0, null))
       all.foreach { user => user.profileImageURL = Image.findByUser(user.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url } 
       
-      val dishLikes = all.map { user => new DishLikes(user.id, user.profileImageURL, user.username, "Zurich", id)}
+      val dishLikes = all.map { user => new DishLikers(user.id, user.profileImageURL, user.username, "Zurich", id)}
       
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(dishLikes)))))
     }
@@ -64,8 +64,19 @@ object Activities extends Controller with Secured {
     }
   } 
   
-  def unlike(userId: Long, dishId: Long) = Action { 
+  def unlikeSeveral() = Action { 
     implicit request => {
+      val user_id = (request.body.asJson.get \ "user_id")
+      val dish_ids = (request.body.asJson.get \ "dish_ids").as[List[Long]]
+      Logger.info("ActivityLog deleted called:  dishId: " + dish_ids +  " user: " + user_id)
+      dish_ids.foreach (did => ActivityLog.delete(user_id.as[String].toLong, did))
+      Ok(Json.toJson(CommonJSONResponse.OK))
+    }
+  } 
+  
+  def unlike(userId: Long, dishIdString: String) = Action { 
+    implicit request => {
+      val dishId = dishIdString.toLong
       Logger.info("calling unlike/delete for dishid:" + dishId + " userid:" + userId)
       val id = ActivityLog.delete(userId, dishId)
       Logger.info("ActivityLog deleted count: "+ id + " dishId: " + dishId +  " user: " + userId)
