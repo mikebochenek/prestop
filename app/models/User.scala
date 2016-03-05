@@ -36,7 +36,7 @@ case class User(id: Long, email: String, username: String, password: String)
 
 case class UserFull(id: Long, createdate: Date, lastlogindate: Option[Date], deleted: Boolean, 
     var password: String, settings: String, email: String, username: String, ttype: String,
-    openidtoken: String)
+    openidtoken: String, fullname: String, city: String, state: String, country: String, phone: String)
 
 case class UserProfile(id: Long, email: String, username: String, 
     var following: Int, var followers: Int, var likes: Int, var reservations: Int, var profileImageURL: String)
@@ -65,23 +65,29 @@ object User {
       get[String]("user.email") ~
       get[String]("user.username") ~
       get[Option[String]]("user.type") ~
-      get[Option[String]]("user.openidtoken") map {
-        case id ~ createdate ~ lastlogindate ~ deleted ~ password ~ settings ~ email ~ username ~ ttype ~ openidtoken => 
+      get[Option[String]]("user.openidtoken") ~
+      get[Option[String]]("user.fullname") ~
+      get[Option[String]]("user.city") ~
+      get[Option[String]]("user.state") ~
+      get[Option[String]]("user.country") ~
+      get[Option[String]]("user.phone") map {
+        case id ~ createdate ~ lastlogindate ~ deleted ~ password ~ settings ~ email ~ username ~ ttype ~ openidtoken ~ fullname ~ city ~ state ~ country ~ phone => 
           UserFull(id, createdate.getOrElse(null), lastlogindate, deleted.getOrElse(false), 
-              password, settings.getOrElse(null), email, username, ttype.getOrElse(null), openidtoken.getOrElse(null))
+              password, settings.getOrElse(null), email, username, ttype.getOrElse(null), openidtoken.getOrElse(null),
+              fullname.getOrElse(null), city.getOrElse(null), state.getOrElse(null), country.getOrElse(null), phone.getOrElse(null))
       }
   }
   
   def getFullUser(email: String): UserFull = {
     DB.withConnection { implicit connection =>
-      SQL("select id, createdate, lastlogindate, deleted, password, settings, email, username, type, openidtoken from user where email = {email}").on(
+      SQL("select id, createdate, lastlogindate, deleted, password, settings, email, username, type, openidtoken, fullname, city, state, country, phone from user where email = {email}").on(
         'email -> email).as(User.all.single)
     }
   }
   
   def getFullUser(id: Long): UserFull = {
     DB.withConnection { implicit connection =>
-      SQL("select id, createdate, lastlogindate, deleted, password, settings, email, username, type, openidtoken from user where id = {id}").on(
+      SQL("select id, createdate, lastlogindate, deleted, password, settings, email, username, type, openidtoken, fullname, city, state, country, phone from user where id = {id}").on(
         'id -> id).as(User.all.single)
     }
   }
