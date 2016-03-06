@@ -14,6 +14,7 @@ import play.api.libs.functional.syntax._
 import models._
 import views._
 import java.util.Date
+import models.json.DishLikers
 
 object Reservations extends Controller with Secured {
 
@@ -24,7 +25,20 @@ object Reservations extends Controller with Secured {
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(all)))))
     }
   } 
-
+  
+  def getByRestaurant(id: Long)  = Action { 
+    implicit request => {
+      Logger.info("calling ByReservations - load data for id:" + id)
+      val reservations = Reservation.findAllByRestaurant(id)
+      val allUsers = reservations.map(a => User.getFullUser(a.user_id)) //TODO this should be optimized as well
+      val all = allUsers.distinct.map(user => new DishLikers(user.id, 
+         Image.findByUser(user.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
+         user.fullname, user.city, id))
+      
+      Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(all)))))
+    }
+  } 
+  
   def create() = Action {
     implicit request => {
       val user_id = (request.body.asJson.get \ "user_id").as[String].toLong

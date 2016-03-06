@@ -31,6 +31,8 @@ GET      /api/unlike/:userId,:dishId   controllers.Activities.unlike(userId: Lon
 POST     /api/unlike                   controllers.Activities.unlikeSeveral
 GET      /api/getlikers/:id            controllers.Activities.getByDish(id: Long)
 
+GET      /api/getfriendswhobooked/:id  controllers.Reservations.getByRestaurant(id: Long)
+
 GET      /api/restaurants            controllers.Restaurants.getAll
 POST     /api/restaurants/new        controllers.Restaurants.create
 GET      /api/dishes/:restId         controllers.Dishes.getAll(restId: Long)
