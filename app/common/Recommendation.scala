@@ -18,7 +18,7 @@ object Recommendation {
   
   val maxdist = 10 //maximum allowable distance in km
   val priceMin = 0
-  val priceMax = 40.0
+  val priceMax = 4000.0
 
   def recommend(user: UserFull, latitude: Double, longitude: Double, options: String) = {
     val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*)
