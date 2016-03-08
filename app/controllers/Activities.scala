@@ -30,7 +30,7 @@ object Activities extends Controller with Secured {
   def getByUser(id: Long) = Action { 
     implicit request => {
       Logger.info("calling get activities (getByUser) id:" + id)
-      val all = ActivityLog.findAllByUser(id)
+      val all = ActivityLog.findAllByUserType(id, 11)
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(all)))))
     }
   } 
