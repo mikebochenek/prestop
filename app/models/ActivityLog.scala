@@ -69,7 +69,8 @@ object ActivityLog {
   
   def findAll(): Seq[ActivityLog] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, user_id, createdate, activity_type, activity_subtype, activity_details from activity_log "
+      SQL("select id, user_id, createdate, activity_type, activity_subtype, activity_details "
+          + " from activity_log where activity_type <> 7 "
           + " order by id asc").on().as(ActivityLog.simple *)
     }
   }
