@@ -1,4 +1,4 @@
-@(form: Form[(String,String,String,String,String,String,String,String,String,String,String,String,String,String,String)], restaurant: Restaurant, url: String, tags: String, cuisines: String)(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String,String,String,String,String,String,String,String,String,String)], restaurant: Restaurant, url: String, tags: String, cuisines: String, reservations: Seq[Reservation])(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -138,6 +138,29 @@
          </div><!-- /.col-sm-6 -->
         </div>
 
+      	<h3>Reservations (@reservations.size)</h3>
+      	<table class="table table-hover">
+      	  <thead>
+      	    <tr>
+      	       <td>user ID</td>
+      	       <td>date and time</td>
+      	       <td>guests</td>
+      	       <td>special requests</td>
+      	       <td>status</td>
+      	    </tr>
+      	  </thead>
+      	  <tbody>
+      	@for((reservation, index) <- reservations.zipWithIndex)  {	
+		  <tr>
+		  <td>@reservation.user_id</td>
+		  <td>@reservation.reservationtime.format("dd MMM YYYY HH:MM")</td>
+		  <td>@reservation.guestcount</td>
+		  <td>@reservation.special_requests</td>
+		  <td>@reservation.status</td>
+		  </tr>
+		  }
+      	  </tbody>
+		</table>
 
       
   </div>
