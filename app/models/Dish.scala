@@ -16,7 +16,7 @@ import play.api.libs.functional.syntax._
 import play.api.Logger
 
 case class Dish(id: Long, restaurant_id: Long, price: Double, name: String,  
-    greenScore: Double, lastupdate: Date, status: Int, var url: String, var distance: Double, var tags: Seq[String])
+    var greenScore: Double, lastupdate: Date, status: Int, var url: String, var distance: Double, var tags: Seq[String])
 
 object Dish {
   val simple = {

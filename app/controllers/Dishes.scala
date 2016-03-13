@@ -26,12 +26,16 @@ object Dishes extends Controller with Secured {
       Logger.info("calling dish edit - load data for id:" + id)
       val dish = Dish.findById(username, id)
       val tags = Tag.findByRef(id, 11).map(_.name).mkString(", ")
-      val greenscoretags = Tag.findByRef(id, 31).map(_.name).mkString(", ")
+      val greenscoretags = Tag.findByRef(id, 31).map(_.name)
       val diet = Tag.findByRef(id, 34).map(_.name).mkString(", ")
       val dishtype = Tag.findByRef(id, 35).map(_.name).mkString(", ")
       val meatorigin = Tag.findByRef(id, 36).map(_.name).mkString(", ")
       val url = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
-      Ok(views.html.dish_edit(dishForm, dish(0), url, tags, greenscoretags, diet, dishtype, meatorigin))
+
+      val totalPossibleGreenscoreTags = Tag.findAll().filter { x => x.status == Tag.TYPE_GREENSCORE }.size 
+      dish.foreach { x => x.greenScore = greenscoretags.size * 100 / totalPossibleGreenscoreTags }
+      
+      Ok(views.html.dish_edit(dishForm, dish(0), url, tags, greenscoretags.mkString(", "), diet, dishtype, meatorigin))
     }
   } 
 
