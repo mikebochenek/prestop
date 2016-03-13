@@ -1,7 +1,6 @@
 package controllers
 
 import java.io.File
-
 import play.Play
 import play.api.mvc.Action
 import play.api.mvc.Session
@@ -13,11 +12,10 @@ import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.Logger
 import play.api.http.HeaderNames
-
 import com.thoughtworks.xstream._
-
 import models._
 import views._
+import models.json.NameValue
 
 object Settings extends Controller with Secured {
   def load() = IsAuthenticated { username =>
@@ -168,4 +166,24 @@ object Settings extends Controller with Secured {
       Ok(Json.prettyPrint(Json.toJson(all)))
     }
   } 
+  
+  def register() = Action {
+    implicit request => {
+      val email = (request.body.asJson.get \ "email")
+      //val id = User.create(email, null, null)
+      Logger.info("register user - body:" + request.body.asJson)
+      Ok("ok")
+    }
+  }
+  
+  def introTexts(lang: String) = Action {
+    implicit request => {
+      val tags = Tag.findAll().filter { x => x.status == Tag.TYPE_INTRO_TEXTS }
+      Logger.info("intro texts for lang:" + lang + "  count:" + tags.size)
+      lang match {
+        case "en" => Ok(Json.prettyPrint(Json.toJson(tags.map { x => NameValue(x.name, x.en_text) })))
+        case "de" => Ok(Json.prettyPrint(Json.toJson(tags.map { x => Json.obj(x.name -> x.de_text)})))
+      } 
+    }
+  }
 }

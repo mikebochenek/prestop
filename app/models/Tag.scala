@@ -117,5 +117,13 @@ object Tag {
   implicit val tagReads = Json.reads[Tag]
   implicit val tagWrites = Json.writes[Tag]
 
+  val TYPE_INGREDIENTS = 11
+  val TYPE_PAYMENTS = 12
+  val TYPE_CUISINE = 21
+  val TYPE_GREENSCORE = 31
+  val TYPE_DIET = 34
+  val TYPE_DISHTYPE = 35
+  val TYPE_MEATORIGIN = 36
+  val TYPE_INTRO_TEXTS = 41
 }
 
