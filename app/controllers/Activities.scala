@@ -15,15 +15,52 @@ import models._
 import views._
 import models.json.DishLikers
 import models.json.DishLikes
+import scala.collection.mutable.MutableList
+import common.Recommendation
+import models.json.DishLikesContainer
 
 object Activities extends Controller with Secured {
 
   def getLikesByUser(id: Long) = Action { 
     implicit request => {
 	    Logger.info("calling get activities (getByUser) id:" + id)
-	    val activities = ActivityLog.findAllByUserType(id, 11).filter { x => x.activity_type == 11} //still needs to be optimized
-	    val all = activities.map (d => new DishLikes(d.activity_subtype, Image.findByDish(d.activity_subtype).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, id))
-	    Ok(Json.prettyPrint(Json.toJson(all)))
+      
+      //TODO all the below is way too similar to Recommendation.recommend and should be refactored into a common method
+      val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*)
+
+      var result = DishLikesContainer(MutableList.empty);
+
+      val activities = ActivityLog.findAllByUserType(id, 11).filter { x => x.activity_type == 11} //still needs to be optimized
+      Logger.info("activities " + activities + " size:" + activities.size)
+
+      for (ac <- activities) {
+        val dish = Dish.findById(null, ac.activity_subtype)(0)
+        val allLikes = Activities.getLikeActivitiesByDish(dish.id)
+        val like = false //TODO? !(allLikes.find { x => x.id == user.id }.isEmpty)
+      
+        val friendLikedDishURLs = allLikes.map(x => x.profileImageURL)
+        //Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url  :: Nil
+      
+        val r = restaurants.get(dish.restaurant_id).head
+        val ri = new DishLikes(id, dish.id, dish.id, Recommendation.makePriceString(dish.price), dish.name, like, dish.greenScore, 
+          Tag.findByRef(dish.id, 31).map(_.name),
+          Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+          Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+          null,
+          Tag.findByRef(dish.id, 11).map(_.name),
+          r.id,
+          r.name, Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
+          friendLikedDishURLs,
+          Tag.findByRef(dish.id, 34).map(_.name),
+          Tag.findByRef(dish.id, 35).map(_.name),
+          Tag.findByRef(dish.id, 36).map(_.name))
+        result.likes += ri
+      }
+      
+	    //val all = activities.map (d => new DishLikes(d.activity_subtype, Image.findByDish(d.activity_subtype).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, id))
+	    //Ok(Json.prettyPrint(Json.toJson(result)))
+      Ok(Json.prettyPrint(Json.toJson(result.likes.map(a => Json.toJson(a)))))
+
 	  }
   } 
   
