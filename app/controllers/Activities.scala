@@ -36,7 +36,7 @@ object Activities extends Controller with Secured {
       for (ac <- activities) {
         val dish = Dish.findById(null, ac.activity_subtype)(0)
         val allLikes = Activities.getLikeActivitiesByDish(dish.id)
-        val like = false //TODO? !(allLikes.find { x => x.id == user.id }.isEmpty)
+        val like = true
       
         val friendLikedDishURLs = allLikes.map(x => x.profileImageURL)
         //Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url  :: Nil
