@@ -181,8 +181,10 @@ object Settings extends Controller with Secured {
       val tags = Tag.findAll().filter { x => x.status == Tag.TYPE_INTRO_TEXTS }
       Logger.info("intro texts for lang:" + lang + "  count:" + tags.size)
       lang match {
-        case "en" => Ok(Json.prettyPrint(Json.toJson(tags.map { x => NameValue(x.name, x.en_text) })))
-        case "de" => Ok(Json.prettyPrint(Json.toJson(tags.map { x => Json.obj(x.name -> x.de_text)})))
+        case "de" => Ok(Json.prettyPrint(Json.toJson(tags.map { x => Json.obj(x.name -> x.de_text) })))
+        case "it" => Ok(Json.prettyPrint(Json.toJson(tags.map { x => Json.obj(x.name -> x.it_text) })))
+        case "fr" => Ok(Json.prettyPrint(Json.toJson(tags.map { x => Json.obj(x.name -> x.fr_text) })))
+        case default => Ok(Json.prettyPrint(Json.toJson(tags.map { x => Json.obj(x.name -> x.en_text) })))
       } 
     }
   }
