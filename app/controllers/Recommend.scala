@@ -22,7 +22,7 @@ import views._
 object Recommend extends Controller with Secured  {
   def test() = IsAuthenticated { username =>
     implicit request => {
-      Ok(views.html.test(testForm, null))
+      Ok(views.html.test(testForm, null, null))
     }
   }
 
@@ -31,7 +31,7 @@ object Recommend extends Controller with Secured  {
       Logger.info("calling recommend test submit")
       val (id, longitude, latitude, jsonoptions, maxdistance, time) = testForm.bindFromRequest.get
       val response = Recommendation.recommend(User.getFullUser(id.toLong), 47.385740, 8.518084, null)// longitude.toDouble, latitude.toDouble)
-      Ok(views.html.test(testForm, Json.prettyPrint(Json.toJson(response))))
+      Ok(views.html.test(testForm, response, Json.prettyPrint(Json.toJson(response))))
     }
   }
   

@@ -1,4 +1,4 @@
-@(form: Form[(String,String,String,String,String,String)], resp: String)(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String)], re: Recommendations, resp: String)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -46,7 +46,23 @@
 	}      
 	
 @if(resp!=null) {
-      <h3>Output</h3>
+      	<h3>Recommended Dishes (@re.dishes.size)</h3>
+      	<table class="table table-striped">
+      	@for((r, index) <- re.dishes.zipWithIndex)  {	
+		  <tr>
+		    <td>#@(index+1) @r.name -  @r.price - @r.distance - liked:@r.liked - friendsLiked:@r.friendLikeUrls.size</td>
+		  </tr>
+		  <tr>
+  		    <td>ingredients: @r.ingredients.mkString(", ")</td>
+		  </tr>
+		  <tr>
+  		    <td><img src="@r.url"></img><br>@Html(AdminHelper.mybr)</td>
+		  </tr>
+		  
+		  }
+		</table>
+
+      <h3>Raw Output</h3>
       
       <pre>@resp</pre>
 		}
