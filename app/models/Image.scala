@@ -97,11 +97,12 @@ object Image {
     url.getOrElse("http://localhost") + str  
   }
   
-  def updateRestaurantImages(restaurantId: Long, status: Int) = {
+  def updateRestaurantImages(restaurantId: Long, previousStatus: Int, status: Int) = {
     DB.withConnection { implicit connection =>
-      SQL("update image set status = {status} where restaurant_id = {restaurant_id}").on(
+      SQL("update image set status = {status} where restaurant_id = {restaurant_id} and status = {prevStatus}").on(
           'restaurant_id -> restaurantId,
           'lastupdate -> new Date(),
+          'prevStatus -> previousStatus,
           'status -> status).executeUpdate
     }
   }
@@ -134,7 +135,7 @@ object Image {
     val filename = picture.filename
     val ts = System.currentTimeMillis()
     
-    var restID = 0L; var dishID = 0L; var userID = 0L;
+    var restID = 0L; var dishID = 0L; var userID = 0L; var status = 0;
     
     if ("dish".equals(kind)) {
       Image.updateDishImages(id, -1)
@@ -142,10 +143,16 @@ object Image {
     }
       
     if ("restaurant".equals(kind)) {
-      Image.updateRestaurantImages(id, -1)
+      Image.updateRestaurantImages(id, 0, -1)
       restID = id
     }
-    
+
+    if ("restaurantlogo".equals(kind)) {
+      Image.updateRestaurantImages(id, 1, -1)
+      restID = id
+      status = 1
+    }
+
     if ("user".equals(kind)) {
       userID = id
     }
@@ -156,7 +163,7 @@ object Image {
     
     picture.ref.moveTo(file)
     val img = ImageIO.read(file); // load image
-    Image.create(new Image(0, file.getAbsolutePath, Image.createUrl(ts + "/" + file.getName), restID, dishID, Some(userID), Some(img.getWidth), Some(img.getHeight.toLong), 0, null))
+    Image.create(new Image(0, file.getAbsolutePath, Image.createUrl(ts + "/" + file.getName), restID, dishID, Some(userID), Some(img.getWidth), Some(img.getHeight.toLong), status, null))
       
     //http://www.htmlgoodies.com/beyond/java/create-high-quality-thumbnails-using-the-imgscalr-library.html
 
@@ -169,7 +176,7 @@ object Image {
 
       Image.create(new Image(0, resizeFile.getAbsolutePath, 
           Image.createUrl(ts + "/" + resizeFile.getName), restID, dishID, Some(userID), 
-          Some(resized.getWidth), Some(resized.getHeight.toLong), 0, null))
+          Some(resized.getWidth), Some(resized.getHeight.toLong), status, null))
     }
     
   }

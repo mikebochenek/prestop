@@ -55,6 +55,7 @@ GET     /restaurantedit/:id                 controllers.Restaurants.edit(id: Lon
 POST    /restaurantedit                     controllers.Restaurants.save
 GET     /about                              controllers.Restaurants.about
 POST	/restaurant							controllers.Restaurants.upload(id: Long)
+POST	/restaurant2						controllers.Restaurants.uploadLogo(id: Long)
 GET     /contact                            controllers.Restaurants.contact
 GET     /tageditor                          controllers.TagEditor.load
 GET     /tagedit/:id                        controllers.TagEditor.loadTag(id: Long)
