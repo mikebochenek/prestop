@@ -21,7 +21,7 @@ object AdminHelper {
         + "<br>" + mybr
         + system_df + "<br><br>" + mybr + system_top.split("\n").filter { x => x.contains("%MEM") || x.contains("java") }.mkString("\n") + "<br><br>" + mybr
         + (java.lang.management.ManagementFactory.getRuntimeMXBean().getUptime() / (1000 * 60 * 60)) + " hours JVM uptime."  + "<br><br>" + mybr
-        + system_gitlog
+        + "last " + system_gitlog
      ).replaceAll("\n", "<br>")
   }
 
