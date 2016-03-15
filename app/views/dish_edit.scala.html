@@ -72,7 +72,7 @@
             <input class="form-control span4" type="text" name="tags" id="tags" value="@tags">
           </div>
           
-          <div>&emsp;<u>possible ingredients:</u> @Tag.findAll.filter(_.status == 11).map(_.name).mkString(", ")</div>
+          <div>&emsp;<u>possible ingredients:</u> @Tag.findAll.filter(_.status == 11).map(_.name).take(10).mkString(", ")</div>
           <script>var availableTags = @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 11).map(_.name)).toString) ;</script>
           
           </br>
