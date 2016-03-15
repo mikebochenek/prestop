@@ -19,7 +19,7 @@ object AdminHelper {
         + "activitylog count:" + ActivityLog.countAll + "<br>" 
         + "tag ref count:" + TagRef.findAll.size + "<br>" 
         + "<br>" + mybr
-        + system_df + "<br><br>" + mybr + system_top.split("\n").take(26).mkString("\n") + "<br><br>").replaceAll("\n", "<br>")
+        + system_df + "<br><br>" + mybr + system_top.split("\n").filter { x => x.contains("%MEM") || x.contains("java") }.mkString("\n") + "<br><br>").replaceAll("\n", "<br>")
   }
 
   //http://stackoverflow.com/questions/16162483/execute-external-command
