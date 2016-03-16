@@ -40,10 +40,12 @@ object Activities extends Controller with Secured {
       
         val friendLikedDishURLs = allLikes.map(x => x.profileImageURL)
         //Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url  :: Nil
-      
+
+        val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.name)
+        
         val r = restaurants.get(dish.restaurant_id).head
-        val ri = new DishLikes(id, dish.id, dish.id, Recommendation.makePriceString(dish.price), dish.name, like, dish.greenScore, 
-          Tag.findByRef(dish.id, 31).map(_.name),
+        val ri = new DishLikes(id, dish.id, dish.id, Recommendation.makePriceString(dish.price), dish.name, like, Dishes.calculateGreenScore(greenscoretags.size), 
+          greenscoretags,
           Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
           Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
           null,

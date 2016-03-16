@@ -9,6 +9,7 @@ import java.text.DecimalFormat
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import controllers.Activities
+import controllers.Dishes
 
 object Recommendation {
   //47.385740, 8.518084 coordinates for Zurich Hardbrucke
@@ -53,10 +54,12 @@ object Recommendation {
       
       val friendLikedDishURLs = allLikes.map(x => x.profileImageURL).filter { url => url != null }  //TODO in cases where its null, should we show a default image?
       //Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url  :: Nil
+
+      val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.name)
       
       val r = restaurants.get(dish.restaurant_id).head
-      val ri = new RecommendationItem(dish.id, makePriceString(dish.price), dish.name, like, dish.greenScore, 
-        Tag.findByRef(dish.id, 31).map(_.name),
+      val ri = new RecommendationItem(dish.id, makePriceString(dish.price), dish.name, like, Dishes.calculateGreenScore(greenscoretags.size), 
+        greenscoretags,
         Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
         Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
         makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),

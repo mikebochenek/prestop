@@ -26,18 +26,22 @@ object Dishes extends Controller with Secured {
       Logger.info("calling dish edit - load data for id:" + id)
       val dish = Dish.findById(username, id)
       val tags = Tag.findByRef(id, 11).map(_.name).mkString(", ")
-      val greenscoretags = Tag.findByRef(id, 31).map(_.name)
+      val greenscoretags = Tag.findByRef(id, Tag.TYPE_GREENSCORE).map(_.name)
       val diet = Tag.findByRef(id, 34).map(_.name).mkString(", ")
       val dishtype = Tag.findByRef(id, 35).map(_.name).mkString(", ")
       val meatorigin = Tag.findByRef(id, 36).map(_.name).mkString(", ")
       val url = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
 
-      val totalPossibleGreenscoreTags = Tag.findAll().filter { x => x.status == Tag.TYPE_GREENSCORE }.size 
-      dish.foreach { x => x.greenScore = greenscoretags.size * 100 / totalPossibleGreenscoreTags }
+      dish.foreach { x => x.greenScore = calculateGreenScore(greenscoretags.size) }
       
       Ok(views.html.dish_edit(dishForm, dish(0), url, tags, greenscoretags.mkString(", "), diet, dishtype, meatorigin))
     }
-  } 
+  }
+  
+  def calculateGreenScore(size: Int) = {
+    val totalPossibleGreenscoreTags = Tag.findAll().filter { x => x.status == Tag.TYPE_GREENSCORE }.size 
+    size * 100 / totalPossibleGreenscoreTags 
+  }
 
   
   val dishForm = Form(
@@ -82,10 +86,13 @@ object Dishes extends Controller with Secured {
       
         val friendLikedDishURLs = allLikes.map(x => x.profileImageURL)
         //Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url  :: Nil
+        
+        val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.name)
+
       
         val r = restaurants.get(dish.restaurant_id).head
-        val ri = new RecommendationItem(dish.id, Recommendation.makePriceString(dish.price), dish.name, like, dish.greenScore, 
-          Tag.findByRef(dish.id, 31).map(_.name),
+        val ri = new RecommendationItem(dish.id, Recommendation.makePriceString(dish.price), dish.name, like, calculateGreenScore(greenscoretags.size), 
+          greenscoretags,
           Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
           Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
           null,
