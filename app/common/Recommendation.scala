@@ -43,6 +43,7 @@ object Recommendation {
     val dishes = Dish.findAll()
       .filter { x => within(maxdist, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
       .filter { x => (priceMax >= x.price && priceMin <= x.price) } // filter by price
+      .take(100) //TODO for now, limit to 100 dishes..
     
     val result = new Recommendations(MutableList.empty);
     
