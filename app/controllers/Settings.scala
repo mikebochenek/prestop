@@ -27,7 +27,7 @@ object Settings extends Controller with Secured {
       val subdomainLanguage = request.headers.get(HeaderNames.ACCEPT_LANGUAGE).get/*.substring(0,2)*/
       Logger.debug(" language from request:" + subdomainLanguage)
 
-      var userSettings = new UserSettings(fullUser.id, "en_US", false, "", 0, Seq.empty[Tag])
+      var userSettings = new UserSettings(fullUser.id, "en_US", false, "", 0, Seq.empty[Cuisine])
       if (fullUser.settings != null) {
         userSettings = Json.parse(fullUser.settings).validate[UserSettings].get 
         Logger.debug("parse ----->" + userSettings)

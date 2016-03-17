@@ -9,11 +9,18 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.Logger
 
-case class UserSettings(id: Long, var language: String, skipDailyEmail: Boolean, timeZone: String, screenWidth: Long, var favCuisines: Seq[Tag])
+case class Cuisine(tag: String, rating: Int)
+
+object Cuisine {
+  implicit val cuisineReads = Json.reads[Cuisine]
+  implicit val cuisineWrites = Json.writes[Cuisine]
+}
+
+case class UserSettings(id: Long, var language: String, skipDailyEmail: Boolean, 
+    timeZone: String, screenWidth: Long, var favCuisines: Seq[Cuisine])
 
 object UserSettings {
-
   implicit val userSettingsReads = Json.reads[UserSettings]
   implicit val userSettingsWrites = Json.writes[UserSettings]
-
 }
+
