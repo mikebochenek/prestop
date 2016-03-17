@@ -62,6 +62,11 @@ object Application extends Controller {
       user => Redirect(routes.Restaurants.index).withSession("email" -> user._1))
   }
 
+  def authenticateTest(email: String) = Action { implicit request =>
+    val user = User.authenticate(email, "test")
+    Redirect(routes.Recommend.test).withSession("email" -> user.get.email)
+  }
+
   def createuser = Action { implicit request =>
     Ok(html.createuser(createUserForm))
   }

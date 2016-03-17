@@ -67,6 +67,7 @@ GET     /login                              controllers.Application.login
 GET     /createuser                         controllers.Application.createuser
 GET     /submitcreateuser                   controllers.Application.submitcreateuser
 POST    /login                              controllers.Application.authenticate
+GET     /testlogin/:id                      controllers.Application.authenticateTest(id: String)
 GET     /logout                             controllers.Application.logout
 
 GET     /reports                            controllers.Reports.load
