@@ -10,6 +10,8 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import controllers.Activities
 import controllers.Dishes
+import play.cache.Cache
+import java.util.concurrent.Callable
 
 object Recommendation {
   //47.385740, 8.518084 coordinates for Zurich Hardbrucke
@@ -20,9 +22,24 @@ object Recommendation {
   val maxdist = 10 //maximum allowable distance in km
   val priceMin = 0
   val priceMax = 4000.0
+  
+  { //TODO ... but isn't it kinda wrong that I need to place these in the cache myself
+    Cache.set("allrestaurants", Map(Restaurant.findAll map { a => a.id -> a}: _*))
+    Cache.set("alldishes", Dish.findAll())
+  }
 
+  def getAllRestaurants() = {
+    //Cache.get("allrestaurants").asInstanceOf[Map[Long,models.Restaurant]]
+    Cache.getOrElse("allrestaurants", new Callable[Map[Long,models.Restaurant]] { def call() = Map(Restaurant.findAll map { a => a.id -> a}: _*) }, 1000)
+  }
+  
+  def getAllDishes() = {
+    //Cache.get("alldishes").asInstanceOf[Seq[Dish]]
+    Cache.getOrElse("alldishes", new Callable[Seq[Dish]] { def call() = Dish.findAll()}, 1000)
+  }
+  
   def recommend(user: UserFull, latitude: Double, longitude: Double, options: String) = {
-    val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*)
+    val restaurants = getAllRestaurants()//Map(Restaurant.findAll map { a => a.id -> a}: _*) //getAllRestaurants()
     // http://stackoverflow.com/questions/2925041/how-to-convert-a-seqa-to-a-mapint-a-using-a-value-of-a-as-the-key-in-the-ma
     
     val likedDishes = Recommendations.getLikedDishes(user.id)
@@ -42,7 +59,7 @@ object Recommendation {
     }
         
         
-    val dishes = Dish.findAll()
+    val dishes = getAllDishes()//Dish.findAll()
       .filter { x => within(maxdist, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
       .filter { x => (priceMax >= x.price && priceMin <= x.price) } // filter by price
       .take(100) //TODO for now, limit to 100 dishes..
