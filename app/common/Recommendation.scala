@@ -30,6 +30,8 @@ object Recommendation {
     //TODO we can not iterate in a dumb for-loop because this would not scale
     //TODO ideally, we would read the restaurants only once in a while..
     
+    //TODO load favorites cuisines similar to Recommend.testsubmit...
+    //TODO or what about a nightly batch job which re-ranks all dishes for all active users?
     
     var desiredWidth = 750L
     if (user.settings != null) {
