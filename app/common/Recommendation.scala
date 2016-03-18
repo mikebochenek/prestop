@@ -70,9 +70,9 @@ object Recommendation {
         r.id,
         r.name, Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
         friendLikedDishURLs,
-        Tag.findByRef(dish.id, 34).map(_.name),
-        Tag.findByRef(dish.id, 35).map(_.name),
-        Tag.findByRef(dish.id, 36).map(_.name))
+        Tag.findByRef(dish.id, Tag.TYPE_DIET ).map(_.name),
+        Tag.findByRef(dish.id, Tag.TYPE_DISHTYPE).map(_.name),
+        Tag.findByRef(dish.id, Tag.TYPE_MEATORIGIN).map(_.name))
       result.dishes += ri
     }
     result
