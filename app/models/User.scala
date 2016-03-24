@@ -73,7 +73,7 @@ object User {
       get[Option[String]]("user.phone") map {
         case id ~ createdate ~ lastlogindate ~ deleted ~ password ~ settings ~ email ~ username ~ ttype ~ openidtoken ~ fullname ~ city ~ state ~ country ~ phone => 
           UserFull(id, createdate.getOrElse(null), lastlogindate, deleted.getOrElse(false), 
-              password, settings.getOrElse(null), email, username, ttype.getOrElse(null), openidtoken.getOrElse(null),
+              password, settings.getOrElse(null), email, username, ttype.getOrElse(""), openidtoken.getOrElse(null),
               fullname.getOrElse(null), city.getOrElse(null), state.getOrElse(null), country.getOrElse(null), phone.getOrElse(null))
       }
   }

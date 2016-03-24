@@ -59,7 +59,7 @@ object Application extends Controller {
   def authenticate = Action { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(html.login(formWithErrors)),
-      user => Redirect(routes.Restaurants.index).withSession("email" -> user._1))
+      user => Redirect(routes.Restaurants.index).withSession("email" -> user._1, "usertype" -> User.getFullUser(user._1).ttype))
   }
 
   def authenticateTest(email: String) = Action { implicit request =>
