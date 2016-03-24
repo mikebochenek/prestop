@@ -1,6 +1,7 @@
 @(form: Form[(String,String,String,String,String,String)], tag: Tag, size: Int)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
+@if(session.get("usertype").get.toString.equals("7")) {
 
 <div class="container">
 
@@ -51,4 +52,5 @@
 
 
     </div><!-- /.container -->
+    }
 }
