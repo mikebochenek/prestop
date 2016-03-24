@@ -1,5 +1,6 @@
 @(tags: Seq[Tag])(implicit session: Session, lang: Lang)
 @main(title = "reports") {
+    @if(session.get("usertype").get.toString.equals("7")) {
     <div class="container">
 
       <div class="starter-template">
@@ -96,4 +97,5 @@
       </div>
 
     </div><!-- /.container -->
+}
 }
