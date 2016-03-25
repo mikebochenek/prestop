@@ -19,7 +19,7 @@ object Application extends Controller {
   }
   
   def permalink(id: String) = Action { implicit request =>
-    Ok(views.html.index())
+    Ok(views.html.permalink("title"))
   }
 
   /** resolve "any" into the corresponding HTML page URI */
