@@ -44,6 +44,7 @@ POST     /api/user/new               controllers.Settings.createUser
 
 
 GET      /dishedit/:id              controllers.Dishes.getById(id: Long)
+GET      /dishcrop/:id              controllers.Dishes.cropImage(id: Long)
 POST     /dishedit                  controllers.Dishes.save
 POST	 /dish						controllers.Dishes.upload(id: Long)
 

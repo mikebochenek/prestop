@@ -21,6 +21,14 @@ import common.Recommendation
 
 object Dishes extends Controller with Secured {
 
+  def cropImage(id: Long) = IsAuthenticated { username =>
+    implicit request => {
+      Logger.info("calling dish crop - load data for id:" + id)
+      val url = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+      Ok(views.html.dish_crop(url, id))
+    }
+  }
+
   def getById(id: Long) = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling dish edit - load data for id:" + id)

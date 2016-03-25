@@ -88,7 +88,9 @@
 
       <div class="row ">
         <div class="col-sm-8 col-md-offset-2">
-           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">crop</button>
+                @helper.form(action = routes.Dishes.cropImage(dish.id)) {
+                       <button class="span4 btn btn-primary" type="submit" id="cropbutton" >crop</button>
+                }
         
                 @if(url != null) {
                      <img src="@url" alt="dish photo" height="100" width="100"></img>

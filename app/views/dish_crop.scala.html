@@ -1,0 +1,38 @@
+@(url: String, id: Long)(implicit flash: Flash, session: Session, lang: Lang)
+
+@main(title = "settings") {
+
+<div class="container">
+
+
+  <div class="starter-template">
+    <h3>Dish Image</h3>
+
+      <h3>Photo</h3>
+
+      <div class="row ">
+        <div class="col-sm-8 col-md-offset-2">
+           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">crop</button>
+        
+                @if(url != null) {
+                     <img src="@url" alt="dish photo" height="100" width="100"></img>
+                     @for(w <- Image.resolutions) { <a href="@Image.reverseURLGen(url, w)">@w px wide</a> &nbsp&nbsp }
+                }        
+		  
+        </div>
+      </div>
+      
+	<script src="@routes.Assets.at("js/jquery.Jcrop.min.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.at("js/jquery.color.js")" type="text/javascript"></script>
+
+<script language="Javascript">
+    jQuery(function($) {
+        $('#target').Jcrop();
+    });
+</script>      
+
+  </div>
+
+
+    </div><!-- /.container -->
+}
