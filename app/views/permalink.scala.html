@@ -1,4 +1,4 @@
-@(title: String)(implicit session: Session, lang: Lang)
+@(title: String, url: String, name: String, price: String)(implicit session: Session, lang: Lang)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +27,9 @@
   <body>
 
 
-    <div>ya</div>
+    <div>@name</div>
+    <div>@price</div>
+    <div><img src="@url"></img></div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
