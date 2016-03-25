@@ -16,6 +16,8 @@ import play.api.Logger
 import models.Tag
 import models.RestaurantFriends
 import models.Reservation
+import models.User
+import models.RestaurantOwner
 
 object Restaurants extends Controller with Secured {
 
@@ -103,9 +105,14 @@ object Restaurants extends Controller with Secured {
     }
   }
 
-  def getAll() = Action {
+  def getAll() = IsAuthenticated { username =>
     implicit request => {
+      val user = User.getFullUser(username)
       val all = Restaurant.findAll()
+      if (!user.ttype.equals("7")) {
+        val ro = RestaurantOwner.findByUser(user.id)
+        Logger.info("find restaurants that user owns: " + user.id + "  found:" + ro.size)
+      }
       for (restaurant <- all) {
         restaurant.paymentoptions =  Tag.findByRef(restaurant.id, 12).map(_.name)
         restaurant.cuisines =  Tag.findByRef(restaurant.id, 21).map(_.name)
