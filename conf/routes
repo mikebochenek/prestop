@@ -60,7 +60,7 @@ GET     /contact                            controllers.Restaurants.contact
 GET     /tageditor                          controllers.TagEditor.load
 GET     /tagedit/:id                        controllers.TagEditor.loadTag(id: Long)
 POST    /tageditor                          controllers.TagEditor.save
-
+GET     /permalink/:id                      controllers.Application.permalink(id: String)
 
 # Authentication
 GET     /login                              controllers.Application.login

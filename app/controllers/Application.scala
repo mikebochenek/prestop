@@ -17,6 +17,10 @@ object Application extends Controller {
   def index(any: String) = Action { implicit request =>
     Ok(views.html.index())
   }
+  
+  def permalink(id: String) = Action { implicit request =>
+    Ok(views.html.index())
+  }
 
   /** resolve "any" into the corresponding HTML page URI */
   def getURI(any: String): String = any match {
