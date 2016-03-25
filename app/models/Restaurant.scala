@@ -119,7 +119,15 @@ object Restaurant {
           + " order by id asc").on().as(Restaurant.simple *)
     }
   }
-  
+
+  def findAllByUser(userId: Long): Seq[Restaurant] = {
+    DB.withConnection { implicit connection =>
+      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state from restaurant where status >= 0 "
+          + " and id in (select restaurant_id from restaurant_owner where user_id = {user_id} and status >= 0) order by id asc").on(
+              'user_id -> userId).as(Restaurant.simple *)
+    }
+  }
+
   implicit val restaurantReads = Json.reads[Restaurant]
   implicit val restaurantWrites = Json.writes[Restaurant]
 

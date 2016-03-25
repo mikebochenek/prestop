@@ -18,6 +18,7 @@ import models.RestaurantFriends
 import models.Reservation
 import models.User
 import models.RestaurantOwner
+import models.UserFull
 
 object Restaurants extends Controller with Secured {
 
@@ -104,15 +105,20 @@ object Restaurants extends Controller with Secured {
       Redirect(routes.Restaurants.edit(id.toLong))
     }
   }
+  
+  def getRestaurantsForUser(user: UserFull): Seq[Restaurant] = user.ttype match {
+    case "7" => Restaurant.findAll()
+    case _   => Restaurant.findAllByUser(user.id)
+  }
 
   def getAll() = IsAuthenticated { username =>
     implicit request => {
       val user = User.getFullUser(username)
-      val all = Restaurant.findAll()
-      if (!user.ttype.equals("7")) {
+      val all = getRestaurantsForUser(user)
+      /* if (!user.ttype.equals("7")) {
         val ro = RestaurantOwner.findByUser(user.id)
         Logger.info("find restaurants that user owns: " + user.id + "  found:" + ro.size)
-      }
+      } */
       for (restaurant <- all) {
         restaurant.paymentoptions =  Tag.findByRef(restaurant.id, 12).map(_.name)
         restaurant.cuisines =  Tag.findByRef(restaurant.id, 21).map(_.name)
