@@ -88,6 +88,8 @@
 
       <div class="row ">
         <div class="col-sm-8 col-md-offset-2">
+           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">crop</button>
+        
                 @if(url != null) {
                      <img src="@url" alt="dish photo" height="100" width="100"></img>
                      @for(w <- Image.resolutions) { <a href="@Image.reverseURLGen(url, w)">@w px wide</a> &nbsp&nbsp }
@@ -97,6 +99,7 @@
 		   </br>
            <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">upload</button>
 		  }
+		  
         </div>
       </div>
       
