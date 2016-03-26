@@ -21,6 +21,13 @@ import common.Recommendation
 
 object Dishes extends Controller with Secured {
 
+  val dishCropForm = Form(
+    tuple(
+      "x" -> text,
+      "y" -> text,
+      "w" -> text,
+      "h" -> text))
+
   def cropImage(id: Long) = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling dish crop - load data for id:" + id)
@@ -31,9 +38,12 @@ object Dishes extends Controller with Secured {
 
   def cropImagePost(id: Long) = IsAuthenticated { username =>
     implicit request => {
-      Logger.info("calling dish crop POST - load data for id:" + id)
+      Logger.info("cropping - calling dish crop POST - load data for id:" + id)
+      val (x, y, w, h) = dishCropForm.bindFromRequest.get
+      Logger.info("cropping x:" + x + " y:" + y + " w:" + w + " h:" + h)
+
       val url = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
-      Ok(views.html.dish_crop(url, id))
+      Redirect(routes.Dishes.getById(id))
     }
   }
   
