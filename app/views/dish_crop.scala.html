@@ -4,31 +4,59 @@
 
 <div class="container">
 
-
   <div class="starter-template">
-    <h3>Dish Image</h3>
-
       <h3>Photo</h3>
 
       <div class="row ">
         <div class="col-sm-8 col-md-offset-2">
-           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">crop</button>
         
                 @if(url != null) {
-                     <img src="@url" alt="dish photo" height="100" width="100"></img>
-                     @for(w <- Image.resolutions) { <a href="@Image.reverseURLGen(url, w)">@w px wide</a> &nbsp&nbsp }
+                     <img src="@url" alt="dish photo" width="750" id="croptarget"></img>
+                     
+                     		<!-- This is the form that our event handler fills -->
+		<form action="" method="post" onsubmit="return checkCoords();">
+			<input type="hidden" id="x" name="x" />
+			<input type="hidden" id="y" name="y" />
+			<input type="hidden" id="w" name="w" />
+			<input type="hidden" id="h" name="h" />
+			<input type="submit" value="Crop Image" />
+		</form>
                 }        
 		  
         </div>
       </div>
       
-	<script src="@routes.Assets.at("js/jquery.Jcrop.min.js")" type="text/javascript"></script>
-	<script src="@routes.Assets.at("js/jquery.color.js")" type="text/javascript"></script>
+	<!-- script src="@routes.Assets.at("js/jquery.color.js")" type="text/javascript"></script -->
 
 <script language="Javascript">
-    jQuery(function($) {
-        $('#target').Jcrop();
-    });
+attachjcrop = function() {
+	$(function(){
+
+		$('#croptarget').Jcrop({
+			aspectRatio: 1,
+			onSelect: updateCoords
+		});
+
+	});
+
+	function updateCoords(c)
+	{
+		$('#x').val(c.x);
+		$('#y').val(c.y);
+		$('#w').val(c.w);
+		$('#h').val(c.h);
+	};
+
+	function checkCoords()
+	{
+		if (parseInt($('#w').val())) return true;
+		alert('Please select a crop region then press submit.');
+		return false;
+	};
+}
+window.onload = function() {
+	setTimeout(attachjcrop , 2000);
+}
 </script>      
 
   </div>
