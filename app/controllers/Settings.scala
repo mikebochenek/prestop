@@ -169,7 +169,7 @@ object Settings extends Controller with Secured {
   
   def register() = Action {
     implicit request => {
-      val email = (request.body.asJson.get \ "email")
+      //val email = (request.body.asJson.get \ "email")
       //val id = User.create(email, null, null)
       Logger.info("register user - body:" + request.body.asJson)
       Ok("ok")
