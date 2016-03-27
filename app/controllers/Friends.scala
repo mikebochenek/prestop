@@ -1,7 +1,6 @@
 package controllers
 
 import java.io.File
-
 import play.Play
 import play.api.mvc.Action
 import play.api.mvc.Session
@@ -12,9 +11,10 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.libs.functional.syntax._
-
 import models._
 import views._
+import models.json.FriendSuggestion
+import models.json.FriendSuggestion
 
 object Friends extends Controller with Secured {
 
@@ -47,7 +47,10 @@ object Friends extends Controller with Secured {
       for (phone <- phones) {
         
       }
-      Ok("ok")
+      val fakeFriend = new FriendSuggestion(2, "dont-use-this-url", "10156711015015472", "James Bellofiore", "+445556666")
+      val all = Array(fakeFriend)
+      Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(all)))))
+      //Ok("ok")
     }
   }
 
