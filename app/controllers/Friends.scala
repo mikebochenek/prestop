@@ -39,14 +39,27 @@ object Friends extends Controller with Secured {
       Ok(Json.prettyPrint(Json.toJson(user)))
     }
   }
+  
+  def suggestFriendsToFollow() = Action {
+    implicit request => {
+      val phones = (request.body.asJson.get \ "phones").as[Array[String]]
+      Logger.info("suggestFriendsToFollow " + phones.length)
+      for (phone <- phones) {
+        
+      }
+      Ok("ok")
+    }
+  }
 
   def create() = Action {
     implicit request => {
       val user_id = (request.body.asJson.get \ "user_id").as[String].toLong
-      val friend_user_id = (request.body.asJson.get \ "friend_user_id").as[String].toLong
-      val status = (request.body.asJson.get \ "status").as[String].toInt
-      val id = Friend.create(user_id, friend_user_id, status)
-      Logger.info("Create Friend endity with id: " + id.get + " user_id: " + user_id)
+      val friend_array = (request.body.asJson.get \ "friend_user_id").as[Array[String]]
+      for (friend_id_str <- friend_array) {
+        val friend_user_id = friend_id_str.toLong
+        val id = Friend.create(user_id, friend_user_id, 0)
+        Logger.info("Create Friend endity with id: " + id.get + " user_id: " + user_id + " friend: " + friend_user_id)
+      }
       Ok("ok")
     }
   }
