@@ -71,7 +71,7 @@ object Application extends Controller {
 
   def authenticateTest(email: String) = Action { implicit request =>
     val user = User.authenticate(email, "test")
-    Redirect(routes.Recommend.test).withSession("email" -> user.get.email)
+    Redirect(routes.Recommend.test).withSession("email" -> user.get.email, "usertype" -> User.getFullUser(user.get.email).ttype)
   }
 
   def createuser = Action { implicit request =>
