@@ -16,6 +16,7 @@ import com.thoughtworks.xstream._
 import models._
 import views._
 import models.json.NameValue
+import models.json.RegisterResponse
 
 object Settings extends Controller with Secured {
   def load() = IsAuthenticated { username =>
@@ -178,13 +179,13 @@ object Settings extends Controller with Secured {
       val name = (request.body.asJson.get \ "user_data" \ "name")
       val id = (request.body.asJson.get \ "user_data" \ "id")
       val newid = User.create(new UserFull(-1, null, null, false, "test", null, email.as[String], id.as[String], "1", null, name.as[String], null, null, null, phone.as[String]))
-      //(id: Long, createdate: Date, lastlogindate: Option[Date], deleted: Boolean, 
-      //var password: String, settings: String, email: String, username: String, ttype: String,
-      // openidtoken: String, fullname: String, city: String, state: String, country: String, phone: String)
 
+      //TODO also link URL!
+      
       Logger.info("parsed name: " + name + " id: " + id + " email: " + email + " phone: " + phone + " gender:" + gender + " url: " + url)
       Logger.info("created new user with id: " + newid)
-      Ok("ok")
+      
+      Ok(Json.prettyPrint(Json.toJson(new RegisterResponse("OK", newid.get))))
     }
   }
   
