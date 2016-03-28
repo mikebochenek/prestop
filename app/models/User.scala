@@ -151,21 +151,26 @@ object User {
     }
   }
 
-  def create(user: User): User = {
+  def create(user: UserFull): Option[Long] = {
     DB.withConnection { implicit connection =>
       SQL(
         """
-          insert into user (email, username, password, createdate) values (
-            {email}, {username}, {password}, {createdate}
-          )
+          insert into user (email, username, password, createdate, deleted, settings, type, openidtoken, fullname, city, country, state, phone) 
+          values ( {email}, {username}, {password}, {createdate}, {deleted}, {settings}, {type}, {openidtoken}, {fullname}, {city}, {country}, {state}, {phone} )
         """).on(
           'email -> user.email,
           'username -> user.username,
           'password -> hash(user.password),
-          'createdate -> new Date()).executeInsert()
-
-      user
-
+          'createdate -> new Date(),
+          'deleted -> user.deleted,
+          'settings -> user.settings,
+          'type -> user.ttype,
+          'openidtoken -> user.openidtoken,
+          'fullname -> user.fullname,
+          'city -> user.city,
+          'country -> user.country,
+          'state -> user.state,
+          'phone -> user.phone).executeInsert()
     }
   }
 

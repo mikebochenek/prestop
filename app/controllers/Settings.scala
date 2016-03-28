@@ -169,9 +169,21 @@ object Settings extends Controller with Secured {
   
   def register() = Action {
     implicit request => {
-      //val email = (request.body.asJson.get \ "email")
-      //val id = User.create(email, null, null)
       Logger.info("register user - body:" + request.body.asJson)
+      
+      val email = (request.body.asJson.get \ "user_data" \ "email")
+      val phone = (request.body.asJson.get \ "user_data" \ "phone_numer")
+      val url = (request.body.asJson.get \ "user_data" \ "profile_pictureURL")
+      val gender = (request.body.asJson.get \ "user_data" \ "gender")
+      val name = (request.body.asJson.get \ "user_data" \ "name")
+      val id = (request.body.asJson.get \ "user_data" \ "id")
+      val newid = User.create(new UserFull(-1, null, null, false, "test", null, email.as[String], id.as[String], "1", null, name.as[String], null, null, null, phone.as[String]))
+      //(id: Long, createdate: Date, lastlogindate: Option[Date], deleted: Boolean, 
+      //var password: String, settings: String, email: String, username: String, ttype: String,
+      // openidtoken: String, fullname: String, city: String, state: String, country: String, phone: String)
+
+      Logger.info("parsed name: " + name + " id: " + id + " email: " + email + " phone: " + phone + " gender:" + gender + " url: " + url)
+      Logger.info("created new user with id: " + newid)
       Ok("ok")
     }
   }
