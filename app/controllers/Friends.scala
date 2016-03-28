@@ -46,7 +46,7 @@ object Friends extends Controller with Secured {
       val phones = (request.body.asJson.get \ "phones").as[Array[String]]
       Logger.info("suggestFriendsToFollow " + phones.length)
       for (phone <- phones) {
-        
+        //TODO!
       }
       val fakeFriend = new FriendSuggestion(1, Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, "10156711015015472", "James Bellofiore", "+445556666")
       val all = Array(fakeFriend)
