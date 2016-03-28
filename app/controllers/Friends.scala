@@ -49,7 +49,7 @@ object Friends extends Controller with Secured {
       }
       val fakeFriend = new FriendSuggestion(2, "dont-use-this-url", "10156711015015472", "James Bellofiore", "+445556666")
       val all = Array(fakeFriend)
-      Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(all)))))
+      Ok(Json.prettyPrint(Json.toJson(all)))
       //Ok("ok")
     }
   }
