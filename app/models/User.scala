@@ -92,6 +92,13 @@ object User {
     }
   }
 
+  def getFullUserByUsername(username: String): Option[UserFull] = {
+    DB.withConnection { implicit connection =>
+      SQL("select id, createdate, lastlogindate, deleted, password, settings, email, username, type, openidtoken, fullname, city, state, country, phone from user where username = {username}").on(
+        'username -> username).as(User.all.singleOpt)
+    }
+  }
+  
   def findByEmail(email: String): User = {
     DB.withConnection { implicit connection =>
       SQL("select id, email, username, password from user where email = {email}").on(

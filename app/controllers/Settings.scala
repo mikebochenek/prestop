@@ -181,6 +181,7 @@ object Settings extends Controller with Secured {
       val newid = User.create(new UserFull(-1, null, null, false, "test", null, email.as[String], id.as[String], "1", null, name.as[String], null, null, null, phone.as[String]))
 
       //TODO also link URL!
+      //TODO maybe we should check for existing users somehow???
       
       Logger.info("parsed name: " + name + " id: " + id + " email: " + email + " phone: " + phone + " gender:" + gender + " url: " + url)
       Logger.info("created new user with id: " + newid)

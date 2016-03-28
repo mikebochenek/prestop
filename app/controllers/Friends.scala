@@ -50,20 +50,27 @@ object Friends extends Controller with Secured {
       val fakeFriend = new FriendSuggestion(2, "dont-use-this-url", "10156711015015472", "James Bellofiore", "+445556666")
       val all = Array(fakeFriend)
       Ok(Json.prettyPrint(Json.toJson(all)))
-      //Ok("ok")
     }
+  }
+  
+  def checkAndConvertUserID(id: String) : Long = {
+      val user = User.getFullUserByUsername(id)
+      val user_id = user.isDefined match {
+        case false => id.toLong
+        case true => user.get.id
+      }
+      user_id
   }
 
   def create() = Action {
     implicit request => {
-      val user_id = (request.body.asJson.get \ "user_id").as[String].toLong
+      val user_id_input = (request.body.asJson.get \ "user_id").as[String]
       val friend_array = (request.body.asJson.get \ "friend_user_id").as[Array[String]]
       for (friend_id_str <- friend_array) {
-        val friend_user_id = friend_id_str.toLong
-        val id = Friend.create(user_id, friend_user_id, 0)
-        Logger.info("Create Friend endity with id: " + id.get + " user_id: " + user_id + " friend: " + friend_user_id)
+        val id = Friend.create(checkAndConvertUserID(user_id_input), checkAndConvertUserID(friend_id_str), 0)
+        Logger.info("Create Friend endity with id: " + id.get + " user_id: " + user_id_input + " friend: " + friend_id_str)
       }
-      Ok("ok")
+      Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
     }
   }
 
