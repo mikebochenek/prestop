@@ -15,6 +15,7 @@ import models._
 import views._
 import models.json.FriendSuggestion
 import models.json.FriendSuggestion
+import models.json.FriendSuggestion
 
 object Friends extends Controller with Secured {
 
@@ -35,7 +36,7 @@ object Friends extends Controller with Secured {
       user.following = Friend.findAllByUser(user.id).size
       user.reservations = Reservation.findAllByUser(user.id).size
       user.likes = ActivityLog.findAllByUser(user.id).size //TODO filtering for likes
-      //TODO populate user.profileImageURL
+      user.profileImageURL = Image.findByUser(userFull.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url //TODO populate user.profileImageURL
       Ok(Json.prettyPrint(Json.toJson(user)))
     }
   }
@@ -47,7 +48,7 @@ object Friends extends Controller with Secured {
       for (phone <- phones) {
         
       }
-      val fakeFriend = new FriendSuggestion(2, "dont-use-this-url", "10156711015015472", "James Bellofiore", "+445556666")
+      val fakeFriend = new FriendSuggestion(1, Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, "10156711015015472", "James Bellofiore", "+445556666")
       val all = Array(fakeFriend)
       Ok(Json.prettyPrint(Json.toJson(all)))
     }
