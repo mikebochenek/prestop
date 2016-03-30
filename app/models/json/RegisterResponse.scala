@@ -8,7 +8,7 @@ import play.api.libs.json.JsString
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-case class RegisterResponse (status: String, user_id: Long)
+case class RegisterResponse (status: String, user_id: Long, user_status: String)
 
 object RegisterResponse {
   implicit val registerResponseReads = Json.reads[RegisterResponse]

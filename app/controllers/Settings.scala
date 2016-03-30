@@ -182,15 +182,31 @@ object Settings extends Controller with Secured {
       val gender = (request.body.asJson.get \ "user_data" \ "gender")
       val name = (request.body.asJson.get \ "user_data" \ "name")
       val id = (request.body.asJson.get \ "user_data" \ "id")
-      val newid = User.create(new UserFull(-1, null, null, false, "test", null, email.as[String], id.as[String], "1", null, name.as[String], null, null, null, cleanPhoneString(phone.as[String])))
+      
+      val userByUsername = User.getFullUserByUsername(id.as[String])
+      val userByPhone = User.getFullUserByPhone(cleanPhoneString(phone.as[String]))
+      Logger.debug("userByUsername: " + userByUsername)
+      Logger.debug("userByPhone: " + userByPhone)
+      
+      val existingUser = (userByUsername.isDefined || userByPhone.size > 0)
+      
+     
+      val newid = existingUser match {
+        case true => { if (userByUsername.isDefined) userByUsername.get.id else userByPhone(0).id } 
+        case false => User.create(new UserFull(-1, null, null, false, "test", null, email.as[String], id.as[String], "1", null, name.as[String], null, null, null, cleanPhoneString(phone.as[String]))).get
+      }
+      
+      val userStatus = existingUser match {
+        case true => "existing_user"
+        case false => "new"
+      }
 
       //TODO also link URL!
-      //TODO maybe we should check for existing users somehow???
       
       Logger.info("parsed name: " + name + " id: " + id + " email: " + email + " phone: " + phone + " gender:" + gender + " url: " + url)
-      Logger.info("created new user with id: " + newid)
+      Logger.info("found / created new user with id: " + newid + " " + userStatus)
       
-      Ok(Json.prettyPrint(Json.toJson(new RegisterResponse("OK", newid.get))))
+      Ok(Json.prettyPrint(Json.toJson(new RegisterResponse("OK", newid, userStatus))))
     }
   }
   
