@@ -98,6 +98,13 @@ object User {
         'username -> username).as(User.all.singleOpt)
     }
   }
+
+  def getFullUserByPhone(phone: String): Seq[UserFull] = {
+    DB.withConnection { implicit connection =>
+      SQL("select id, createdate, lastlogindate, deleted, password, settings, email, username, type, openidtoken, fullname, city, state, country, phone from user where phone = {phone}").on(
+        'phone -> phone).as(User.all. *)
+    }
+  }
   
   def findByEmail(email: String): User = {
     DB.withConnection { implicit connection =>

@@ -168,6 +168,10 @@ object Settings extends Controller with Secured {
     }
   } 
   
+  def cleanPhoneString(p: String) = {
+    p.replaceAll("[^\\+\\d]", "") //http://stackoverflow.com/questions/1533659/how-do-i-remove-the-non-numeric-character-from-a-string-in-java
+  }
+  
   def register() = Action {
     implicit request => {
       Logger.info("register user - body:" + request.body.asJson)
@@ -178,7 +182,7 @@ object Settings extends Controller with Secured {
       val gender = (request.body.asJson.get \ "user_data" \ "gender")
       val name = (request.body.asJson.get \ "user_data" \ "name")
       val id = (request.body.asJson.get \ "user_data" \ "id")
-      val newid = User.create(new UserFull(-1, null, null, false, "test", null, email.as[String], id.as[String], "1", null, name.as[String], null, null, null, phone.as[String]))
+      val newid = User.create(new UserFull(-1, null, null, false, "test", null, email.as[String], id.as[String], "1", null, name.as[String], null, null, null, cleanPhoneString(phone.as[String])))
 
       //TODO also link URL!
       //TODO maybe we should check for existing users somehow???

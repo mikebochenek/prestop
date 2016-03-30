@@ -16,6 +16,7 @@ import views._
 import models.json.FriendSuggestion
 import models.json.FriendSuggestion
 import models.json.FriendSuggestion
+import scala.collection.mutable.MutableList
 
 object Friends extends Controller with Secured {
 
@@ -45,11 +46,17 @@ object Friends extends Controller with Secured {
     implicit request => {
       val phones = (request.body.asJson.get \ "phones").as[Array[String]]
       Logger.info("suggestFriendsToFollow " + phones.length)
+      val all = MutableList.empty[FriendSuggestion]
       for (phone <- phones) {
-        //TODO!
+        val user = User.getFullUserByPhone(Settings.cleanPhoneString(phone))
+        if (user.size > 0) {
+          val newFriend = new FriendSuggestion(user(0).id, 
+              Image.findByUser(user(0).id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
+              user(0).username, user(0).fullname, user(0).phone)
+          Logger.info("suggesting: " + newFriend)
+          all += newFriend
+        }
       }
-      val fakeFriend = new FriendSuggestion(1, Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, "10156711015015472", "James Bellofiore", "+445556666")
-      val all = Array(fakeFriend)
       Ok(Json.prettyPrint(Json.toJson(all)))
     }
   }
@@ -69,7 +76,7 @@ object Friends extends Controller with Secured {
       val friend_array = (request.body.asJson.get \ "friend_user_id").as[Array[String]]
       for (friend_id_str <- friend_array) {
         val id = Friend.create(checkAndConvertUserID(user_id_input), checkAndConvertUserID(friend_id_str), 0)
-        Logger.info("Create Friend endity with id: " + id.get + " user_id: " + user_id_input + " friend: " + friend_id_str)
+        Logger.info("Create Friend entity with id: " + id.get + " user_id: " + user_id_input + " friend: " + friend_id_str)
       }
       Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
     }
