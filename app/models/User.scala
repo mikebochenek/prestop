@@ -78,30 +78,32 @@ object User {
       }
   }
   
+  val columns = " id, createdate, lastlogindate, deleted, password, settings, email, username, type, openidtoken, fullname, city, state, country, phone "
+  
   def getFullUser(email: String): UserFull = {
     DB.withConnection { implicit connection =>
-      SQL("select id, createdate, lastlogindate, deleted, password, settings, email, username, type, openidtoken, fullname, city, state, country, phone from user where email = {email}").on(
+      SQL("select " + columns + " from user where email = {email}").on(
         'email -> email).as(User.all.single)
     }
   }
   
   def getFullUser(id: Long): UserFull = {
     DB.withConnection { implicit connection =>
-      SQL("select id, createdate, lastlogindate, deleted, password, settings, email, username, type, openidtoken, fullname, city, state, country, phone from user where id = {id}").on(
+      SQL("select " + columns + " from user where id = {id}").on(
         'id -> id).as(User.all.single)
     }
   }
 
   def getFullUserByUsername(username: String): Option[UserFull] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, createdate, lastlogindate, deleted, password, settings, email, username, type, openidtoken, fullname, city, state, country, phone from user where username = {username}").on(
+      SQL("select " + columns + " from user where username = {username}").on(
         'username -> username).as(User.all.singleOpt)
     }
   }
 
   def getFullUserByPhone(phone: String): Seq[UserFull] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, createdate, lastlogindate, deleted, password, settings, email, username, type, openidtoken, fullname, city, state, country, phone from user where phone = {phone}").on(
+      SQL("select " + columns + " from user where phone = {phone}").on(
         'phone -> phone).as(User.all. *)
     }
   }
