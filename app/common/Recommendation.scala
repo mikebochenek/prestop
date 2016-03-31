@@ -12,6 +12,8 @@ import controllers.Activities
 import controllers.Dishes
 import play.cache.Cache
 import java.util.concurrent.Callable
+import play.api.libs.json._
+import com.fasterxml.jackson.core.JsonParseException
 
 object Recommendation {
   //47.385740, 8.518084 coordinates for Zurich Hardbrucke
@@ -37,6 +39,15 @@ object Recommendation {
     //Cache.get("alldishes").asInstanceOf[Seq[Dish]]
     Cache.getOrElse("alldishes", new Callable[Seq[Dish]] { def call() = Dish.findAll()}, 1000)
   }
+
+  def getMaxdist(options: String) :Double = {
+    try {
+      val v = (Json.parse(options) \ "maxdist").as[Double]
+      v
+    } catch {
+      case jpe : JsonParseException => maxdist
+    }
+  }
   
   def recommend(user: UserFull, latitude: Double, longitude: Double, options: String) = {
     val restaurants = getAllRestaurants()//Map(Restaurant.findAll map { a => a.id -> a}: _*) //getAllRestaurants()
@@ -60,7 +71,7 @@ object Recommendation {
         
         
     val dishes = getAllDishes()//Dish.findAll()
-      .filter { x => within(maxdist, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
+      .filter { x => within(getMaxdist(options), restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
       .filter { x => (priceMax >= x.price && priceMin <= x.price) } // filter by price
       .take(100) //TODO for now, limit to 100 dishes..
     
