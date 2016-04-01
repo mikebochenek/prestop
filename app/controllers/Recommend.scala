@@ -36,7 +36,7 @@ object Recommend extends Controller with Secured  {
         val settings = Json.parse(fullUser.settings).validate[UserSettings].get
         favs = Json.prettyPrint(Json.toJson(settings.favCuisines))
       }
-      val response = Recommendation.recommend(User.getFullUser(id.toLong), 47.385740, 8.518084, 10, 0, 4000.0, false)
+      val response = Recommendation.recommend(User.getFullUser(id.toLong), 47.385740, 8.518084, 10, 0, 4000.0, false, 0)
       Ok(views.html.test(testForm, response, Json.prettyPrint(Json.toJson(response)), favs))
     }
   }
@@ -50,12 +50,13 @@ object Recommend extends Controller with Secured  {
       "maxdistance" -> text,
       "time" -> text))  
   
-  def getWithFilters(id: Long, longitude: String, latitude: String, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean) = Action {
+  def getWithFilters(id: Long, longitude: String, latitude: String, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean, lastDishID: Long) = Action {
     implicit request => {
-      Logger.info("calling Recommend.get with id:" + id + " longitude:" + longitude + " latitude:" + latitude + " filter:" + maxDistance)
+      Logger.info("calling Recommend.get with id:" + id + " longitude:" + longitude + " latitude:" + latitude + " maxDistance:" + maxDistance
+          + " minPrice:" + minPrice + " maxPrice:" + maxPrice + " openNow:" + openNow + " lastDishID:" + lastDishID)
       val user = User.getFullUser(id)
       
-      val recommendations = Recommendation.recommend(user, longitude.toDouble, latitude.toDouble, maxDistance, minPrice, maxPrice, openNow)
+      val recommendations = Recommendation.recommend(user, longitude.toDouble, latitude.toDouble, maxDistance, minPrice, maxPrice, openNow, lastDishID)
       val json = Json.prettyPrint(Json.toJson(recommendations.dishes.map(a => Json.toJson(a))))
       ActivityLog.create(user.id, 7, 1, Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
       Ok(json)
@@ -66,7 +67,7 @@ object Recommend extends Controller with Secured  {
       Logger.info("calling Recommend.get with id:" + id + " longitude:" + longitude + " latitude:" + latitude + " filter:" + filter)
       val user = User.getFullUser(id)
       
-      val recommendations = Recommendation.recommend(user, longitude.toDouble, latitude.toDouble, 10, 0, 4000.0, false)
+      val recommendations = Recommendation.recommend(user, longitude.toDouble, latitude.toDouble, 10, 0, 4000.0, false, 0)
       val json = Json.prettyPrint(Json.toJson(recommendations.dishes.map(a => Json.toJson(a))))
       ActivityLog.create(user.id, 7, 1, Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
       Ok(json)
