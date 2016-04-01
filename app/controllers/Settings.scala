@@ -198,6 +198,10 @@ object Settings extends Controller with Secured {
       val name = (request.body.asJson.get \ "user_data" \ "name")
       val id = (request.body.asJson.get \ "user_data" \ "id")
       
+      val deviceOS = (request.body.asJson.get \ "device_operating_system")
+      val deviceSWidth = (request.body.asJson.get \ "device_screen_width")
+      val deviceLang = (request.body.asJson.get \ "device_language")
+      
       val userByUsername = User.getFullUserByUsername(id.as[String])
       val userByPhone = User.getFullUserByPhone(cleanPhoneString(phone.as[String]))
       Logger.debug("userByUsername: " + userByUsername)
