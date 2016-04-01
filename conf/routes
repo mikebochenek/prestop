@@ -18,6 +18,7 @@ POST     /api/reservations/new       controllers.Reservations.create
 GET      /api/settings/:id           controllers.Settings.getByUser(id: Long)
 POST     /api/settings/update        controllers.Settings.updateUser
 POST     /api/register               controllers.Settings.register
+POST     /api/personalize            controllers.Settings.personalize
 GET      /api/intros/:lang           controllers.Settings.introTexts(lang: String)
 
 GET      /api/tags                   controllers.Dishes.getTags(ttype: Int ?= 0)

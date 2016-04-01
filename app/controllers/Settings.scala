@@ -171,6 +171,21 @@ object Settings extends Controller with Secured {
   def cleanPhoneString(p: String) = {
     p.replaceAll("[^\\+\\d]", "") //http://stackoverflow.com/questions/1533659/how-do-i-remove-the-non-numeric-character-from-a-string-in-java
   }
+
+  def personalize() = Action {
+    implicit request => {
+      Logger.info("personalize user - body:" + request.body.asJson)
+      
+      val userId = (request.body.asJson.get \ "user_id" )
+      val favCuisines = (request.body.asJson.get \ "favCuisines" )
+      val preferToAvoid = (request.body.asJson.get \ "preferToAvoid" )
+      val sampleDishLikes = (request.body.asJson.get \ "sampleDishLikes" )
+      
+      Logger.info("personalize parsed user_id:" + userId + "  favCuisines:" + favCuisines + "  preferToAvoid:" + preferToAvoid + "  sampleDishLikes:" + sampleDishLikes)
+      
+      Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
+    }
+  }
   
   def register() = Action {
     implicit request => {
