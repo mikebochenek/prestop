@@ -20,11 +20,7 @@ object Recommendation {
   //47.411875, 8.548024 Zurich Oerlikon Neudorfstrasse 23 
   //47.356842, 8.514578 Zurich Uetlibergstrasse 231
   //46.953082, 7.446915 Bern
-  
-  val maxdist = 10 //maximum allowable distance in km
-  val priceMin = 0
-  val priceMax = 4000.0
-  
+    
   { //TODO ... but isn't it kinda wrong that I need to place these in the cache myself
     Cache.set("allrestaurants", Map(Restaurant.findAll map { a => a.id -> a}: _*))
     Cache.set("alldishes", Dish.findAll())
@@ -40,7 +36,7 @@ object Recommendation {
     Cache.getOrElse("alldishes", new Callable[Seq[Dish]] { def call() = Dish.findAll()}, 1000)
   }
   
-  def recommend(user: UserFull, latitude: Double, longitude: Double, options: String) = {
+  def recommend(user: UserFull, latitude: Double, longitude: Double, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean) = {
     val restaurants = getAllRestaurants()//Map(Restaurant.findAll map { a => a.id -> a}: _*) //getAllRestaurants()
     // http://stackoverflow.com/questions/2925041/how-to-convert-a-seqa-to-a-mapint-a-using-a-value-of-a-as-the-key-in-the-ma
     
@@ -62,8 +58,8 @@ object Recommendation {
         
         
     val dishes = getAllDishes()//Dish.findAll()
-      .filter { x => within(maxdist, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
-      .filter { x => (priceMax >= x.price && priceMin <= x.price) } // filter by price
+      .filter { x => within(maxDistance, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
+      .filter { x => (maxPrice >= x.price && minPrice <= x.price) } // filter by price
       .take(100) //TODO for now, limit to 100 dishes..
     
     val result = new Recommendations(MutableList.empty);
