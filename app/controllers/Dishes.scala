@@ -136,9 +136,12 @@ object Dishes extends Controller with Secured {
     }
   } 
   
-  def getTags() = Action {
+  def getTags(ttype: Long) = Action {
     implicit request => {
-      val all = Tag.findAll()
+      val all = ttype match {
+        case 0 => Tag.findAll()
+        case _ => Tag.findAll().filter { x => x.status == ttype }
+      }
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
     }
   }
