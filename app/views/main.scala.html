@@ -50,8 +50,8 @@
           <ul class="nav navbar-nav navbar-right">
           
 @session.get("email").map { user =>
-            @if(session.get("usertype").get.toString.equals("7")) {
               <li><a href="/test">Test!</a></li>
+            @if(session.get("usertype").get.toString.equals("7")) {
               <li><a href="/reports">@Messages("menu.reports")</a></li>
             }
             <li><a href="/settings">@Messages("menu.settings")</a></li>
