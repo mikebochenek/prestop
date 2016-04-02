@@ -102,7 +102,7 @@ object Recommendation {
       case Some(f) =>
         val distance = Haversine.haversine(f.latitude, f.longitude, latitude, longitude)
         val iswithin = distance < max
-        Logger.debug("restaurant: " + f.id + " " + iswithin + " because distance: " + distance + " inputs:" + (f.latitude + " " + f.longitude + " " + longitude + " " + latitude))
+        //Logger.debug("restaurant: " + f.id + " " + iswithin + " because distance: " + distance + " inputs:" + (f.latitude + " " + f.longitude + " " + longitude + " " + latitude))
         iswithin
       case None => false
     }
