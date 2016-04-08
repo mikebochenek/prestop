@@ -190,7 +190,7 @@ object Image {
   
   def crop(id: Long, x: Int, y: Int, w: Int, h: Int) {
     val ts = System.currentTimeMillis
-    Logger.info("==== cropping image: " + id)
+    Logger.info("==== cropping image: " + id  +  " x:" + x + " y:" + y + " w:" + w + " h:" + h)
 
     val original = findById(id)
     val file = new File(original.filename)

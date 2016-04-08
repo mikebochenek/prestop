@@ -28,12 +28,17 @@ object Dishes extends Controller with Secured {
       "w" -> text,
       "h" -> text))
 
+  val maxW = 1242.0
   def cropImage(id: Long) = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling dish crop - load data for id:" + id)
       val img = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
-      Ok(views.html.dish_crop(img.url, id, img.width.get, img.height.get, img.width.get / 1242.0))
+      Ok(views.html.dish_crop(img.url, id, img.width.get, img.height.get, img.width.get / maxW))
     }
+  }
+  
+  def adjust(w: Int, x: Int) = {
+    (w / maxW * x).toInt
   }
 
   def cropImagePost(id: Long) = IsAuthenticated { username =>
@@ -41,10 +46,10 @@ object Dishes extends Controller with Secured {
       val (x, y, w, h) = dishCropForm.bindFromRequest.get
       Logger.info("cropping - calling dish crop POST - id:" + id + "cropping x:" + x + " y:" + y + " w:" + w + " h:" + h)
       
-      //TODO 1242 ratio! don't forget ratio could be greater than one, and less than one
-      
-      Image.crop(Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].id, 
-          x.toInt, y.toInt, w.toInt, h.toInt)
+      //1242 ratio! don't forget ratio could be greater than one, and less than one
+      val originalImg = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+      val wd = originalImg.width.get.toInt
+      Image.crop(originalImg.id, adjust(wd, x.toInt), adjust(wd, y.toInt), adjust(wd, w.toInt), adjust(wd, h.toInt))
       Redirect(routes.Dishes.getById(id))
     }
   }
