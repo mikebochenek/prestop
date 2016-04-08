@@ -184,12 +184,14 @@ object Settings extends Controller with Secured {
       val favCuisines = (request.body.asJson.get \ "favCuisines" )
       val preferToAvoid = (request.body.asJson.get \ "preferToAvoid" )
       
+      val restaurantIDs = Restaurant.findAll().map { x => x.id }
+      
       Logger.info("personalize taste profile parsed user_id:" + userId + "  favCuisines:" + favCuisines + "  preferToAvoid:" + preferToAvoid)
       
       val desiredWidth = 750
-      val all = Random.shuffle(Dish.findAll).take(3).map { dish => new TasteProfileDish(dish.id, 
+      val all = Random.shuffle(Dish.findAll).filter { x => restaurantIDs.contains(x.restaurant_id) }.take(5).map { dish => new TasteProfileDish(dish.id, 
           Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
-          Recommendation.makePriceString(dish.price)) }
+          Recommendation.makePriceString(dish.price), dish.name, "description placeholder text") }
       
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
     }
