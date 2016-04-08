@@ -100,7 +100,7 @@ object Image {
 
   def createUrl(str: String): String = {
     val url = current.configuration.getString("image.server.baseurl")
-    Logger.info("Image using base url " + url)
+    //Logger.info("Image using base url " + url)
     url.getOrElse("http://localhost") + str  
   }
   
@@ -208,7 +208,7 @@ object Image {
 
       Image.updateDishImages(original.restaurant_id, original.dish_id, original.user_id, 
           w, resized.getHeight.toLong, resizeFile.getAbsolutePath, 
-          Image.createUrl(ts + "/" + resizeFile.getName))
+          (original.url.take(original.url.lastIndexOf("/")) + "/" + resizeFile.getName))
     }
     
     Logger.info("==== DONE cropping " + (System.currentTimeMillis - ts))
