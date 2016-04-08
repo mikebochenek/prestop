@@ -31,8 +31,8 @@ object Dishes extends Controller with Secured {
   def cropImage(id: Long) = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling dish crop - load data for id:" + id)
-      val url = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
-      Ok(views.html.dish_crop(url, id))
+      val img = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+      Ok(views.html.dish_crop(img.url, id, img.width.get, img.height.get, img.width.get / 1200.0))
     }
   }
 
@@ -42,7 +42,7 @@ object Dishes extends Controller with Secured {
       val (x, y, w, h) = dishCropForm.bindFromRequest.get
       Logger.info("cropping x:" + x + " y:" + y + " w:" + w + " h:" + h)
 
-      val url = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+      Image.crop(id, x.toLong, y.toLong, w.toLong, h.toLong)
       Redirect(routes.Dishes.getById(id))
     }
   }
@@ -159,7 +159,7 @@ object Dishes extends Controller with Secured {
   def upload(id: Long) = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
       Image.saveAndResizeImages(picture, id, "dish")
-      Redirect(routes.Dishes.getById(id))
+      Redirect(routes.Dishes.cropImage(id))
     }.getOrElse {
       Redirect(routes.Restaurants.about).flashing(
         "error" -> "Missing file")

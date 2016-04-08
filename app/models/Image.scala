@@ -181,6 +181,10 @@ object Image {
     
   }
   
+  def crop(id: Long, x: Long, y: Long, w: Long, h: Long) {
+    
+  }
+  
   implicit val imageReads = Json.reads[Image]
   implicit val imageWrites = Json.writes[Image]
 

@@ -37,6 +37,7 @@ object Recommend extends Controller with Secured  {
         favs = Json.prettyPrint(Json.toJson(settings.favCuisines))
       }
       val response = Recommendation.recommend(User.getFullUser(id.toLong), 47.385740, 8.518084, 10, 0, 4000.0, false, 0)
+      testForm.fill(User.getFullUser(id.toLong).id.toString, "47.385740", "8.518084", "", "10", "")
       Ok(views.html.test(testForm, response, Json.prettyPrint(Json.toJson(response)), favs))
     }
   }

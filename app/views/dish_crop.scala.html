@@ -1,4 +1,4 @@
-@(url: String, id: Long)(implicit flash: Flash, session: Session, lang: Lang)
+@(url: String, id: Long, width: Long, height: Long, resize: Double)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -10,8 +10,9 @@
       <div class="row ">
         <div class="col-sm-8 col-md-offset-2">
         
-                @if(url != null) {
-                     <img src="@url" alt="dish photo" width="750" id="croptarget"></img>
+      @if(url != null) {
+      	Your image is @width pixels wide and @height pixels high.  It's been resize by @resize 
+        <img src="@url" alt="dish photo" width="1200" id="croptarget"></img>
                      
         <!-- This is the form that our event handler fills -->
 		  <form action="" method="post" onsubmit="return checkCoords();">
@@ -21,7 +22,7 @@
 			<input type="hidden" id="h" name="h" />
 			<input type="submit" class="btn btn-primary" value="Crop Image" />
 		  </form>
-                }        
+       }        
 		  
         </div>
       </div>
