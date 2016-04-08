@@ -28,12 +28,12 @@ object Recommendation {
 
   def getAllRestaurants() = {
     //Cache.get("allrestaurants").asInstanceOf[Map[Long,models.Restaurant]]
-    Cache.getOrElse("allrestaurants", new Callable[Map[Long,models.Restaurant]] { def call() = Map(Restaurant.findAll map { a => a.id -> a}: _*) }, 1000)
+    Cache.getOrElse("allrestaurants", new Callable[Map[Long,models.Restaurant]] { def call() = Map(Restaurant.findAll map { a => a.id -> a}: _*) }, 100)
   }
   
   def getAllDishes() = {
     //Cache.get("alldishes").asInstanceOf[Seq[Dish]]
-    Cache.getOrElse("alldishes", new Callable[Seq[Dish]] { def call() = Dish.findAll()}, 1000)
+    Cache.getOrElse("alldishes", new Callable[Seq[Dish]] { def call() = Dish.findAll()}, 5)
   }
   
   def recommend(user: UserFull, latitude: Double, longitude: Double, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean, lastDishID: Long) = {
