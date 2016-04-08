@@ -11,8 +11,11 @@
         <div class="col-sm-8 col-md-offset-2">
         
       @if(url != null) {
-      	Your image is @width pixels wide and @height pixels high.  It's been resize by @resize 
+      	Your <b>original</b> image is @width pixels wide and @height pixels high.  It's been resized by @resize 
         <img src="@url" alt="dish photo" width="1242" id="croptarget"></img>
+
+     <br/>
+        <div id="cropstatus"></div>
                      
         <!-- This is the form that our event handler fills -->
 		  <form action="" method="post" onsubmit="return checkCoords();">
@@ -40,12 +43,17 @@ attachjcrop = function() {
 
 	});
 
+	function convrt(x) {
+		return parseInt(@resize * x, 10);
+	}
+
 	function updateCoords(c)
 	{
 		$('#x').val(c.x);
 		$('#y').val(c.y);
 		$('#w').val(c.w);
 		$('#h').val(c.h);
+		$('#cropstatus').html('start (' + convrt(c.x) + ',' + convrt(c.y) + ') width=' + convrt(c.w) + ' height=' + convrt(c.h));
 	};
 
 	function checkCoords()

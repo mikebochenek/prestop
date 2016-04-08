@@ -66,7 +66,7 @@ object Image {
   
   def findByDish(id: Long): Seq[Image] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, filename, url, restaurant_id, dish_id, user_id, width, height, status, lastupdate from image where status >= 0 and dish_id = {dish_id} order by width desc ")
+      SQL("select id, filename, url, restaurant_id, dish_id, user_id, width, height, status, lastupdate from image where status >= 0 and dish_id = {dish_id} order by id asc ")
          .on('dish_id -> id).as(Image.simple *)
     }
   }
