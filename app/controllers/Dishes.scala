@@ -32,7 +32,7 @@ object Dishes extends Controller with Secured {
     implicit request => {
       Logger.info("calling dish crop - load data for id:" + id)
       val img = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
-      Ok(views.html.dish_crop(img.url, id, img.width.get, img.height.get, img.width.get / 1200.0))
+      Ok(views.html.dish_crop(img.url, id, img.width.get, img.height.get, img.width.get / 1242.0))
     }
   }
 
@@ -40,6 +40,8 @@ object Dishes extends Controller with Secured {
     implicit request => {
       val (x, y, w, h) = dishCropForm.bindFromRequest.get
       Logger.info("cropping - calling dish crop POST - id:" + id + "cropping x:" + x + " y:" + y + " w:" + w + " h:" + h)
+      
+      //TODO 1242 ratio! don't forget ratio could be greater than one, and less than one
       
       Image.crop(Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].id, 
           x.toInt, y.toInt, w.toInt, h.toInt)
