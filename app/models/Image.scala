@@ -57,6 +57,13 @@ object Image {
     }
   }
 
+  def findById(id: Long): Image = {
+    DB.withConnection { implicit connection =>
+      SQL("select id, filename, url, restaurant_id, dish_id, user_id, width, height, status, lastupdate from image where status >= 0 and id = {id} order by width desc ")
+         .on('id -> id).as(Image.simple.single)
+    }
+  }
+  
   def findByDish(id: Long): Seq[Image] = {
     DB.withConnection { implicit connection =>
       SQL("select id, filename, url, restaurant_id, dish_id, user_id, width, height, status, lastupdate from image where status >= 0 and dish_id = {dish_id} order by width desc ")
@@ -181,8 +188,32 @@ object Image {
     
   }
   
-  def crop(id: Long, x: Long, y: Long, w: Long, h: Long) {
+  def crop(id: Long, x: Int, y: Int, w: Int, h: Int) {
+    val ts = System.currentTimeMillis
+    Logger.info("==== cropping image: " + id)
+
+    val original = findById(id)
+    val file = new File(original.filename)
+    val img = ImageIO.read(file); // load image
+    val croppedImg = Scalr.crop(img, x, y, w, h)
+
+    val extension = original.filename.takeRight(3).toLowerCase
+
+    for (w <- resolutions) {
+      val resized = Scalr.resize(croppedImg, w); 
+      val resizeFilename = file.getAbsolutePath.dropRight(4) + "-" + w + "." + extension
+      val resizeFile = new File(resizeFilename)
+      Logger.info("==== resized: " + resizeFilename)
+      ImageIO.write(resized, extension, resizeFile)
+/*
+      Image.update(resizeFile.getAbsolutePath, 
+          Image.createUrl(ts + "/" + resizeFile.getName),  
+          Some(resized.getWidth), Some(resized.getHeight.toLong))
+          * 
+          */
+    }
     
+    Logger.info("==== DONE cropping " + (System.currentTimeMillis - ts))
   }
   
   implicit val imageReads = Json.reads[Image]

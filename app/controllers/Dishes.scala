@@ -38,11 +38,11 @@ object Dishes extends Controller with Secured {
 
   def cropImagePost(id: Long) = IsAuthenticated { username =>
     implicit request => {
-      Logger.info("cropping - calling dish crop POST - load data for id:" + id)
       val (x, y, w, h) = dishCropForm.bindFromRequest.get
-      Logger.info("cropping x:" + x + " y:" + y + " w:" + w + " h:" + h)
-
-      Image.crop(id, x.toLong, y.toLong, w.toLong, h.toLong)
+      Logger.info("cropping - calling dish crop POST - id:" + id + "cropping x:" + x + " y:" + y + " w:" + w + " h:" + h)
+      
+      Image.crop(Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].id, 
+          x.toInt, y.toInt, w.toInt, h.toInt)
       Redirect(routes.Dishes.getById(id))
     }
   }
