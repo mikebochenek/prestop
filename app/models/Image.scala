@@ -122,7 +122,7 @@ object Image {
           'status -> status).executeUpdate
     }
   }
-  
+
   val resolutions = List(48, 72, 172, 640, 750, 1242)
   
   def reverseURLGen(url: String, w: Int) = {
@@ -205,16 +205,32 @@ object Image {
       val resizeFile = new File(resizeFilename)
       Logger.info("==== resized: " + resizeFilename)
       ImageIO.write(resized, extension, resizeFile)
-/*
-      Image.update(resizeFile.getAbsolutePath, 
-          Image.createUrl(ts + "/" + resizeFile.getName),  
-          Some(resized.getWidth), Some(resized.getHeight.toLong))
-          * 
-          */
+
+      Image.updateDishImages(original.restaurant_id, original.dish_id, original.user_id, 
+          w, resized.getHeight.toLong, resizeFile.getAbsolutePath, 
+          Image.createUrl(ts + "/" + resizeFile.getName))
     }
     
     Logger.info("==== DONE cropping " + (System.currentTimeMillis - ts))
   }
+
+  def updateDishImages(restID: Long, dishID: Long, userID: Option[Long], width: Long, 
+      height: Long, filename: String, url: String) = {
+    DB.withConnection { implicit connection =>
+      SQL("update image set filename = {filename}, url = {url}, height = {height}, lastupdate = {lastupdate} " +
+          "where dish_id = {dish_id} and restaurant_id = {restaurant_id} and user_id = {user_id} and width = {width} ").on(
+          'dish_id -> dishID,
+          'restaurant_id -> restID,
+          'user_id -> userID,
+          'width -> width,
+          'height -> height,
+          'filename -> filename,
+          'url -> url,
+          'lastupdate -> new Date()).executeUpdate
+    }
+  }
+  
+  
   
   implicit val imageReads = Json.reads[Image]
   implicit val imageWrites = Json.writes[Image]
