@@ -28,7 +28,7 @@ object Dishes extends Controller with Secured {
       "w" -> text,
       "h" -> text))
 
-  val maxW = 1242.0
+  val maxW = 900.0
   def cropImage(id: Long) = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling dish crop - load data for id:" + id)

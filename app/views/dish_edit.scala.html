@@ -89,8 +89,8 @@
       <div class="row ">
         <div class="col-sm-8 col-md-offset-2">
                 @if(url != null) {
-                     <a href="@url"><img src="@url" alt="d" height="100" width="100" title="original"></img></a>
-                     @for(w <- Image.resolutions) { <a href="@Image.reverseURLGen(url, w)"><img src="@Image.reverseURLGen(url, w)" alt="d" height="60" width="60" title="(cropped) @w px wide"></img></a> &nbsp&nbsp }
+                     <a href="@url"><img src="@url" alt="d" width="100" title="original"></img></a>
+                     @for(w <- Image.resolutions) { <a href="@Image.reverseURLGen(url, w)"><img src="@Image.reverseURLGen(url, w)" alt="d" width="60" title="(cropped) @w px wide"></img></a> &nbsp&nbsp }
                      
                   @helper.form(action = routes.Dishes.cropImage(dish.id)) {
                        <button class="span4 btn btn-primary" type="submit" id="cropbutton" >crop</button>
@@ -100,8 +100,8 @@
         
         
                 @helper.form(action = routes.Dishes.upload(dish.id), 'enctype -> "multipart/form-data") {
-                    <button class="btn btn-primary" type="submit" id="generalsavebutton">upload</button>
 		            <span class="btn"><input type="file" name="picture"></span>
+                    <button class="btn btn-primary" type="submit" id="generalsavebutton">upload</button>
         		}
 		  
         </div>
