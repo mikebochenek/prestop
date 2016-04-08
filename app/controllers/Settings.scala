@@ -15,8 +15,11 @@ import play.api.http.HeaderNames
 import com.thoughtworks.xstream._
 import models._
 import views._
+import common._
 import models.json.NameValue
 import models.json.RegisterResponse
+import scala.util.Random
+import models.json.TasteProfileDish
 
 object Settings extends Controller with Secured {
   def load() = IsAuthenticated { username =>
@@ -172,6 +175,26 @@ object Settings extends Controller with Secured {
     p.replaceAll("[^\\+\\d]", "") //http://stackoverflow.com/questions/1533659/how-do-i-remove-the-non-numeric-character-from-a-string-in-java
   }
 
+  
+  def personalizeTasteProfile() = Action {
+    implicit request => {
+      Logger.info("personalize taste profile - body:" + request.body.asJson)
+      
+      val userId = (request.body.asJson.get \ "user_id" )
+      val favCuisines = (request.body.asJson.get \ "favCuisines" )
+      val preferToAvoid = (request.body.asJson.get \ "preferToAvoid" )
+      
+      Logger.info("personalize taste profile parsed user_id:" + userId + "  favCuisines:" + favCuisines + "  preferToAvoid:" + preferToAvoid)
+      
+      val desiredWidth = 750
+      val all = Random.shuffle(Dish.findAll).take(3).map { dish => new TasteProfileDish(dish.id, 
+          Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
+          Recommendation.makePriceString(dish.price)) }
+      
+      Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
+    }
+  }  
+  
   def personalize() = Action {
     implicit request => {
       Logger.info("personalize user - body:" + request.body.asJson)
