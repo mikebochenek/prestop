@@ -82,6 +82,8 @@ object Dishes extends Controller with Secured {
       "id" -> text,
       "price" -> text,
       "name" -> text,
+      "serving" -> text,
+      "description" -> text,
       "greenscore" -> text,
       "restaurant_id" -> text,
       "status" -> text,
@@ -93,8 +95,8 @@ object Dishes extends Controller with Secured {
       
   def save = IsAuthenticated { username =>
     implicit request =>  
-      val (id, price, name, greenscore, restaurant_id, status, tags, greenscoretags, diet, dishtype, meatorigin) = dishForm.bindFromRequest.get
-      Dish.update(id.toLong, price.toDouble, name, greenscore.toDouble, status.toInt)
+      val (id, price, name, serving, description, greenscore, restaurant_id, status, tags, greenscoretags, diet, dishtype, meatorigin) = dishForm.bindFromRequest.get
+      Dish.update(id.toLong, price.toDouble, name, greenscore.toDouble, status.toInt, serving, description)
       Tag.updateTags(id.toLong, tags, 11)
       Tag.updateTags(id.toLong, greenscoretags, 31)
       Tag.updateTags(id.toLong, diet, 34)
