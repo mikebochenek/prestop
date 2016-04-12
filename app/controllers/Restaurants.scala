@@ -73,7 +73,8 @@ object Restaurants extends Controller with Secured {
       val url = Image.findByRestaurant(id).filter { x => x.status == 0 }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       val logourl = Image.findByRestaurant(id).filter { x => x.status == 1 }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       val reservations = Reservation.findAllByRestaurant(id)
-      Ok(views.html.restaurant_edit(restaurantForm, all(0), url, logourl, tags, cuisines, reservations))
+      val childRestaurants = Restaurant.findAllByParent(id)
+      Ok(views.html.restaurant_edit(restaurantForm, all(0), url, logourl, tags, cuisines, reservations, childRestaurants))
     }
   }
 
@@ -131,7 +132,7 @@ object Restaurants extends Controller with Secured {
   def create() = IsAuthenticated { username =>
     implicit request => {
       val txt = (request.body.asJson.get \ "donetext")
-      val id = Restaurant.create(txt.as[String], "", "", 0.0, 0.0, "", 0);
+      val id = Restaurant.create(txt.as[String], "", "", 0.0, 0.0, "", 0, None);
       Logger.info("restaurant created with " + txt.as[String] + " with id:" + id)
       Ok("ok")
     }
@@ -175,17 +176,27 @@ object Restaurants extends Controller with Secured {
     implicit request => { 
       val (id, phone, email, address, city, postalcode, state, longitude, latitude, schedule, status) = restaurantLocationsForm.bindFromRequest.get
       Logger.info("calling restaurant locations edit - load data for id:" + id)
-      val all = Restaurant.findById(username, id.toLong)
-      Ok(views.html.restaurant_locations(restaurantLocationsForm, all(0)))
+      val rest = Restaurant.findById(username, id.toLong)(0)
+      Restaurant.update(id.toLong, rest.name, city, address, longitude.toDouble, latitude.toDouble, schedule, rest.restype, status.toInt, phone, email, postalcode, state)
+      Logger.info("done calling restaurant CHILD update for id:" + id)
+      Ok(views.html.restaurant_locations(restaurantLocationsForm, Restaurant.findById(username, id.toLong)(0)))
     }
   }
   
   def editLocations(id: Long) = IsAuthenticated { username =>
     implicit request => {
-      Logger.info("calling restaurant locations save - for id:" + id)
+      Logger.info("calling restaurant locations load - for id:" + id)
       val all = Restaurant.findById(username, id.toLong)
       Ok(views.html.restaurant_locations(restaurantLocationsForm, all(0)))
     }
   }
-  
+
+  def addLocations(id: Long) = IsAuthenticated { username =>
+    implicit request => {
+      Logger.info("calling add new location - for id:" + id)
+      val r = Restaurant.findById(username, id)(0)
+      val newid = Restaurant.create(r.name, r.city, r.address, r.longitude, r.latitude, r.schedule, r.restype, Option(r.id));
+      Redirect(routes.Restaurants.edit(id))
+    }
+  }
 }

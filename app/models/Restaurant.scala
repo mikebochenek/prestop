@@ -51,15 +51,16 @@ object Restaurant {
   }
 
   def create(name: String, city: String, address: String, longitude: Double, latitude: Double, 
-      scheduleCron: String, restype: Int): Option[Long] = {
+      scheduleCron: String, restype: Int, parent_id: Option[Long]): Option[Long] = {
     DB.withConnection { implicit connection =>
       SQL(
         """
-          insert into restaurant (name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status) values (
-          {name}, {city}, {address}, {longitude}, {latitude}, {schedulecron}, {restype}, {lastupdate}, {status}
+          insert into restaurant (name, parent_id, city, address, longitude, latitude, schedulecron, restype, lastupdate, status) values (
+          {name}, {parent_id}, {city}, {address}, {longitude}, {latitude}, {schedulecron}, {restype}, {lastupdate}, {status}
           )
         """).on(
           'name -> name,
+          'parent_id -> parent_id,
           'city-> city,
           'address -> address,
           'longitude -> longitude,

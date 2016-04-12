@@ -61,6 +61,7 @@ GET     /restaurantedit/:id                 controllers.Restaurants.edit(id: Lon
 POST    /restaurantedit                     controllers.Restaurants.save
 GET     /restaurantlocations/:id            controllers.Restaurants.editLocations(id: Long)
 POST    /restaurantlocations                controllers.Restaurants.saveLocations
+GET     /addrestaurantlocations/:id         controllers.Restaurants.addLocations(id: Long)
 GET     /about                              controllers.Restaurants.about
 POST	/restaurant							controllers.Restaurants.upload(id: Long)
 POST	/restaurant2						controllers.Restaurants.uploadLogo(id: Long)
