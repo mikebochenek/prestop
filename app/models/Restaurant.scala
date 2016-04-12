@@ -108,26 +108,34 @@ object Restaurant {
 
   def findById(username: String, id: Long): Seq[Restaurant] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state from restaurant where id = {id}").on(
+      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state from restaurant where id = {id} ").on(
         'id -> id).as(Restaurant.simple *)
     }
   }
   
   def findAll(): Seq[Restaurant] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state from restaurant where status >= 0 "
+      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state from restaurant where status >= 0 and parent_id is null "
           + " order by id asc").on().as(Restaurant.simple *)
     }
   }
 
   def findAllByUser(userId: Long): Seq[Restaurant] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state from restaurant where status >= 0 "
+      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state from restaurant where status >= 0 and parent_id is null "
           + " and id in (select restaurant_id from restaurant_owner where user_id = {user_id} and status >= 0) order by id asc").on(
               'user_id -> userId).as(Restaurant.simple *)
     }
   }
 
+  def findAllByParent(parentId: Long): Seq[Restaurant] = {
+    DB.withConnection { implicit connection =>
+      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state from restaurant where status >= 0 "
+          + " and parent_id = {parent_id} order by id asc").on(
+              'parent_id -> parentId).as(Restaurant.simple *)
+    }
+  }
+  
   implicit val restaurantReads = Json.reads[Restaurant]
   implicit val restaurantWrites = Json.writes[Restaurant]
 
