@@ -59,6 +59,8 @@ GET      /testsubmit      controllers.Recommend.testsubmit
 GET     /restaurant                         controllers.Restaurants.index
 GET     /restaurantedit/:id                 controllers.Restaurants.edit(id: Long)
 POST    /restaurantedit                     controllers.Restaurants.save
+GET     /restaurantlocations/:id            controllers.Restaurants.editLocations(id: Long)
+POST    /restaurantlocations                controllers.Restaurants.saveLocations
 GET     /about                              controllers.Restaurants.about
 POST	/restaurant							controllers.Restaurants.upload(id: Long)
 POST	/restaurant2						controllers.Restaurants.uploadLogo(id: Long)

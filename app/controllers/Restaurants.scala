@@ -156,5 +156,36 @@ object Restaurants extends Controller with Secured {
         "error" -> "Missing file")
     }
   }  
+
+  val restaurantLocationsForm = Form(
+    tuple(
+      "id" -> text,
+      "phone" -> text,
+      "email" -> text,
+      "address" -> text,
+      "city" -> text,
+      "postalcode" -> text,
+      "state" -> text,
+      "longitude" -> text,
+      "latitude" -> text,
+      "schedule" -> text,
+      "status" -> text))
+  
+  def saveLocations = IsAuthenticated { username =>
+    implicit request => { 
+      val (id, phone, email, address, city, postalcode, state, longitude, latitude, schedule, status) = restaurantLocationsForm.bindFromRequest.get
+      Logger.info("calling restaurant locations edit - load data for id:" + id)
+      val all = Restaurant.findById(username, id.toLong)
+      Ok(views.html.restaurant_locations(restaurantLocationsForm, all(0)))
+    }
+  }
+  
+  def editLocations(id: Long) = IsAuthenticated { username =>
+    implicit request => {
+      Logger.info("calling restaurant locations save - for id:" + id)
+      val all = Restaurant.findById(username, id.toLong)
+      Ok(views.html.restaurant_locations(restaurantLocationsForm, all(0)))
+    }
+  }
   
 }
