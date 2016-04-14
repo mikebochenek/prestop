@@ -23,8 +23,8 @@
 			<input type="hidden" id="y" name="y" />
 			<input type="hidden" id="w" name="w" />
 			<input type="hidden" id="h" name="h" />
-			<input type="submit" class="btn btn-primary" value="Crop Image" />
-            <button class="btn btn-primary" type="submit" id="generalsavebutton" onclick="window.history.go(-1);">cancel</button>
+			<input type="submit" class="btn btn-primary" id="cropbutton" value="Crop Image" disabled="true" />
+            <button class="btn btn-primary" type="submit" id="backbutton" onclick="window.history.go(-1);">cancel</button>
 		  </form>
        }        
 		  
@@ -55,6 +55,7 @@ attachjcrop = function() {
 		$('#w').val(c.w);
 		$('#h').val(c.h);
 		$('#cropstatus').html('start (' + convrt(c.x) + ',' + convrt(c.y) + ') width=' + convrt(c.w) + ' height=' + convrt(c.h));
+		$('#cropbutton').prop( "disabled", false );
 	};
 
 	function checkCoords()
