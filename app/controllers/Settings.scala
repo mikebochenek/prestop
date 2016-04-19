@@ -34,7 +34,7 @@ object Settings extends Controller with Secured {
       val subdomainLanguage = request.headers.get(HeaderNames.ACCEPT_LANGUAGE).get/*.substring(0,2)*/
       Logger.debug(" language from request:" + subdomainLanguage)
 
-      var userSettings = new UserSettings(fullUser.id, "en_US", false, "", 0, MutableList.empty[Cuisine], Option(MutableList.empty[Cuisine]), Option(MutableList.empty[Cuisine]))
+      var userSettings = UserSettings.default(fullUser.id)
       if (fullUser.settings != null) {
         userSettings = Json.parse(fullUser.settings).validate[UserSettings].get 
         Logger.debug("parse ----->" + userSettings)
@@ -215,7 +215,7 @@ object Settings extends Controller with Secured {
       val fullUser = User.getFullUser(userId.as[Long])
       
       val previousSettings = fullUser.settings match {
-        case null => new UserSettings(fullUser.id, "en_US", false, "", 0, MutableList.empty[Cuisine], Option(MutableList.empty[Cuisine]), Option(MutableList.empty[Cuisine]))
+        case null => UserSettings.default(fullUser.id)
         case _ => Json.parse(fullUser.settings).validate[UserSettings].get 
       }
       
