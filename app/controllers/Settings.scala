@@ -12,6 +12,8 @@ import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.Logger
 import play.api.http.HeaderNames
+import play.api.libs.json.JsArray
+import play.api.libs.json._
 import com.thoughtworks.xstream._
 import models._
 import views._
@@ -20,6 +22,7 @@ import models.json.NameValue
 import models.json.RegisterResponse
 import scala.util.Random
 import models.json.TasteProfileDish
+import scala.collection.mutable.MutableList
 
 object Settings extends Controller with Secured {
   def load() = IsAuthenticated { username =>
@@ -31,7 +34,7 @@ object Settings extends Controller with Secured {
       val subdomainLanguage = request.headers.get(HeaderNames.ACCEPT_LANGUAGE).get/*.substring(0,2)*/
       Logger.debug(" language from request:" + subdomainLanguage)
 
-      var userSettings = new UserSettings(fullUser.id, "en_US", false, "", 0, Seq.empty[Cuisine])
+      var userSettings = new UserSettings(fullUser.id, "en_US", false, "", 0, MutableList.empty[Cuisine], Option(MutableList.empty[Cuisine]), Option(MutableList.empty[Cuisine]))
       if (fullUser.settings != null) {
         userSettings = Json.parse(fullUser.settings).validate[UserSettings].get 
         Logger.debug("parse ----->" + userSettings)
@@ -181,8 +184,8 @@ object Settings extends Controller with Secured {
       Logger.info("personalize taste profile - body:" + request.body.asJson)
       
       val userId = (request.body.asJson.get \ "user_id" )
-      val favCuisines = (request.body.asJson.get \ "favCuisines" )
-      val preferToAvoid = (request.body.asJson.get \ "preferToAvoid" )
+      val favCuisines = (request.body.asJson.get \ "favCuisines" ) //TODO we should save these!
+      val preferToAvoid = (request.body.asJson.get \ "preferToAvoid" ) //TODO we should save these!
       
       val restaurantIDs = Restaurant.findAll().map { x => x.id }
       
@@ -196,7 +199,7 @@ object Settings extends Controller with Secured {
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
     }
   }  
-  
+
   def personalize() = Action {
     implicit request => {
       Logger.info("personalize user - body:" + request.body.asJson)
@@ -207,10 +210,43 @@ object Settings extends Controller with Secured {
       val sampleDishLikes = (request.body.asJson.get \ "sampleDishLikes" )
       
       Logger.info("personalize parsed user_id:" + userId + "  favCuisines:" + favCuisines + "  preferToAvoid:" + preferToAvoid + "  sampleDishLikes:" + sampleDishLikes)
+
+      //smart insert/update
+      val fullUser = User.getFullUser(userId.as[Long])
+      
+      val previousSettings = fullUser.settings match {
+        case null => new UserSettings(fullUser.id, "en_US", false, "", 0, MutableList.empty[Cuisine], Option(MutableList.empty[Cuisine]), Option(MutableList.empty[Cuisine]))
+        case _ => Json.parse(fullUser.settings).validate[UserSettings].get 
+      }
+      
+      if (previousSettings != null) {
+        
+        if (!favCuisines.isInstanceOf[JsUndefined]) {
+          Logger.debug("yes, we will save the favCuisines:" + favCuisines + "  was:" + previousSettings.favCuisines)
+          previousSettings.favCuisines = MutableList.empty[Cuisine];
+          previousSettings.favCuisines ++= favCuisines.as[JsObject].fields.collect { case (key, JsString(value)) => new Cuisine(key, Option(value.toInt)) }
+        }
+        
+        if (!preferToAvoid.isInstanceOf[JsUndefined]) {
+          Logger.debug("yes, we will save the preferToAvoid:" + preferToAvoid + "  was:" + previousSettings.preferToAvoid)
+          previousSettings.preferToAvoid = Option(MutableList.empty[Cuisine]);
+          previousSettings.preferToAvoid.get ++= preferToAvoid.as[JsObject].fields.collect { case (key, JsString(value)) => new Cuisine(key, Option(value.toInt)) }
+        }
+
+        if (!sampleDishLikes.isInstanceOf[JsUndefined]) {
+          Logger.debug("yes, we will save the sampleDishLikes:" + sampleDishLikes + "  was:" + previousSettings.sampleDishLikes)
+          previousSettings.sampleDishLikes = Option(MutableList.empty[Cuisine])
+          previousSettings.sampleDishLikes.get ++= sampleDishLikes.as[JsObject].fields.collect { case (key, JsString(value)) => new Cuisine(key, Option(value.toInt)) }
+        }
+        
+        val settingsJson = Json.toJson(previousSettings).toString
+        User.update(fullUser, fullUser.email, settingsJson)
+      }
       
       Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
     }
   }
+  
   
   def register() = Action {
     implicit request => {
@@ -223,9 +259,9 @@ object Settings extends Controller with Secured {
       val name = (request.body.asJson.get \ "user_data" \ "name")
       val id = (request.body.asJson.get \ "user_data" \ "id")
       
-      val deviceOS = (request.body.asJson.get \ "device_operating_system")
-      val deviceSWidth = (request.body.asJson.get \ "device_screen_width")
-      val deviceLang = (request.body.asJson.get \ "device_language")
+      val deviceOS = (request.body.asJson.get \ "device_operating_system") //TODO
+      val deviceSWidth = (request.body.asJson.get \ "device_screen_width") //TODO
+      val deviceLang = (request.body.asJson.get \ "device_language") //TODO
       
       val userByUsername = User.getFullUserByUsername(id.as[String])
       val userByPhone = User.getFullUserByPhone(cleanPhoneString(phone.as[String]))
