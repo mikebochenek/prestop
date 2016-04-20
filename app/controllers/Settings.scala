@@ -23,6 +23,12 @@ import models.json.RegisterResponse
 import scala.util.Random
 import models.json.TasteProfileDish
 import scala.collection.mutable.MutableList
+import play.api.http._
+import play.api.mvc.MultipartFormData.FilePart
+import play.api.libs.iteratee._
+import play.api.libs.Files.TemporaryFile
+import play.api.mvc.{Codec, MultipartFormData }
+import java.io.{FileInputStream, ByteArrayOutputStream}
 
 object Settings extends Controller with Secured {
   def load() = IsAuthenticated { username =>
@@ -285,7 +291,14 @@ object Settings extends Controller with Secured {
         case false => "new"
       }
 
-      //TODO also link URL!
+      // download image and create link URL!
+      /*
+      val filename = "/tmp/user" + newid + "-" + System.currentTimeMillis + ".jpg" //TODO make generic and more testing probably needed
+      FileDownloader.download(url.as[String], filename)
+      Image.saveAndResizeImages(FilePart("qqfile", "DSC03024.JPG", Some("image/jpeg"), TemporaryFile(new File(filename))), newid, "user") 
+      //TODO cleanup work
+      */
+      
       val fullUser = User.getFullUser(newid)
       val previousSettings = getPreviousSettingsSafely(fullUser)
 
