@@ -263,9 +263,9 @@ object Settings extends Controller with Secured {
       val name = (request.body.asJson.get \ "user_data" \ "name")
       val id = (request.body.asJson.get \ "user_data" \ "id")
       
-      val deviceOS = (request.body.asJson.get \ "device_operating_system") //TODO
-      val deviceSWidth = (request.body.asJson.get \ "device_screen_width") //TODO
-      val deviceLang = (request.body.asJson.get \ "device_language") //TODO
+      val deviceOS = (request.body.asJson.get \ "device_operating_system")
+      val deviceSWidth = (request.body.asJson.get \ "device_screen_width")
+      val deviceLang = (request.body.asJson.get \ "device_language") 
       
       val userByUsername = User.getFullUserByUsername(id.as[String])
       val userByPhone = User.getFullUserByPhone(cleanPhoneString(phone.as[String]))
@@ -290,7 +290,7 @@ object Settings extends Controller with Secured {
       val previousSettings = getPreviousSettingsSafely(fullUser)
 
       if (!deviceOS.isInstanceOf[JsUndefined]) { previousSettings.deviceOS = Option(deviceOS.as[String]) }
-      if (!deviceSWidth.isInstanceOf[JsUndefined]) { previousSettings.deviceSWidth = Option(deviceSWidth.as[Long]) }
+      if (!deviceSWidth.isInstanceOf[JsUndefined]) { previousSettings.deviceSWidth = Option(deviceSWidth.as[String].toDouble) }
       if (!deviceLang.isInstanceOf[JsUndefined]) { previousSettings.deviceLang = Option(deviceLang.as[String]) }
         
       User.update(fullUser, fullUser.email, Json.toJson(previousSettings).toString)
