@@ -110,9 +110,8 @@ object Settings extends Controller with Secured {
 
       Ok(header + csvstr.replaceAll("Done[(]", "").replaceAll("[)]", "")) 
       
-      //TODO kinda wrong because commas in the done text, breaks everything
-      //TODO simplified, but I want only starting 
-      //TODO or better use a real library - i.e. http://code.google.com/p/opencsv/
+      // kinda wrong because commas in the done text, breaks everything, simplified, but I want only starting 
+      // or better use a real library - i.e. http://code.google.com/p/opencsv/
     }
   }
 
@@ -184,9 +183,12 @@ object Settings extends Controller with Secured {
       Logger.info("personalize taste profile - body:" + request.body.asJson)
       
       val userId = (request.body.asJson.get \ "user_id" )
-      val favCuisines = (request.body.asJson.get \ "favCuisines" ) //TODO we should save these!
-      val preferToAvoid = (request.body.asJson.get \ "preferToAvoid" ) //TODO we should save these!
-      
+      val favCuisines = (request.body.asJson.get \ "favCuisines" ) 
+      val preferToAvoid = (request.body.asJson.get \ "preferToAvoid" )
+      val sampleDishLikes = (request.body.asJson.get \ "sampleDishLikes" ) // this should always be empty
+
+      smartInsertUpdate(userId, favCuisines, preferToAvoid, sampleDishLikes)
+
       val restaurantIDs = Restaurant.findAll().map { x => x.id }
       
       Logger.info("personalize taste profile parsed user_id:" + userId + "  favCuisines:" + favCuisines + "  preferToAvoid:" + preferToAvoid)
@@ -211,6 +213,13 @@ object Settings extends Controller with Secured {
       
       Logger.info("personalize parsed user_id:" + userId + "  favCuisines:" + favCuisines + "  preferToAvoid:" + preferToAvoid + "  sampleDishLikes:" + sampleDishLikes)
 
+      smartInsertUpdate(userId, favCuisines, preferToAvoid, sampleDishLikes)
+      
+      Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
+    }
+  }
+
+  def smartInsertUpdate(userId: JsValue, favCuisines: JsValue, preferToAvoid: JsValue, sampleDishLikes: JsValue) = {
       //smart insert/update
       val fullUser = User.getFullUser(userId.as[Long])
       
@@ -242,11 +251,8 @@ object Settings extends Controller with Secured {
         val settingsJson = Json.toJson(previousSettings).toString
         User.update(fullUser, fullUser.email, settingsJson)
       }
-      
-      Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
-    }
+    
   }
-  
   
   def register() = Action {
     implicit request => {
