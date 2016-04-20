@@ -22,7 +22,7 @@ import views._
 object Recommend extends Controller with Secured  {
   def test() = IsAuthenticated { username =>
     implicit request => {
-      Ok(views.html.test(testForm, null, null, null))
+      Ok(views.html.test(testForm, null, null, null, "1", "47.385740", "8.518084", "", "10", ""))
     }
   }
 
@@ -36,9 +36,9 @@ object Recommend extends Controller with Secured  {
         val settings = Json.parse(fullUser.settings).validate[UserSettings].get
         favs = Json.prettyPrint(Json.toJson(settings.favCuisines))
       }
-      val response = Recommendation.recommend(User.getFullUser(id.toLong), 47.385740, 8.518084, 10, 0, 4000.0, false, 0)
-      testForm.fill(User.getFullUser(id.toLong).id.toString, "47.385740", "8.518084", "", "10", "")
-      Ok(views.html.test(testForm, response, Json.prettyPrint(Json.toJson(response)), favs))
+      val response = Recommendation.recommend(User.getFullUser(id.toLong), longitude.toDouble, latitude.toDouble, maxdistance.toDouble, 0, 4000.0, false, 0)
+      //testForm.fill(User.getFullUser(id.toLong).id.toString, "47.385740", "8.518084", "", "10", "")
+      Ok(views.html.test(testForm, response, Json.prettyPrint(Json.toJson(response)), favs, id, longitude, latitude, jsonoptions, maxdistance, time))
     }
   }
   

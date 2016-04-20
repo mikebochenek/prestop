@@ -1,4 +1,4 @@
-@(form: Form[(String,String,String,String,String,String)], re: Recommendations, resp: String, userFavs: String)(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String)], re: Recommendations, resp: String, userFavs: String, id: String, longitude: String, latitude: String, jsonoptions: String, maxdistance: String, time: String)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 <div class="container">
@@ -13,27 +13,27 @@
           
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">User ID</span>
-            <input class="form-control span4" type="text" name="id" id="id" value="1">
+            <input class="form-control span4" type="text" name="id" id="id" value="@id">
           </div>
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Longitude</span>
-            <input class="form-control span4" type="text" name="longitude" id="longitude" value="47.385740">
+            <input class="form-control span4" type="text" name="longitude" id="longitude" value="@longitude">
           </div>
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Latitude</span>
-            <input class="form-control span4" type="text" name="latitude" id="latitude" value="8.518084">
+            <input class="form-control span4" type="text" name="latitude" id="latitude" value="@latitude">
           </div>
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">JSON</span>
-            <input class="form-control span4" type="text" name="jsonoptions" id="jsonoptions" value="">
+            <input class="form-control span4" type="text" name="jsonoptions" id="jsonoptions" value="@jsonoptions">
           </div>
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Max distance (km)</span>
-            <input class="form-control span4" type="text" name="maxdistance" id="maxdistance" value="10">
+            <input class="form-control span4" type="text" name="maxdistance" id="maxdistance" value="@maxdistance">
           </div>
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Time</span>
-            <input class="form-control span4" type="text" name="time" id="time" value="">
+            <input class="form-control span4" type="text" name="time" id="time" value="@time">
           </div>
           
           </br>
