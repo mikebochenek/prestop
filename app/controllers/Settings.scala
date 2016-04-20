@@ -34,11 +34,7 @@ object Settings extends Controller with Secured {
       val subdomainLanguage = request.headers.get(HeaderNames.ACCEPT_LANGUAGE).get/*.substring(0,2)*/
       Logger.debug(" language from request:" + subdomainLanguage)
 
-      var userSettings = UserSettings.default(fullUser.id)
-      if (fullUser.settings != null) {
-        userSettings = Json.parse(fullUser.settings).validate[UserSettings].get 
-        Logger.debug("parse ----->" + userSettings)
-      }
+      val userSettings = getPreviousSettingsSafely(fullUser)
       
       val url = Image.findByUser(fullUser.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
 
@@ -218,15 +214,17 @@ object Settings extends Controller with Secured {
       Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
     }
   }
+  
+  def getPreviousSettingsSafely(fullUser: UserFull) = {
+    fullUser.settings match {
+      case null => UserSettings.default(fullUser.id)
+      case _ => Json.parse(fullUser.settings).validate[UserSettings].get 
+    }
+  }
 
   def smartInsertUpdate(userId: JsValue, favCuisines: JsValue, preferToAvoid: JsValue, sampleDishLikes: JsValue) = {
-      //smart insert/update
       val fullUser = User.getFullUser(userId.as[Long])
-      
-      val previousSettings = fullUser.settings match {
-        case null => UserSettings.default(fullUser.id)
-        case _ => Json.parse(fullUser.settings).validate[UserSettings].get 
-      }
+      val previousSettings = getPreviousSettingsSafely(fullUser)
       
       if (previousSettings != null) {
         
@@ -288,6 +286,15 @@ object Settings extends Controller with Secured {
       }
 
       //TODO also link URL!
+      val fullUser = User.getFullUser(newid)
+      val previousSettings = getPreviousSettingsSafely(fullUser)
+
+      if (!deviceOS.isInstanceOf[JsUndefined]) { previousSettings.deviceOS = Option(deviceOS.as[String]) }
+      if (!deviceSWidth.isInstanceOf[JsUndefined]) { previousSettings.deviceSWidth = Option(deviceSWidth.as[Long]) }
+      if (!deviceLang.isInstanceOf[JsUndefined]) { previousSettings.deviceLang = Option(deviceLang.as[String]) }
+        
+      User.update(fullUser, fullUser.email, Json.toJson(previousSettings).toString)
+      
       
       Logger.info("parsed name: " + name + " id: " + id + " email: " + email + " phone: " + phone + " gender:" + gender + " url: " + url)
       Logger.info("found / created new user with id: " + newid + " " + userStatus)
