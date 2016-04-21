@@ -52,7 +52,7 @@ object Image {
 
   def findByRestaurant(id: Long): Seq[Image] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, filename, url, restaurant_id, dish_id, user_id, width, height, status, lastupdate from image where status >= 0 and restaurant_id = {restaurant_id} order by width desc ")
+      SQL("select id, filename, url, restaurant_id, dish_id, user_id, width, height, status, lastupdate from image where status >= 0 and restaurant_id = {restaurant_id} order by id asc ")
          .on('restaurant_id -> id).as(Image.simple *)
     }
   }
@@ -211,6 +211,7 @@ object Image {
       Logger.info("==== resized: " + resizeFilename)
       ImageIO.write(resized, extension, resizeFile)
 
+      //TODO this needs different switches
       Image.updateDishImages(original.restaurant_id, original.dish_id, original.user_id, 
           w, resized.getHeight.toLong, resizeFile.getAbsolutePath, 
           (original.url.take(original.url.lastIndexOf("/")) + "/" + resizeFile.getName))

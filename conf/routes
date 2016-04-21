@@ -48,8 +48,8 @@ POST     /api/user/new               controllers.Settings.createUser
 
 
 GET      /dishedit/:id              controllers.Dishes.getById(id: Long)
-GET      /dishcrop/:id              controllers.Dishes.cropImage(id: Long)
-POST     /dishcrop/:id              controllers.Dishes.cropImagePost(id: Long)
+GET      /dishcrop/:id,:imgType     controllers.Dishes.cropImage(id: Long, imgType: String)
+POST     /dishcrop/:id,:imgType     controllers.Dishes.cropImagePost(id: Long, imgType: String)
 POST     /dishedit                  controllers.Dishes.save
 POST	 /dish						controllers.Dishes.upload(id: Long)
 

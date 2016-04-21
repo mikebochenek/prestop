@@ -29,7 +29,7 @@ object Dishes extends Controller with Secured {
       "h" -> text))
 
   val maxW = 700.0
-  def cropImage(id: Long) = IsAuthenticated { username =>
+  def cropImage(id: Long, imgType: String) = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling dish crop - load data for id:" + id)
       val img = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
@@ -41,16 +41,25 @@ object Dishes extends Controller with Secured {
     (w / maxW * x).toInt
   }
 
-  def cropImagePost(id: Long) = IsAuthenticated { username =>
+  def cropImagePost(id: Long, imgType: String) = IsAuthenticated { username =>
     implicit request => {
       val (x, y, w, h) = dishCropForm.bindFromRequest.get
-      Logger.info("cropping - calling dish crop POST - id:" + id + "cropping x:" + x + " y:" + y + " w:" + w + " h:" + h)
+      Logger.info("cropping - calling dish crop POST - type: " + imgType + " id:" + id + "cropping x:" + x + " y:" + y + " w:" + w + " h:" + h)
       
       //1242 ratio! don't forget ratio could be greater than one, and less than one
-      val originalImg = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+      val originalImg = imgType match {
+        case "dish" => Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+        case "restaurant" => Image.findByRestaurant(id).filter { x => x.status == 0 }.sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+        case "restaurantProfile" => Image.findByRestaurant(id).filter { x => x.status == 1 }.sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+      }
       val wd = originalImg.width.get.toInt
       Image.crop(originalImg.id, adjust(wd, x.toInt), adjust(wd, y.toInt), adjust(wd, w.toInt), adjust(wd, h.toInt))
-      Redirect(routes.Dishes.getById(id))
+      
+      if ("dish".equals(imgType)) {
+        Redirect(routes.Dishes.getById(id))
+      } else {
+        Redirect(routes.Restaurants.edit(id))
+      }
     }
   }
   
@@ -168,7 +177,7 @@ object Dishes extends Controller with Secured {
   def upload(id: Long) = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
       Image.saveAndResizeImages(picture, id, "dish")
-      Redirect(routes.Dishes.cropImage(id))
+      Redirect(routes.Dishes.cropImage(id, "dish"))
     }.getOrElse {
       Redirect(routes.Restaurants.about).flashing(
         "error" -> "Missing file")

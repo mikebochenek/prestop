@@ -102,7 +102,7 @@
                      <a href="@url"><img src="@url" alt="d" width="100" title="original"></img></a>
                      @for(w <- Image.resolutions) { <a href="@Image.reverseURLGen(url, w)"><img src="@Image.reverseURLGen(url, w)" alt="d" width="60" title="(cropped) @w px wide"></img></a> &nbsp&nbsp }
                      
-                  @helper.form(action = routes.Dishes.cropImage(dish.id)) {
+                  @helper.form(action = routes.Dishes.cropImage(dish.id, "dish")) {
                        <button class="span4 btn btn-primary" type="submit" id="cropbutton" >crop</button>
                   }
                   <hr>
