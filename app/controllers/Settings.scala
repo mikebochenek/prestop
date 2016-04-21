@@ -229,7 +229,7 @@ object Settings extends Controller with Secured {
   }
 
   def smartInsertUpdate(userId: JsValue, favCuisines: JsValue, preferToAvoid: JsValue, sampleDishLikes: JsValue) = {
-      val fullUser = User.getFullUser(userId.as[Long])
+      val fullUser = User.getFullUser(userId.as[String].toLong)
       val previousSettings = getPreviousSettingsSafely(fullUser)
       
       if (previousSettings != null) {
