@@ -49,13 +49,13 @@
           </div>
                       
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Longitude</span>
-            <input class="form-control span4" type="text" name="longitude" id="longitude" value="@restaurant.longitude">
+            <span class="input-group-addon" id="basic-addon1">Latitude</span>
+            <input class="form-control span4" type="text" name="latitude" id="latitude" value="@restaurant.latitude">
           </div>
           
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Latitude</span>
-            <input class="form-control span4" type="text" name="latitude" id="latitude" value="@restaurant.latitude">
+            <span class="input-group-addon" id="basic-addon1">Longitude</span>
+            <input class="form-control span4" type="text" name="longitude" id="longitude" value="@restaurant.longitude">
           </div>
           
           <div class="input-group">
@@ -190,8 +190,8 @@
       	       <td>ID & name</td>
       	       <td>address</td>
       	       <td>phone</td>
-      	       <td>longitude</td>
       	       <td>latitude</td>
+      	       <td>longitude</td>
       	       <td>status</td>
       	    </tr>
       	  </thead>
@@ -201,8 +201,8 @@
 		  <td><a href="../restaurantlocations/@cr.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a>@cr.id @cr.name</td>
 		  <td>@cr.address @cr.city @cr.state</td>
 		  <td>@cr.phone</td>
-		  <td>@cr.longitude</td>
 		  <td>@cr.latitude</td>
+		  <td>@cr.longitude</td>
 		  <td>@cr.status</td>
 		  </tr>
 		  }
