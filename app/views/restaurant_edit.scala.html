@@ -156,32 +156,6 @@
         </div>
 
 		<hr/>
-
-      	<h3>Reservations (@reservations.size)</h3>
-      	<table class="table table-hover">
-      	  <thead>
-      	    <tr>
-      	       <td>user ID</td>
-      	       <td>date and time</td>
-      	       <td>guests</td>
-      	       <td>special requests</td>
-      	       <td>status</td>
-      	    </tr>
-      	  </thead>
-      	  <tbody>
-      	@for((reservation, index) <- reservations.zipWithIndex)  {	
-		  <tr>
-		  <td>@reservation.user_id</td>
-		  <td>@reservation.reservationtime.format("dd MMM YYYY HH:MM")</td>
-		  <td>@reservation.guestcount</td>
-		  <td>@reservation.special_requests</td>
-		  <td>@reservation.status</td>
-		  </tr>
-		  }
-      	  </tbody>
-		</table>
-
-		<hr/>
 		
      	<h3>Other locations (@children.size)</h3>
       	<table class="table table-hover">
@@ -212,6 +186,32 @@
         @helper.form(action = routes.Restaurants.addLocations(restaurant.id)) {
             <button class="span4 btn btn-primary" type="submit" id="createlocation" >Add new location</button>
         }
+
+		<hr/>
+
+      	<h3>Reservations (@reservations.size)</h3>
+      	<table class="table table-hover">
+      	  <thead>
+      	    <tr>
+      	       <td>user ID</td>
+      	       <td>date and time</td>
+      	       <td>guests</td>
+      	       <td>special requests</td>
+      	       <td>status</td>
+      	    </tr>
+      	  </thead>
+      	  <tbody>
+      	@for((reservation, index) <- reservations.zipWithIndex)  {	
+		  <tr>
+		  <td>@reservation.user_id</td>
+		  <td>@reservation.reservationtime.format("dd MMM YYYY HH:MM")</td>
+		  <td>@reservation.guestcount</td>
+		  <td>@reservation.special_requests</td>
+		  <td>@reservation.status</td>
+		  </tr>
+		  }
+      	  </tbody>
+		</table>
       
   </div>
 
