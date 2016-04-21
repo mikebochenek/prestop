@@ -68,12 +68,12 @@ object Tag {
     }
   }
 
-  def update(id: Int, name: String, en: String, de: String, it: String, fr: String) = {
+  def update(id: Int, name: String, en: String, de: String, it: String, fr: String, status: Long) = {
     DB.withConnection { implicit connection =>
       SQL(
         """
          update tag set name = {name}, en_text = {en_text}, de_text = {de_text},
-         it_text = {it_text}, fr_text = {fr_text} where 
+         it_text = {it_text}, fr_text = {fr_text}, status = {status} where 
          id = {id} 
         """).on(
           'id -> id,
@@ -81,7 +81,8 @@ object Tag {
           'en_text -> en,
           'de_text -> de,
           'it_text -> it,
-          'fr_text -> fr).executeUpdate
+          'fr_text -> fr,
+          'status -> status).executeUpdate
     }
   }  
   

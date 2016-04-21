@@ -1,4 +1,4 @@
-@(form: Form[(String,String,String,String,String,String)], tag: Tag, size: Int)(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String,String)], tag: Tag, size: Int)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 @if(session.get("usertype").get.toString.equals("7")) {
@@ -34,6 +34,10 @@
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">French</span>
             <input class="form-control span4" type="text" name="fr_text" id="fr_text" value="@tag.fr_text">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Status</span>
+            <input class="form-control span4" type="text" name="status" id="status" value="@tag.status">
           </div>
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">number of assignments</span>

@@ -20,7 +20,7 @@ object TagEditor extends Controller with Secured {
 
   def load() = IsAuthenticated { username =>
     implicit request => {
-      Ok(views.html.taglist_edit(Tag.findAll))
+      Ok(views.html.taglist_edit(Tag.findAll.filter{ _.status >= 0 }))
     }
   }
 
@@ -39,13 +39,14 @@ object TagEditor extends Controller with Secured {
       "en_text" -> text,
       "de_text" -> text,
       "it_text" -> text,
-      "fr_text" -> text))
+      "fr_text" -> text,
+      "status" -> text))
       
   def save() = IsAuthenticated { username =>
     implicit request =>  
-      val (id, name, en_text, de_text, it_text, fr_text) = tagForm.bindFromRequest.get
+      val (id, name, en_text, de_text, it_text, fr_text, status) = tagForm.bindFromRequest.get
       Logger.info("calling tag update for id:" + id + " name:" + name)
-      Tag.update(id.toInt, name, en_text, de_text, it_text, fr_text)
+      Tag.update(id.toInt, name, en_text, de_text, it_text, fr_text, status.toLong)
       Redirect(routes.TagEditor.loadTag(id.toLong))
   }  
 }
