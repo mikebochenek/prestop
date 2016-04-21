@@ -104,6 +104,11 @@ object Image {
     url.getOrElse("http://localhost") + str  
   }
   
+  def getImageLocalPath(): String = {
+    val url = current.configuration.getString("image.server.localpath")
+    url.getOrElse("/home/mike/data/presto/")
+  }
+  
   def updateRestaurantImages(restaurantId: Long, previousStatus: Int, status: Int) = {
     DB.withConnection { implicit connection =>
       SQL("update image set status = {status} where restaurant_id = {restaurant_id} and status = {prevStatus}").on(
@@ -164,7 +169,7 @@ object Image {
       userID = id
     }
     
-    val path = "/home/mike/data/presto/" + ts
+    val path = getImageLocalPath() + ts
     val file = new File(path + s"/$filename")
     val extension = filename.takeRight(3).toLowerCase
     
