@@ -212,7 +212,7 @@ object Image {
       ImageIO.write(resized, extension, resizeFile)
 
       //TODO this needs different switches
-      Image.updateDishImages(original.restaurant_id, original.dish_id, original.user_id, 
+      Image.updateDishImages(original.restaurant_id, original.dish_id, original.status, original.user_id, 
           w, resized.getHeight.toLong, resizeFile.getAbsolutePath, 
           (original.url.take(original.url.lastIndexOf("/")) + "/" + resizeFile.getName))
     }
@@ -220,11 +220,11 @@ object Image {
     Logger.info("==== DONE cropping " + (System.currentTimeMillis - ts))
   }
 
-  def updateDishImages(restID: Long, dishID: Long, userID: Option[Long], width: Long, 
+  def updateDishImages(restID: Long, dishID: Long, status: Long, userID: Option[Long], width: Long, 
       height: Long, filename: String, url: String) = {
     DB.withConnection { implicit connection =>
       SQL("update image set filename = {filename}, url = {url}, height = {height}, lastupdate = {lastupdate} " +
-          "where dish_id = {dish_id} and restaurant_id = {restaurant_id} and user_id = {user_id} and width = {width} ").on(
+          "where dish_id = {dish_id} and restaurant_id = {restaurant_id} and user_id = {user_id} and width = {width} and status = {status}").on(
           'dish_id -> dishID,
           'restaurant_id -> restID,
           'user_id -> userID,
@@ -232,6 +232,7 @@ object Image {
           'height -> height,
           'filename -> filename,
           'url -> url,
+          'status -> status,
           'lastupdate -> new Date()).executeUpdate
     }
   }

@@ -141,7 +141,7 @@ object Restaurants extends Controller with Secured {
   def upload(id: Long) = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
       Image.saveAndResizeImages(picture, id, "restaurant")
-      Redirect(routes.Restaurants.edit(id))
+      Redirect(routes.Dishes.cropImage(id, "restaurant"))
     }.getOrElse {
       Redirect(routes.Restaurants.about).flashing(
         "error" -> "Missing file")
@@ -151,7 +151,7 @@ object Restaurants extends Controller with Secured {
   def uploadLogo(id: Long) = Action(parse.multipartFormData) { request =>
     request.body.file("logopicture").map { picture =>
       Image.saveAndResizeImages(picture, id, "restaurantlogo")
-      Redirect(routes.Restaurants.edit(id))
+      Redirect(routes.Dishes.cropImage(id, "restaurantProfile"))
     }.getOrElse {
       Redirect(routes.Restaurants.about).flashing(
         "error" -> "Missing file")

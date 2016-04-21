@@ -32,7 +32,12 @@ object Dishes extends Controller with Secured {
   def cropImage(id: Long, imgType: String) = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling dish crop - load data for id:" + id)
-      val img = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+      val img = imgType match {
+        case "dish" => Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+        case "restaurant" => Image.findByRestaurant(id).filter { x => x.status == 0 }.sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+        case "restaurantProfile" => Image.findByRestaurant(id).filter { x => x.status == 1 }.sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+      }
+        
       Ok(views.html.dish_crop(img.url, id, img.width.get, img.height.get, img.width.get / maxW))
     }
   }

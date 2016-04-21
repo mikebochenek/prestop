@@ -103,12 +103,15 @@
                 @if(url != null) {
                      <img src="@url" alt="restaurant photo" height="100" width="100"></img>
                      @for(w <- Image.resolutions) { <a href="@Image.reverseURLGen(url, w)">@w px wide</a> &nbsp&nbsp }
+                  @helper.form(action = routes.Dishes.cropImage(restaurant.id, "restaurant")) {
+                       <button class="span4 btn btn-primary" type="submit" id="cropbutton" >crop</button>
+                  }
+                  <hr>
                 }
                 @helper.form(action = routes.Restaurants.upload(restaurant.id), 'enctype -> "multipart/form-data") {
-		   <input type="file" name="picture">
-		   </br>
-           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">upload</button>
-		  }
+		            <span class="btn"><input type="file" name="picture"></span>
+                    <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">upload</button>
+		        }
         </div>
       </div>
 
@@ -119,12 +122,15 @@
                 @if(logourl != null) {
                      <img src="@logourl" alt="restaurant photo" height="100" width="100"></img>
                      @for(w <- Image.resolutions) { <a href="@Image.reverseURLGen(logourl, w)">@w px wide</a> &nbsp&nbsp }
+                  @helper.form(action = routes.Dishes.cropImage(restaurant.id, "restaurantProfile")) {
+                       <button class="span4 btn btn-primary" type="submit" id="cropbutton" >crop</button>
+                  }
+                  <hr>
                 }
                 @helper.form(action = routes.Restaurants.uploadLogo(restaurant.id), 'enctype -> "multipart/form-data") {
-		   <input type="file" name="logopicture">
-		   </br>
-           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">upload</button>
-		  }
+		            <span class="btn"><input type="file" name="logopicture"></span>
+                    <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">upload</button>
+                }
         </div>
       </div>
 
