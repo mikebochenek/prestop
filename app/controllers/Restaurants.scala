@@ -60,7 +60,7 @@ object Restaurants extends Controller with Secured {
     val now = new Date();
     val schedule_text = schedule.split("\r\n")
     val day = now.getDay
-    // fudge, this is harder than I thought
+    //TODO fudge, this is harder than I thought
     true
   }
 
@@ -70,8 +70,8 @@ object Restaurants extends Controller with Secured {
       val all = Restaurant.findById(username, id)
       val tags = Tag.findByRef(id, 12).map(_.name).mkString(", ")
       val cuisines = Tag.findByRef(id, 21).map(_.name).mkString(", ")
-      val url = Image.findByRestaurant(id).filter { x => x.status == 0 }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
-      val logourl = Image.findByRestaurant(id).filter { x => x.status == 1 }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+      val url = Image.findByRestaurant(id).filter { x => x.status == 0 }.sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+      val logourl = Image.findByRestaurant(id).filter { x => x.status == 1 }.sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       val reservations = Reservation.findAllByRestaurant(id)
       val childRestaurants = Restaurant.findAllByParent(id)
       Ok(views.html.restaurant_edit(restaurantForm, all(0), url, logourl, tags, cuisines, reservations, childRestaurants))

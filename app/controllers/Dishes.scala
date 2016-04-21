@@ -63,7 +63,7 @@ object Dishes extends Controller with Secured {
       val diet = Tag.findByRef(id, 34).map(_.name).mkString(", ")
       val dishtype = Tag.findByRef(id, 35).map(_.name).mkString(", ")
       val meatorigin = Tag.findByRef(id, 36).map(_.name).mkString(", ")
-      val url = Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+      val url = Image.findByDish(id).sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
 
       dish.foreach { x => x.greenScore = calculateGreenScore(greenscoretags.size) }
       
