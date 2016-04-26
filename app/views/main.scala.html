@@ -42,7 +42,7 @@
           <ul class="nav navbar-nav">
 @session.get("email").map { user =>
             <li><a href="/restaurant">Restaurant Editor</a></li>
-            @if(session.get("usertype").get.toString.equals("7")) {
+            @if(session.get("usertype").getOrElse("").toString.equals("7")) {
               <li><a href="/tageditor">Tag Editor</a></li>
             }
 }          
@@ -51,7 +51,7 @@
           
 @session.get("email").map { user =>
               <li><a href="/test">Test!</a></li>
-            @if(session.get("usertype").get.toString.equals("7")) {
+            @if(session.get("usertype").getOrElse("").toString.equals("7")) {
               <li><a href="/reports">@Messages("menu.reports")</a></li>
             }
             <li><a href="/settings">@Messages("menu.settings")</a></li>
