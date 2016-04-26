@@ -37,7 +37,7 @@ object Recommendation {
   }
   
   def recommend(user: UserFull, latitude: Double, longitude: Double, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean, lastDishID: Long) = {
-    val restaurants = getAllRestaurants()//Map(Restaurant.findAll map { a => a.id -> a}: _*) //getAllRestaurants()
+    val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*) //getAllRestaurants()
     // http://stackoverflow.com/questions/2925041/how-to-convert-a-seqa-to-a-mapint-a-using-a-value-of-a-as-the-key-in-the-ma
     
     val likedDishes = Recommendations.getLikedDishes(user.id)
@@ -57,7 +57,7 @@ object Recommendation {
     }
         
         
-    val dishes = getAllDishes()//Dish.findAll()
+    val dishes = Dish.findAll() // getAllDishes()
       .filter { x => within(maxDistance, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
       .filter { x => (maxPrice >= x.price && minPrice <= x.price) } // filter by price
       .take(100) //TODO for now, limit to 100 dishes..
