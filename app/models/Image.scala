@@ -128,6 +128,15 @@ object Image {
     }
   }
 
+  def updateUserImages(userId: Long, status: Int) = {
+    DB.withConnection { implicit connection =>
+      SQL("update image set status = {status} where user_id = {user_id}").on(
+          'user_id -> userId,
+          'lastupdate -> new Date(),
+          'status -> status).executeUpdate
+    }
+  }
+  
   val resolutions = List(48, 72, 172, 640, 750, 1242)
   
   def reverseURLGen(url: String, w: Int) = {
@@ -166,6 +175,7 @@ object Image {
     }
 
     if ("user".equals(kind)) {
+      updateUserImages(id, -1)
       userID = id
     }
     
@@ -180,7 +190,7 @@ object Image {
     //http://www.htmlgoodies.com/beyond/java/create-high-quality-thumbnails-using-the-imgscalr-library.html
 
     for (w <- resolutions) {
-      val resized = Scalr.resize(img, w); 
+      val resized = Scalr.resize(img, Scalr.Mode.FIT_TO_WIDTH, w); 
       val resizeFilename = file.getAbsolutePath.dropRight(4) + "-" + w + "." + extension
       val resizeFile = new File(resizeFilename)
       Logger.info("==== resized: " + resizeFilename)
