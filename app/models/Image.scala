@@ -148,7 +148,7 @@ object Image {
         newURL += x + "/"
       }
     }
-    newURL += filename.replace(".", ("-" + w + "."))
+    newURL += filename.dropRight(4) + filename.takeRight(4).replace(".", ("-" + w + "."))
     newURL
   }
   
