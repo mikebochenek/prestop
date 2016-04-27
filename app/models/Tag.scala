@@ -98,7 +98,7 @@ object Tag {
 					case Some(f) => TagRef.create(new TagRef(-1, f.id, id, status, null))
 					case None => { 
             // instead of ignoring the tag, we create it!
-            val newId = Tag.create(new Tag(-1, tag.trim.toLowerCase, Some(tag.trim.toLowerCase), Some(tag.trim.toLowerCase), Some(null), Some(null), status, new Date()))
+            val newId = Tag.create(new Tag(-1, tag.trim.toLowerCase, Some(tag.trim.toLowerCase), Some(null), Some(null), Some(null), status, new Date()))
             Logger.warn("new tag created:" + tag + " with newId=" + newId)
             TagRef.create(new TagRef(-1, newId.getOrElse(0), id, status, null))
           }
