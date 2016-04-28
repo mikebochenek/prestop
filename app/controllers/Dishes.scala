@@ -38,7 +38,7 @@ object Dishes extends Controller with Secured {
         case "restaurantProfile" => Image.findByRestaurant(id).filter { x => x.status == 1 }.sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
       }
         
-      Ok(views.html.dish_crop(img.url, id, img.width.get, img.height.get, img.width.get / maxW))
+      Ok(views.html.dish_crop(imgType, img.url, id, img.width.get, img.height.get, img.width.get / maxW))
     }
   }
   

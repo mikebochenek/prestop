@@ -215,7 +215,7 @@ object Image {
     val extension = original.filename.takeRight(3).toLowerCase
 
     for (w <- resolutions) {
-      val resized = Scalr.resize(croppedImg, w); 
+      val resized = Scalr.resize(croppedImg, Scalr.Mode.FIT_TO_WIDTH, w); 
       val resizeFilename = file.getAbsolutePath.dropRight(4) + "-" + w + "." + extension
       val resizeFile = new File(resizeFilename)
       Logger.info("==== resized: " + resizeFilename)

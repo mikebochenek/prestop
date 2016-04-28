@@ -1,4 +1,4 @@
-@(url: String, id: Long, width: Long, height: Long, resize: Double)(implicit flash: Flash, session: Session, lang: Lang)
+@(imgType: String, url: String, id: Long, width: Long, height: Long, resize: Double)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -11,7 +11,7 @@
         <div class="col-sm-8 col-md-offset-2">
         
       @if(url != null) {
-      	Your <b>original</b> image is @width pixels wide and @height pixels high.  It's been resized by @resize 
+      	Your <b>original</b> image is @width pixels wide and @height pixels high.  It's been resized by @resize
         <img src="@url" alt="dish photo" width="700" id="croptarget"></img>
 
      <br/>
@@ -36,9 +36,12 @@
 <script language="Javascript">
 attachjcrop = function() {
 	$(function(){
-
 		$('#croptarget').Jcrop({
+		@if(imgType.equals("restaurantProfile")) {
+			aspectRatio: 2.14,
+		} else {
 			aspectRatio: 1,
+		}
 			onSelect: updateCoords
 		});
 
@@ -52,8 +55,8 @@ attachjcrop = function() {
 	{
 		$('#x').val(c.x);
 		$('#y').val(c.y);
-		$('#w').val(c.w);
-		$('#h').val(c.h);
+		$('#w').val(parseInt(c.w));
+		$('#h').val(parseInt(c.h), 10);
 		$('#cropstatus').html('start (' + convrt(c.x) + ',' + convrt(c.y) + ') width=' + convrt(c.w) + ' height=' + convrt(c.h));
 		$('#cropbutton').prop( "disabled", false );
 	};
