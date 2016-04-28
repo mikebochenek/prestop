@@ -42,8 +42,9 @@ object Restaurants extends Controller with Secured {
       for (restaurant <- all) {
         restaurant.paymentoptions =  Tag.findByRef(restaurant.id, 12).map(_.en_text.get) //TODO good, but this has to be dynamic somehow
         restaurant.cuisines =  Tag.findByRef(restaurant.id, 21).map(_.en_text.get) //TODO should be dynamic
-        restaurant.url = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
-        restaurant.smallurl = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+        val defaultImage = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 750 && x.status == 0}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+        restaurant.url = defaultImage.url
+        restaurant.smallurl = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 72 && x.status == 1}.headOption.getOrElse(defaultImage).asInstanceOf[Image].url
         
         restaurant.schedule_text = restaurant.schedule.split("\r\n")
         restaurant.open_now = isOpen(restaurant.schedule)
