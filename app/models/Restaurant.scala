@@ -22,8 +22,8 @@ object RestaurantFriends {
 }
 
 case class Restaurant(id: Long, name: String, city: String, address: String, longitude: Double, latitude: Double, 
-    schedule: String, var schedule_text: Seq[String], var open_now: Boolean, restype: Int, lastupdate: Date, status: Int, 
-    phone: Option[String], email: Option[String], postalcode: Option[String], state: Option[String], 
+    schedule: String, var schedule_text: Seq[String], var open_now: Boolean, restype: Int, status: Int, 
+    phone: Option[String], email: Option[String], postalcode: Option[String], state: Option[String], website: Option[String],
     var url: String, var smallurl: String, var paymentoptions: Seq[String], var cuisines: Seq[String],
     var friendsWhoBooked: Seq[RestaurantFriends])
 
@@ -37,15 +37,16 @@ object Restaurant {
       get[Double]("restaurant.latitude") ~
       get[String]("restaurant.schedulecron") ~
       get[Int]("restaurant.restype") ~
-      get[Date]("restaurant.lastupdate") ~
       get[Int]("restaurant.status") ~
       get[Option[String]]("restaurant.phone") ~
       get[Option[String]]("restaurant.email") ~
       get[Option[String]]("restaurant.postalcode") ~
-      get[Option[String]]("restaurant.state") map {
-        case id ~ name ~ city ~ address ~ longitude ~ latitude ~ schedulecron ~ restype ~ lastupdate ~ status ~ phone ~ email ~ postalcode ~ state => 
-          Restaurant(id, name, city, address, longitude, latitude, schedulecron, Seq.empty[String], true, 
-              restype, lastupdate, status, phone, email, postalcode, state, null, null, 
+      get[Option[String]]("restaurant.state") ~
+      get[Option[String]]("restaurant.website") map {
+        case id ~ name ~ city ~ address ~ longitude ~ latitude ~ schedulecron ~ restype 
+        ~ status ~ phone ~ email ~ postalcode ~ state ~ website => Restaurant(id, name, city, address, 
+              longitude, latitude, schedulecron, Seq.empty[String], true, 
+              restype, status, phone, email, postalcode, state, website, null, null, 
               Seq.empty[String], Seq.empty[String], Seq.empty[RestaurantFriends])
       }
   }
@@ -74,14 +75,14 @@ object Restaurant {
 
 
   def update(id: Long, name: String, city: String, address: String, longitude: Double, latitude: Double, 
-      scheduleCron: String, restype: Int, status: Int, phone: String, email: String, postalcode: String, state: String) = {
+      scheduleCron: String, restype: Int, status: Int, phone: String, email: String, postalcode: String, state: String, website: String) = {
     DB.withConnection { implicit connection =>
       SQL(
         """
          update restaurant set name = {name}, city = {city}, address = {address},
          longitude = {longitude}, latitude = {latitude}, schedulecron = {schedulecron}, 
          restype = {restype}, lastupdate = {lastupdate}, status = {status},
-         phone = {phone}, email = {email}, postalcode = {postalcode}, state = {state} 
+         phone = {phone}, email = {email}, postalcode = {postalcode}, state = {state}, website = {website} 
          where id = {id}
         """).on(
           'id -> id,
@@ -96,6 +97,7 @@ object Restaurant {
           'email -> email,
           'postalcode -> postalcode,
           'state -> state,
+          'website -> website,
           'lastupdate -> new Date(),
           'status -> status).executeUpdate
     }
@@ -107,23 +109,26 @@ object Restaurant {
     }
   }
 
+  val selectString = "select id, name, city, address, longitude, latitude, schedulecron, restype, status, phone, email, postalcode, state, website from restaurant "
+    
+  
   def findById(username: String, id: Long): Seq[Restaurant] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state from restaurant where id = {id} ").on(
+      SQL(selectString + " where id = {id} ").on(
         'id -> id).as(Restaurant.simple *)
     }
   }
   
   def findAll(): Seq[Restaurant] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state from restaurant where status >= 0 and parent_id is null "
+      SQL(selectString + " where status >= 0 and parent_id is null "
           + " order by id asc").on().as(Restaurant.simple *)
     }
   }
 
   def findAllByUser(userId: Long): Seq[Restaurant] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state from restaurant where status >= 0 and parent_id is null "
+      SQL(selectString + " where status >= 0 and parent_id is null "
           + " and id in (select restaurant_id from restaurant_owner where user_id = {user_id} and status >= 0) order by id asc").on(
               'user_id -> userId).as(Restaurant.simple *)
     }
@@ -131,7 +136,7 @@ object Restaurant {
 
   def findAllByParent(parentId: Long): Seq[Restaurant] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, name, city, address, longitude, latitude, schedulecron, restype, lastupdate, status, phone, email, postalcode, state from restaurant where status >= 0 "
+      SQL(selectString + " where status >= 0 "
           + " and parent_id = {parent_id} order by id asc").on(
               'parent_id -> parentId).as(Restaurant.simple *)
     }

@@ -88,6 +88,7 @@ object Restaurants extends Controller with Secured {
       "city" -> text,
       "postalcode" -> text,
       "state" -> text,
+      "website" -> text,
       "longitude" -> text,
       "latitude" -> text,
       "schedule" -> text,
@@ -98,8 +99,8 @@ object Restaurants extends Controller with Secured {
 
   def save = IsAuthenticated { username =>
     implicit request => { 
-      val (id, name, phone, email, address, city, postalcode, state, longitude, latitude, schedule, restype, status, cuisines, tags) = restaurantForm.bindFromRequest.get
-      Restaurant.update(id.toLong, name, city, address, longitude.toDouble, latitude.toDouble, schedule, restype.toInt, status.toInt, phone, email, postalcode, state)
+      val (id, name, phone, email, address, city, postalcode, state, website, longitude, latitude, schedule, restype, status, cuisines, tags) = restaurantForm.bindFromRequest.get
+      Restaurant.update(id.toLong, name, city, address, longitude.toDouble, latitude.toDouble, schedule, restype.toInt, status.toInt, phone, email, postalcode, state, website)
       Tag.updateTags(id.toLong, tags, 12)
       Tag.updateTags(id.toLong, cuisines, 21)
       Logger.info("calling restaurant update for id:" + id)
@@ -177,7 +178,7 @@ object Restaurants extends Controller with Secured {
       val (id, phone, email, address, city, postalcode, state, longitude, latitude, schedule, status) = restaurantLocationsForm.bindFromRequest.get
       Logger.info("calling restaurant locations edit - load data for id:" + id)
       val rest = Restaurant.findById(username, id.toLong)(0)
-      Restaurant.update(id.toLong, rest.name, city, address, longitude.toDouble, latitude.toDouble, schedule, rest.restype, status.toInt, phone, email, postalcode, state)
+      Restaurant.update(id.toLong, rest.name, city, address, longitude.toDouble, latitude.toDouble, schedule, rest.restype, status.toInt, phone, email, postalcode, state, rest.website.getOrElse(""))
       Logger.info("done calling restaurant CHILD update for id:" + id)
       Ok(views.html.restaurant_locations(restaurantLocationsForm, Restaurant.findById(username, id.toLong)(0)))
     }
