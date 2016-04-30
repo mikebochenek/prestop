@@ -16,6 +16,8 @@ import java.util.concurrent.Callable
 import play.api.libs.json._
 import controllers._
 import com.fasterxml.jackson.core.JsonParseException
+import java.util.{ Calendar, GregorianCalendar, TimeZone }
+import Calendar.{ DAY_OF_WEEK, HOUR_OF_DAY, MINUTE, SUNDAY, SATURDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY }
 
 object Recommendation {
   //47.385740, 8.518084 coordinates for Zurich Hardbrucke
@@ -160,9 +162,63 @@ object Recommendation {
     }
   }
   
+  val timezone = TimeZone.getTimeZone("Europe/Copenhagen")
   def checkSchedule(s: String) = {
+    val calendar = Calendar.getInstance(timezone)
+    val day = calendar.get(DAY_OF_WEEK)
+    val hour = calendar.get(HOUR_OF_DAY)
+    val minute = calendar.get(MINUTE)
+    
+    //Logger.debug (SATURDAY + " day: " + day + " hour:" + hour + " minute:" + minute)
+
+    val lines = s.replaceAll("-","").replaceAll("\u2013","").replaceAll("  "," ").split("\r\n")
+    
+    for (str <- lines) {
+      val tokens = str.split(" ")
+
+      if (0 != extractDay(tokens(0))) {
+        if (isTime(tokens(1))) {
+          Logger.debug("case 1 .... one day")
+        } else if (0 != extractDay(tokens(1)) && isTime(tokens(2))) {
+          Logger.debug("case 2 .... day range ")
+        } else if (0 != extractDay(tokens(2)) && isTime(tokens(3))) {
+          Logger.debug("case 3 .... day range with a character")
+        } else {
+          Logger.debug(" ........................ impossible")
+          Logger.debug(" ........................ " + tokens(0))
+          Logger.debug(" ........................ " + tokens(1))
+          Logger.debug(" ........................ " + tokens(2))
+          Logger.debug(" ........................ " + tokens(3))
+        }
+      } else {
+          Logger.debug(" ........................ impossible")
+      }
+/*      println ("\n\n")
+      for (t <- tokens) {
+        println(t)
+      }
+      * 
+      */
+    }
+    
     true
   }
+  
+  def extractDay(t: String) = {
+    t.toLowerCase.take(2) match {
+      case "mo" | "mon" | "montag" | "monday" => MONDAY
+      case "di" | "die" | "dienstag" | "tu" | "tue" | "tuesday" => TUESDAY
+      case "mi" | "mitt" | "mittwoch" | "we" | "wed" | "wednesday" => WEDNESDAY
+      case "do" | "donn" | "donnerstag" | "th" | "thur" | "thurs" | "thursday" => THURSDAY
+      case "fr" | "frei" | "freitag" | "fri" | "friday" => FRIDAY
+      case "sa" | "sam" | "samstag" | "sat" | "saturday" => SATURDAY
+      case "so" | "son" | "sonntag" | "su" | "sun" | "sunday" => SUNDAY
+      case default => 0
+    }
+  }
+  
+  val timePattern = "([01]?[0-9]|2[0-3]):[0-5][0-9]".r
+  def isTime(t: String) = { timePattern.findAllIn(t).hasNext }
   
   
   /**
