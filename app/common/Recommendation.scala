@@ -112,6 +112,9 @@ object Recommendation {
       
       var score = 0.0
       userSettings.favCuisines.foreach { fav => if (r.cuisines.contains(fav.tag)) score += fav.rating.get } 
+
+      val dishDietTags = Tag.findByRef(dish.id, Tag.TYPE_DIET ).map(_.name)
+      userSettings.preferToAvoid.get.foreach { avoid => if (dishDietTags.contains(avoid.tag)) score -= (avoid.rating.get * 1.5) }
       
       val ri = new RecommendationItem(dish.id, makePriceString(dish.price), dish.name, like, Dishes.calculateGreenScore(greenscoretags.size), 
         greenscoretags,
@@ -122,7 +125,7 @@ object Recommendation {
         r.id,
         r.name, Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
         friendLikedDishURLs,
-        Tag.findByRef(dish.id, Tag.TYPE_DIET ).map(_.name),
+        dishDietTags,
         Tag.findByRef(dish.id, Tag.TYPE_DISHTYPE).map(_.name),
         Tag.findByRef(dish.id, Tag.TYPE_MEATORIGIN).map(_.name), score)
       result.dishes += ri
