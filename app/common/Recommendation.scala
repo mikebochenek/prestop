@@ -5,6 +5,7 @@ import play.api.Logger
 import models.RecommendationItem
 import scala.collection.mutable.ArraySeq
 import scala.collection.mutable.MutableList
+import scala.collection.mutable.SortedSet
 import java.text.DecimalFormat
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
@@ -36,7 +37,37 @@ object Recommendation {
     Cache.getOrElse("alldishes", new Callable[Seq[Dish]] { def call() = Dish.findAll()}, 5)
   }
   
+  
   def recommend(user: UserFull, latitude: Double, longitude: Double, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean, lastDishID: Long) = {
+    
+    def getDishesAlreadyRecommended() :SortedSet[Long] = {
+      val dar = SortedSet[Long]()
+      
+      if (lastDishID <= 0) return dar
+      
+      val dishesAlreadyRecommended = ActivityLog.findAllByUserType(user.id, 7).reverse
+      dishesAlreadyRecommended.foreach {x => Logger.debug("___ dishesAlreadyRecommended:  " + x)}
+
+      var _prevLastDishID = lastDishID
+      for (actDish <- dishesAlreadyRecommended) {
+        val a = actDish.activity_details
+        if (a.contains("[") && a.indexOf(']') > 0) {
+          Logger.debug("___ part 1 : " + a.substring(1, a.indexOf(']'))  +  " _prevLastDishID: " + _prevLastDishID)
+          val ids = a.substring(1, a.indexOf(']')).split(",")
+        
+          if (ids.contains("" + _prevLastDishID)) {
+            ids.foreach { x => if (!"".equals(x)) dar += x.toLong }
+            _prevLastDishID = actDish.activity_subtype.toLong //ids.last.toLong
+            Logger.debug("___ part 2!: " + ids.mkString(",") +  " new _prevLastDishID: " + _prevLastDishID)
+          }
+        }
+      }
+
+      Logger.info("getDishesAlreadyRecommended() returns: " + dar.mkString(","))
+      dar
+    }
+
+    
     val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*) //getAllRestaurants()
     // http://stackoverflow.com/questions/2925041/how-to-convert-a-seqa-to-a-mapint-a-using-a-value-of-a-as-the-key-in-the-ma
     
@@ -55,16 +86,17 @@ object Recommendation {
         desiredWidth = 750L
       }
     }
-        
-        
+
+    
+    val dishesAlreadyRecommended = getDishesAlreadyRecommended()
+    
     val dishes = Dish.findAll() // getAllDishes()
       .filter { x => within(maxDistance, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
       .filter { x => (maxPrice >= x.price && minPrice <= x.price) } // filter by price
-      .take(100) //TODO for now, limit to 100 dishes..
+      .filter { x => !dishesAlreadyRecommended.contains(x.id) }
+      .take(20) //TODO for now, limit to 20 dishes..
     
     val result = new Recommendations(MutableList.empty);
-    
-    
     
     for (dish <- dishes) {
       val allLikes = Activities.getLikeActivitiesByDish(dish.id)
