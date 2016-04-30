@@ -94,6 +94,7 @@ object Recommendation {
     val dishes = Dish.findAll() // getAllDishes()
       .filter { x => within(maxDistance, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
       .filter { x => (maxPrice >= x.price && minPrice <= x.price) } // filter by price
+      .filter { x => !openNow || checkOpenTime(restaurants, x.restaurant_id)} // filter out restaurants currently closed
       .filter { x => !dishesAlreadyRecommended.contains(x.id) } // filter out dishes already recommended (list would be empty if lastDishID is 0 or null)
       .take(maxDishes.toInt) 
     
@@ -148,6 +149,21 @@ object Recommendation {
       case None => false
     }
   }  
+  
+  def checkOpenTime(restaurants: Map[Long, Restaurant], id: Long) = {
+    restaurants.get(id) match {
+      case Some(f) => { 
+        Logger.debug(" checking restaurant schedule: " + f.schedule)
+        f.schedule.isEmpty || f.schedule.length == 0 || checkSchedule(f.schedule)
+      }
+      case None => true
+    }
+  }
+  
+  def checkSchedule(s: String) = {
+    true
+  }
+  
   
   /**
    * check if the restaurant is open
