@@ -38,7 +38,7 @@ object Recommendation {
   }
   
   
-  def recommend(user: UserFull, latitude: Double, longitude: Double, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean, lastDishID: Long) = {
+  def recommend(user: UserFull, latitude: Double, longitude: Double, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean, lastDishID: Long, maxDishes: Long) = {
     
     def getDishesAlreadyRecommended() :SortedSet[Long] = {
       val dar = SortedSet[Long]()
@@ -94,7 +94,7 @@ object Recommendation {
       .filter { x => within(maxDistance, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
       .filter { x => (maxPrice >= x.price && minPrice <= x.price) } // filter by price
       .filter { x => !dishesAlreadyRecommended.contains(x.id) }
-      .take(20) //TODO for now, limit to 20 dishes..
+      .take(maxDishes.toInt) 
     
     val result = new Recommendations(MutableList.empty);
     
