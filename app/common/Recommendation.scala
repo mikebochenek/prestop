@@ -14,6 +14,7 @@ import controllers.Dishes
 import play.cache.Cache
 import java.util.concurrent.Callable
 import play.api.libs.json._
+import controllers._
 import com.fasterxml.jackson.core.JsonParseException
 
 object Recommendation {
@@ -79,21 +80,20 @@ object Recommendation {
     //TODO load favorites cuisines similar to Recommend.testsubmit...
     //TODO or what about a nightly batch job which re-ranks all dishes for all active users?
     
-    var desiredWidth = 750L
-    if (user.settings != null) {
-      desiredWidth = Json.parse(user.settings).validate[UserSettings].get.screenWidth
-      if (!Image.resolutions.contains(desiredWidth)) {
-        desiredWidth = 750L
-      }
+    val userSettings = Settings.getPreviousSettingsSafely(user)
+    val desiredWidth = Image.resolutions.contains(userSettings.deviceSWidth.getOrElse(750.0).toLong) match {
+      case true => userSettings.deviceSWidth.get.toLong
+      case false => 750L
     }
 
+    //Logger.debug ("desiredWidth: " + desiredWidth)
     
     val dishesAlreadyRecommended = getDishesAlreadyRecommended()
     
     val dishes = Dish.findAll() // getAllDishes()
       .filter { x => within(maxDistance, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
       .filter { x => (maxPrice >= x.price && minPrice <= x.price) } // filter by price
-      .filter { x => !dishesAlreadyRecommended.contains(x.id) }
+      .filter { x => !dishesAlreadyRecommended.contains(x.id) } // filter out dishes already recommended (list would be empty if lastDishID is 0 or null)
       .take(maxDishes.toInt) 
     
     val result = new Recommendations(MutableList.empty);
