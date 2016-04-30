@@ -69,8 +69,9 @@ object Recommendation {
     }
 
     
-    val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*) //getAllRestaurants()
     // http://stackoverflow.com/questions/2925041/how-to-convert-a-seqa-to-a-mapint-a-using-a-value-of-a-as-the-key-in-the-ma
+    val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*) //getAllRestaurants()
+    restaurants.foreach {case(key, r) => r.cuisines =  Tag.findByRef(r.id, 21).map(_.en_text.get) } //TODO this must be optimized and cached?
     
     val likedDishes = Recommendations.getLikedDishes(user.id)
     
@@ -108,6 +109,10 @@ object Recommendation {
       val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.name)
       
       val r = restaurants.get(dish.restaurant_id).head
+      
+      var score = 0.0
+      userSettings.favCuisines.foreach { fav => if (r.cuisines.contains(fav.tag)) score += fav.rating.get } 
+      
       val ri = new RecommendationItem(dish.id, makePriceString(dish.price), dish.name, like, Dishes.calculateGreenScore(greenscoretags.size), 
         greenscoretags,
         Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
@@ -119,10 +124,11 @@ object Recommendation {
         friendLikedDishURLs,
         Tag.findByRef(dish.id, Tag.TYPE_DIET ).map(_.name),
         Tag.findByRef(dish.id, Tag.TYPE_DISHTYPE).map(_.name),
-        Tag.findByRef(dish.id, Tag.TYPE_MEATORIGIN).map(_.name), 0)
+        Tag.findByRef(dish.id, Tag.TYPE_MEATORIGIN).map(_.name), score)
       result.dishes += ri
     }
-    result
+    
+    new Recommendations(result.dishes.sortBy(_.score).reverse)
   }
   
   /**
