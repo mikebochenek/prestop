@@ -59,7 +59,7 @@ object Recommend extends Controller with Secured  {
       
       val recommendations = Recommendation.recommend(user, longitude.toDouble, latitude.toDouble, maxDistance, minPrice, maxPrice, openNow, lastDishID)
       val json = Json.prettyPrint(Json.toJson(recommendations.dishes.map(a => Json.toJson(a))))
-      ActivityLog.create(user.id, 7, 1, Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
+      ActivityLog.create(user.id, 7, lastDishID, Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
       Ok(json)
     }
   }
