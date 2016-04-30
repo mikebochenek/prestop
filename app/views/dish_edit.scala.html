@@ -113,6 +113,36 @@
 		            <span class="btn"><input type="file" name="picture"></span>
                     <button class="btn btn-primary" type="submit" id="generalsavebutton">upload</button>
         		}
+
+
+<script language="Javascript">
+var file = document.getElementsByName('picture')[0];
+
+file.onchange = function(e){
+    var ext = this.value.match(/\.([^\.]+)$/)[1];
+    switch(ext)
+    {
+        case 'jpg':
+        case 'jpeg':
+        case 'gif':
+        case 'JPG':
+        case 'JPEG':
+        case 'GIF':
+            break;
+        case 'png':
+        case 'PNG':
+			alert('png files are usually larger and could lead to performance issues, please use jpg or gif instead');
+			break;
+        default:
+            alert('filetype not allowed ' + ext);
+            this.value='';
+    }
+    
+    if (this.value.match(/\//) != null) {
+       alert('filename contains invalid characters ' + this.value);
+    }
+};
+		</script>
 		  
         </div>
       </div>
