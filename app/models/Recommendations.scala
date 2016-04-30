@@ -21,7 +21,7 @@ case class RecommendationItem(id: Long, price: String, name: String, liked: Bool
     greenScore: Double, greenScoreTags: Seq[String], url: String, url_large: String, distance: String, ingredients: Seq[String],
     restaurantID: Long, var restaurantName: String, var restaurantUrl: String, 
     var friendLikeUrls: Seq[String],
-    diet: Seq[String], dishType: Seq[String], meatOrigin: Seq[String])
+    diet: Seq[String], dishType: Seq[String], meatOrigin: Seq[String], var score: Double)
 
 object RecommendationItem {
   implicit val recommendationItemsReads = Json.reads[RecommendationItem]

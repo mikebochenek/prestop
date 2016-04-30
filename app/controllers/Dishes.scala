@@ -151,7 +151,7 @@ object Dishes extends Controller with Secured {
           friendLikedDishURLs,
           Tag.findByRef(dish.id, 34).map(_.name),
           Tag.findByRef(dish.id, 35).map(_.name),
-          Tag.findByRef(dish.id, 36).map(_.name))
+          Tag.findByRef(dish.id, 36).map(_.name), 0)
         result.dishes += ri
       }
       

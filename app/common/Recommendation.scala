@@ -119,7 +119,7 @@ object Recommendation {
         friendLikedDishURLs,
         Tag.findByRef(dish.id, Tag.TYPE_DIET ).map(_.name),
         Tag.findByRef(dish.id, Tag.TYPE_DISHTYPE).map(_.name),
-        Tag.findByRef(dish.id, Tag.TYPE_MEATORIGIN).map(_.name))
+        Tag.findByRef(dish.id, Tag.TYPE_MEATORIGIN).map(_.name), 0)
       result.dishes += ri
     }
     result
