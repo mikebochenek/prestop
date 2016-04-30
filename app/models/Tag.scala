@@ -34,19 +34,16 @@ object Tag {
 
   def findByRef(id: Long, status: Int): Seq[Tag] = {
     DB.withConnection { implicit connection =>
-      SQL("""select t.id, t.name, t.en_text, t.de_text, t.it_text, t.fr_text, t.status, t.lastupdate 
-             from tag t 
-             join tagref tr on t.id = tr.tagid
-             where tr.refid = {id} and tr.status = {status}
-          """).on('id -> id, 'status -> status).as(Tag.simple *)
+      SQL(selectSQL + " join tagref tr on t.id = tr.tagid where tr.refid = {id} and tr.status = {status}")
+        .on('id -> id, 'status -> status).as(Tag.simple *)
     }
   }
 
+  val selectSQL = "select t.id, t.name, t.en_text, t.de_text, t.it_text, t.fr_text, t.status, t.lastupdate from tag t "
+
   def findAll(): Seq[Tag] = {
     DB.withConnection { implicit connection =>
-      SQL("""select t.id, t.name, t.en_text, t.de_text, t.it_text, t.fr_text, t.status, t.lastupdate 
-             from tag t order by t.name 
-          """).on().as(Tag.simple *)
+      SQL(selectSQL + " order by t.name ").on().as(Tag.simple *)
     }
   }
 
@@ -91,19 +88,24 @@ object Tag {
 		val oldtags = Tag.findByRef(id.toLong, status).map(_.name)
 		val alltags = Tag.findAll
     
-    // add new tags 
+        // add new tags 
 		for (tag <- tagsArray) {
 		  if (!oldtags.contains(tag.trim.toLowerCase) && tag.trim.length > 0) {
 		    alltags.find(_.name.equals(tag.trim.toLowerCase)) match {
-					case Some(f) => TagRef.create(new TagRef(-1, f.id, id, status, null))
-					case None => { 
-            // instead of ignoring the tag, we create it!
-            val newId = Tag.create(new Tag(-1, tag.trim.toLowerCase, Some(tag.trim.toLowerCase), Some(null), Some(null), Some(null), status, new Date()))
-            Logger.warn("new tag created:" + tag + " with newId=" + newId)
-            TagRef.create(new TagRef(-1, newId.getOrElse(0), id, status, null))
-          }
+			  case Some(f) => {
+			    TagRef.create(new TagRef(-1, f.id, id, status, null))
+			    if (f.status < 0) {
+			      Tag.update(f.id.toInt, f.name, f.en_text.getOrElse(""), f.de_text.getOrElse(""), f.it_text.getOrElse(""), f.fr_text.getOrElse(""), status)
+			    }
 			  }
+			  case None => { 
+                // instead of ignoring the tag, we create it (OR reactivate with if status < 0 above!)
+                val newId = Tag.create(new Tag(-1, tag.trim.toLowerCase, Some(tag.trim.toLowerCase), Some(null), Some(null), Some(null), status, new Date()))
+                Logger.warn("new tag created:" + tag + " with newId=" + newId)
+                TagRef.create(new TagRef(-1, newId.getOrElse(0), id, status, null))
+              }
 			}
+		  }
 		}
     
     // we should also remove tags which are not there anymore
