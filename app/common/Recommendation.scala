@@ -71,7 +71,7 @@ object Recommendation {
     
     // http://stackoverflow.com/questions/2925041/how-to-convert-a-seqa-to-a-mapint-a-using-a-value-of-a-as-the-key-in-the-ma
     val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*) //getAllRestaurants()
-    restaurants.foreach {case(key, r) => r.cuisines =  Tag.findByRef(r.id, 21).map(_.en_text.get) } //TODO this must be optimized and cached?
+    restaurants.foreach {case(key, r) => r.cuisines =  Tag.findByRef(r.id, 21).map(_.name) } //TODO this must be optimized and cached?
     
     val likedDishes = Recommendations.getLikedDishes(user.id)
     
