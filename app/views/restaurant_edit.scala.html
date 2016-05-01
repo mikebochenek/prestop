@@ -67,6 +67,7 @@
             <span class="input-group-addon" id="basic-addon1">Schedule</span>
             <textarea class="form-control span4" type="text" name="schedule" id="schedule" cols=80 rows=7>@restaurant.schedule</textarea> 
           </div>
+          <div>&emsp;according to the schedule above, <b>openNow=@common.Recommendation.checkSchedule(restaurant.schedule)</b></div>
           
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Type</span>
