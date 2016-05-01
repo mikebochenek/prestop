@@ -224,7 +224,16 @@ object Settings extends Controller with Secured {
   def getPreviousSettingsSafely(fullUser: UserFull) = {
     fullUser.settings match {
       case null => UserSettings.default(fullUser.id)
-      case _ => Json.parse(fullUser.settings).validate[UserSettings].get 
+      case _ => {
+        try {
+          Json.parse(fullUser.settings).validate[UserSettings].get
+        } catch {
+          case e: Exception => {
+            Logger.info("failed to parse settings, will use default instead " + e)
+            UserSettings.default(fullUser.id)
+          }
+        }
+      }
     }
   }
 
