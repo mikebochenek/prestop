@@ -179,7 +179,7 @@ object Recommendation {
     def timeWithin(from: String, to: String) = {
       val ft = from.replaceAll(",", "").split(":")
       val tt = to.replaceAll(",", "").split(":")
-      val retval = ft(0).toLong < hour && tt(0).toLong > hour //TODO should also handle minutes here!
+      val retval = ft(0).toLong <= hour && tt(0).toLong > hour //TODO should also handle minutes here!
       Logger.debug("timeWithin: " + from + " - " + to + "  returns -> " + retval)
       retval
     }
@@ -190,6 +190,8 @@ object Recommendation {
     
     for (str <- lines) {
       val tokens = str.split(" ").filter { x => x.length > 1 }
+      
+      if (tokens.length == 0) return true //this handles restaurants with empty/null schedule
 
       val startDay = extractDay(tokens(0))
       if (0 != startDay && tokens.length > 2) {
