@@ -152,6 +152,10 @@ object Recommendation {
     }
   }  
   
+  /**
+   * check if the restaurant is open
+   * (but how to handle situations when someone is booking a restaurant for next Friday?)
+   */
   def checkOpenTime(restaurants: Map[Long, Restaurant], id: Long) = {
     restaurants.get(id) match {
       case Some(f) => { 
@@ -163,68 +167,90 @@ object Recommendation {
   }
   
   val timezone = TimeZone.getTimeZone("Europe/Copenhagen")
-  def checkSchedule(s: String) = {
+  def checkSchedule(s: String) : Boolean = {
     val calendar = Calendar.getInstance(timezone)
-    val day = calendar.get(DAY_OF_WEEK)
+    val day = SUNDAY == calendar.get(DAY_OF_WEEK) match {
+      case true => 7
+      case default => calendar.get(DAY_OF_WEEK) - 1
+    }
     val hour = calendar.get(HOUR_OF_DAY)
     val minute = calendar.get(MINUTE)
     
-    //Logger.debug (SATURDAY + " day: " + day + " hour:" + hour + " minute:" + minute)
-
-    val lines = s.replaceAll("-","").replaceAll("\u2013","").replaceAll("  "," ").split("\r\n")
-    
-    for (str <- lines) {
-      val tokens = str.split(" ")
-
-      if (0 != extractDay(tokens(0))) {
-        if (isTime(tokens(1))) {
-          Logger.debug("case 1 .... one day")
-        } else if (0 != extractDay(tokens(1)) && isTime(tokens(2))) {
-          Logger.debug("case 2 .... day range ")
-        } else if (0 != extractDay(tokens(2)) && isTime(tokens(3))) {
-          Logger.debug("case 3 .... day range with a character")
-        } else {
-          Logger.debug(" ........................ impossible")
-          Logger.debug(" ........................ " + tokens(0))
-          Logger.debug(" ........................ " + tokens(1))
-          Logger.debug(" ........................ " + tokens(2))
-          Logger.debug(" ........................ " + tokens(3))
-        }
-      } else {
-          Logger.debug(" ........................ impossible")
-      }
-/*      println ("\n\n")
-      for (t <- tokens) {
-        println(t)
-      }
-      * 
-      */
+    def timeWithin(from: String, to: String) = {
+      val ft = from.replaceAll(",", "").split(":")
+      val tt = to.replaceAll(",", "").split(":")
+      val retval = ft(0).toLong < hour && tt(0).toLong > hour //TODO should also handle minutes here!
+      Logger.debug("timeWithin: " + from + " - " + to + "  returns -> " + retval)
+      retval
     }
     
-    true
+    Logger.debug (" day: " + day + " hour:" + hour + " minute:" + minute)
+
+    val lines = s.replaceAll("-"," ").replaceAll("\u2013"," ").replaceAll("bis","-").split("\r\n")
+    
+    for (str <- lines) {
+      val tokens = str.split(" ").filter { x => x.length > 1 }
+
+      val startDay = extractDay(tokens(0))
+      if (0 != startDay && tokens.length > 2) {
+        if (tokens.length > 4 && isTime(tokens(1)) && isTime(tokens(2)) && isTime(tokens(3)) && isTime(tokens(4))) {
+          Logger.debug("case 1+ .... one day with two time ranges")
+          if (day == startDay && (timeWithin(tokens(1), tokens(2)) || timeWithin(tokens(3), tokens(4)))) {
+            return true
+          }
+        } else if (isTime(tokens(1)) && isTime(tokens(2))) {
+          Logger.debug("case 1 .... one day")
+          if (day == startDay && timeWithin(tokens(1), tokens(2))) {
+            return true
+          }
+        } else if (tokens.length > 5 && 0 != extractDay(tokens(1)) && isTime(tokens(2)) && isTime(tokens(3)) && isTime(tokens(4)) && isTime(tokens(5))) {
+          if (day >= startDay && day <= extractDay(tokens(1)) && (timeWithin(tokens(2), tokens(3)) || timeWithin(tokens(4), tokens(5)))) {
+            return true
+          }
+          Logger.debug("case 2+ ... day range with two time ranges")
+        } else if (0 != extractDay(tokens(1)) && isTime(tokens(2)) && isTime(tokens(3))) {
+          if (day >= startDay && day <= extractDay(tokens(1)) && (timeWithin(tokens(2), tokens(3)))) {
+            return true
+          }
+          Logger.debug("case 2 .... day range - day:" + day + " startday:" + startDay + " endDay:" + extractDay(tokens(1)))
+        } else {
+          Logger.info(" .........checkSchedule impossible flow")
+          tokens.foreach{t => Logger.debug(t)}
+        }
+      } else {
+        Logger.info(" .......checkSchedule impossible flow #2")
+        tokens.foreach{t => Logger.debug(t)}
+      }
+    }
+    
+    false
   }
-  
-  def extractDay(t: String) = {
-    t.toLowerCase.take(2) match {
-      case "mo" | "mon" | "montag" | "monday" => MONDAY
-      case "di" | "die" | "dienstag" | "tu" | "tue" | "tuesday" => TUESDAY
-      case "mi" | "mitt" | "mittwoch" | "we" | "wed" | "wednesday" => WEDNESDAY
-      case "do" | "donn" | "donnerstag" | "th" | "thur" | "thurs" | "thursday" => THURSDAY
-      case "fr" | "frei" | "freitag" | "fri" | "friday" => FRIDAY
-      case "sa" | "sam" | "samstag" | "sat" | "saturday" => SATURDAY
-      case "so" | "son" | "sonntag" | "su" | "sun" | "sunday" => SUNDAY
-      case default => 0
+
+
+  def extractDay(s: String) = {
+    
+    def extractDayNumber(t: String) = {
+      t.toLowerCase.take(2) match {
+        case "mo" | "mon" | "montag" | "monday" => MONDAY
+        case "di" | "die" | "dienstag" | "tu" | "tue" | "tuesday" => TUESDAY
+        case "mi" | "mitt" | "mittwoch" | "we" | "wed" | "wednesday" => WEDNESDAY
+        case "do" | "donn" | "donnerstag" | "th" | "thur" | "thurs" | "thursday" => THURSDAY
+        case "fr" | "frei" | "freitag" | "fri" | "friday" => FRIDAY
+        case "sa" | "sam" | "samstag" | "sat" | "saturday" => SATURDAY
+        case "so" | "son" | "sonntag" | "su" | "sun" | "sunday" => SUNDAY
+        case default => 0
+      }
+    }
+    
+    extractDayNumber(s) match {
+      case SUNDAY => 7
+      case default => extractDayNumber(s) - 1
     }
   }
   
   val timePattern = "([01]?[0-9]|2[0-3]):[0-5][0-9]".r
   def isTime(t: String) = { timePattern.findAllIn(t).hasNext }
   
-  
-  /**
-   * check if the restaurant is open
-   * (but how to handle situations when someone is booking a restaurant for next Friday?)
-   */
   
   val distanceFormat = new DecimalFormat("#.#")
   def makeDistanceString(d: Double) = {

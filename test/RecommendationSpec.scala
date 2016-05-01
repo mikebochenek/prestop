@@ -31,7 +31,7 @@ class RecommendationSpec extends Specification {
     }
 
    "check schedule 4" in new WithApplication {
-      val s = "Mon ? Wed: 11:30 ? 14:00, 17:00 ? 01:00\r\nThu ? Fri: 11:30 ? 14:00, 17:00 ? 02:00\r\nSat: 17:00 ? 02:00 "
+      val s = "Mon ? Wed: 11:30 ? 14:00, 17:00 ? 01:00\r\nThu ? Fri: 11:30 ? 14:00, 17:00 ? 02:00\r\nSat: 17:00 ? 02:00 & 03:00 - 04:00"
       println(new Date().toString + " --> " + Recommendation.checkSchedule(s) + "  schedule:" + s)    
     }
 
