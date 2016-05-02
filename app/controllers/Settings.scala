@@ -129,8 +129,7 @@ object Settings extends Controller with Secured {
   def getByUser(id: Long) = Action { 
     implicit request => {
       Logger.info("calling Activities get - load data for id:" + id)
-      val all = User.getFullUser(id)
-      all.password = null
+      val all = getPreviousSettingsSafely(User.getFullUser(id))
       Ok(Json.prettyPrint(Json.toJson(all)))
     }
   } 
