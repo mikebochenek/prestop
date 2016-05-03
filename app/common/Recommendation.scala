@@ -131,7 +131,10 @@ object Recommendation {
         dishDietTags,
         Tag.findByRef(dish.id, Tag.TYPE_DISHTYPE).map(_.name),
         Tag.findByRef(dish.id, Tag.TYPE_MEATORIGIN).map(_.name), score)
-      result.dishes += ri
+      
+      if (ri.url != null && ri.url_large != null) { // this is how we ensure that we only show dishes with photos
+        result.dishes += ri
+      }
     }
     
     new Recommendations(result.dishes.sortBy(_.score).reverse)
