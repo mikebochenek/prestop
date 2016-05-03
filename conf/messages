@@ -1,6 +1,6 @@
 
-save = Save
-add = Add
+save = save
+add = add
 
 # main
 application.name = presto admin
