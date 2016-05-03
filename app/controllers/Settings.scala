@@ -169,7 +169,7 @@ object Settings extends Controller with Secured {
   def cuisines() = Action { 
     implicit request => {
       Logger.info("calling get cuisines")
-      val all = Tag.findAll().filter(_.status == 21)
+      val all = Tag.findAllPopular(21)
       Ok(Json.prettyPrint(Json.toJson(all)))
     }
   } 
