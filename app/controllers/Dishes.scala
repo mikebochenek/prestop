@@ -152,9 +152,7 @@ object Dishes extends Controller with Secured {
           Tag.findByRef(dish.id, 34).map(_.name),
           Tag.findByRef(dish.id, 35).map(_.name),
           Tag.findByRef(dish.id, 36).map(_.name), 0)
-        if (ri.url != null && ri.url_large != null) { // this is how we ensure that we only show dishes with photos
-          result.dishes += ri
-        }            
+        result.dishes += ri
       }
       
       Ok(Json.prettyPrint(Json.toJson(result.dishes.map(a => Json.toJson(a)))))
