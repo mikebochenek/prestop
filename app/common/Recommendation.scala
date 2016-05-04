@@ -180,9 +180,13 @@ object Recommendation {
     val minute = calendar.get(MINUTE)
     
     def timeWithin(from: String, to: String) = {
-      val ft = from.replaceAll(",", "").split(":")
-      val tt = to.replaceAll(",", "").split(":")
-      val retval = ft(0).toLong <= hour && tt(0).toLong > hour //TODO should also handle minutes here!
+      val ft = from.replace('.',':').replaceAll(",", "").split(":")
+      val tt = to.replace('.',':').replaceAll(",", "").split(":")
+      val toHour = tt(0).toLong match { 
+        case 0 => 24
+        case default => tt(0).toLong
+      } 
+      val retval = ft(0).toLong <= hour && toHour > hour //TODO should also handle minutes here!
       Logger.debug("timeWithin: " + from + " - " + to + "  returns -> " + retval)
       retval
     }
@@ -254,7 +258,7 @@ object Recommendation {
   }
   
   val timePattern = "([01]?[0-9]|2[0-3]):[0-5][0-9]".r
-  def isTime(t: String) = { timePattern.findAllIn(t).hasNext }
+  def isTime(t: String) = { timePattern.findAllIn(t.replace('.',':')).hasNext }
   
   
   val distanceFormat = new DecimalFormat("#.#")
