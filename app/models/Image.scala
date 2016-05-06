@@ -188,7 +188,6 @@ object Image {
     Image.create(new Image(0, file.getAbsolutePath, Image.createUrl(ts + "/" + file.getName), restID, dishID, Some(userID), Some(img.getWidth), Some(img.getHeight.toLong), status, null))
       
     //http://www.htmlgoodies.com/beyond/java/create-high-quality-thumbnails-using-the-imgscalr-library.html
-
     for (w <- resolutions) {
       val resized = Scalr.resize(img, Scalr.Mode.FIT_TO_WIDTH, w); 
       val resizeFilename = file.getAbsolutePath.dropRight(4) + "-" + w + "." + extension
@@ -200,7 +199,6 @@ object Image {
           Image.createUrl(ts + "/" + resizeFile.getName), restID, dishID, Some(userID), 
           Some(resized.getWidth), Some(resized.getHeight.toLong), status, null))
     }
-    
   }
   
   def crop(id: Long, x: Int, y: Int, w: Int, h: Int) {
@@ -218,7 +216,7 @@ object Image {
       val resized = Scalr.resize(croppedImg, Scalr.Mode.FIT_TO_WIDTH, w); 
       val resizeFilename = file.getAbsolutePath.dropRight(4) + "-" + w + "." + extension
       val resizeFile = new File(resizeFilename)
-      Logger.info("==== resized: " + resizeFilename)
+      Logger.info("=== resized: " + resizeFilename)
       ImageIO.write(resized, extension, resizeFile)
 
       //TODO this needs different switches
@@ -227,7 +225,7 @@ object Image {
           (original.url.take(original.url.lastIndexOf("/")) + "/" + resizeFile.getName))
     }
     
-    Logger.info("==== DONE cropping " + (System.currentTimeMillis - ts))
+    Logger.info("=== DONE cropping " + (System.currentTimeMillis - ts))
   }
 
   def updateDishImages(restID: Long, dishID: Long, status: Long, userID: Option[Long], width: Long, 
@@ -246,8 +244,6 @@ object Image {
           'lastupdate -> new Date()).executeUpdate
     }
   }
-  
-  
   
   implicit val imageReads = Json.reads[Image]
   implicit val imageWrites = Json.writes[Image]
