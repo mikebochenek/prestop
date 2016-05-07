@@ -90,8 +90,6 @@ object ActivityLog {
     }
   }  
 
-
   implicit val activityLogReads = Json.reads[ActivityLog]
   implicit val activityLogWrites = Json.writes[ActivityLog]
-
 }

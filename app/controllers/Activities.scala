@@ -59,10 +59,7 @@ object Activities extends Controller with Secured {
         result.likes += ri
       }
       
-	    //val all = activities.map (d => new DishLikes(d.activity_subtype, Image.findByDish(d.activity_subtype).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, id))
-	    //Ok(Json.prettyPrint(Json.toJson(result)))
       Ok(Json.prettyPrint(Json.toJson(result.likes.map(a => Json.toJson(a)))))
-
 	  }
   } 
   
