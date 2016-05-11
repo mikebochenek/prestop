@@ -126,7 +126,7 @@ object Recommendation {
         makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
         Tag.findByRef(dish.id, 11).map(_.name),
         r.id,
-        r.name, Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
+        r.name, Image.findByRestaurant(r.id).filter{x => x.width.get == 72 && x.status == 1}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
         friendLikedDishURLs,
         dishDietTags,
         Tag.findByRef(dish.id, Tag.TYPE_DISHTYPE).map(_.name),
