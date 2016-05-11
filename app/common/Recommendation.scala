@@ -187,11 +187,11 @@ object Recommendation {
         case default => tt(0).toLong
       } 
       val retval = ft(0).toLong <= hour && toHour > hour //TODO should also handle minutes here!
-      Logger.debug("timeWithin: " + from + " - " + to + "  returns -> " + retval)
+      //Logger.debug("timeWithin: " + from + " - " + to + "  returns -> " + retval)
       retval
     }
     
-    Logger.debug (" day: " + day + " hour:" + hour + " minute:" + minute)
+    //Logger.debug (" day: " + day + " hour:" + hour + " minute:" + minute)
 
     val lines = s.replaceAll("-"," ").replaceAll("\u2013"," ").replaceAll("bis","-").split("\r\n")
     
@@ -203,12 +203,12 @@ object Recommendation {
       val startDay = extractDay(tokens(0))
       if (0 != startDay && tokens.length > 2) {
         if (tokens.length > 4 && isTime(tokens(1)) && isTime(tokens(2)) && isTime(tokens(3)) && isTime(tokens(4))) {
-          Logger.debug("case 1+ .... one day with two time ranges")
+          //Logger.debug("case 1+ .... one day with two time ranges")
           if (day == startDay && (timeWithin(tokens(1), tokens(2)) || timeWithin(tokens(3), tokens(4)))) {
             return true
           }
         } else if (isTime(tokens(1)) && isTime(tokens(2))) {
-          Logger.debug("case 1 .... one day")
+          //Logger.debug("case 1 .... one day")
           if (day == startDay && timeWithin(tokens(1), tokens(2))) {
             return true
           }
@@ -216,18 +216,18 @@ object Recommendation {
           if (day >= startDay && day <= extractDay(tokens(1)) && (timeWithin(tokens(2), tokens(3)) || timeWithin(tokens(4), tokens(5)))) {
             return true
           }
-          Logger.debug("case 2+ ... day range with two time ranges")
+          //Logger.debug("case 2+ ... day range with two time ranges")
         } else if (0 != extractDay(tokens(1)) && isTime(tokens(2)) && isTime(tokens(3))) {
           if (day >= startDay && day <= extractDay(tokens(1)) && (timeWithin(tokens(2), tokens(3)))) {
             return true
           }
-          Logger.debug("case 2 .... day range - day:" + day + " startday:" + startDay + " endDay:" + extractDay(tokens(1)))
+          //Logger.debug("case 2 .... day range - day:" + day + " startday:" + startDay + " endDay:" + extractDay(tokens(1)))
         } else {
-          Logger.info(" .........checkSchedule impossible flow")
+          //Logger.info(" .........checkSchedule impossible flow")
           tokens.foreach{t => Logger.debug(t)}
         }
       } else {
-        Logger.info(" .......checkSchedule impossible flow #2")
+        //Logger.info(" .......checkSchedule impossible flow #2")
         tokens.foreach{t => Logger.debug(t)}
       }
     }
