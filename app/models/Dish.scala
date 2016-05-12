@@ -75,27 +75,45 @@ object Dish {
       SQL("select count(*) from dish ").as(scalar[Long].single)
     }
   }
+  
+  val columns = " id, restaurant_id, price, name, serving, description, greenscore, lastupdate, status "
 
   def findById(username: String, id: Long): Seq[Dish] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, restaurant_id, price, name, serving, description, greenscore, lastupdate, status from dish where id = {id}").on(
+      SQL("select " + columns + " from dish where id = {id}").on(
         'id -> id).as(Dish.simple *)
     }
   }
   
   def findAll(): Seq[Dish] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, restaurant_id, price, name, serving, description, greenscore, lastupdate, status from dish  where status >= 0 "
+      SQL("select " + columns + " from dish  where status >= 0 "
           + " order by id asc").on().as(Dish.simple *)
     }
   }
   
   def findAll(restaurant: Long): Seq[Dish] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, restaurant_id, price, name, serving, description, greenscore, lastupdate, status from dish where status >= 0 and restaurant_id = {restaurant_id}"
+      SQL("select " + columns + " from dish where status >= 0 and restaurant_id = {restaurant_id}"
           + " order by id asc").on('restaurant_id -> restaurant).as(Dish.simple *)
     }
-  }  
+  }
+  
+  def findAllWithoutImages(): Seq[Dish] = {
+    DB.withConnection { implicit connection =>
+      SQL("select " + columns + " from dish where id not in (select dish_id from image) "
+          + " order by id asc").on().as(Dish.simple *)
+    }
+  }
+
+  /* dishes which will not be recommended because the restaurant is disabled (statue=-1) */
+  def findAllInactive(): Seq[Dish] = {
+    DB.withConnection { implicit connection =>
+      SQL("select " + columns + " from dish where restaurant_id in (select r.id from restaurant r where status < 0) "
+          + " order by id asc").on().as(Dish.simple *)
+    }
+  }
+  
   implicit val teamReads = Json.reads[Dish]
   implicit val teamWrites = Json.writes[Dish]
 
