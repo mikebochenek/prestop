@@ -80,6 +80,7 @@ GET     /testlogin/:id                      controllers.Application.authenticate
 GET     /logout                             controllers.Application.logout
 
 GET     /reports                            controllers.Reports.load
+GET     /dailyreports                       controllers.Reports.loaddaily
 GET     /settings                           controllers.Settings.load
 POST    /settings                           controllers.Settings.save
 GET     /settings_csv_export                controllers.Settings.generateCSV
