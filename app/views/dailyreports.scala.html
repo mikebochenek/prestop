@@ -1,6 +1,5 @@
-@(restaurants: Seq[Restaurant], dishes: Seq[Dish], users: Seq[User], 
-	friends: Seq[Friend], reservations: Seq[Reservation], activities: Seq[ActivityLog], 
-	images: Seq[Image], adminStats: String)(implicit session: Session, lang: Lang)
+@(restaurants: Seq[Restaurant], dishesInactive: Seq[Dish], dishesWithoutImages: Seq[Dish], users: Seq[User], 
+	friends: Seq[Friend], reservations: Seq[Reservation], activities: Seq[ActivityLog])(implicit session: Session, lang: Lang)
     @if(session.get("usertype").get.toString.equals("7")) {
     <div class="container">
 
@@ -16,9 +15,9 @@
 		  }
 		</table>
 		
-      	<h3>Dishes (@dishes.size)</h3>
+      	<h3>Dishes without images (@dishesWithoutImages.size)</h3>
       	<table class="table table-striped">
-      	@for((dish, index) <- dishes.zipWithIndex)  {	
+      	@for((dish, index) <- dishesWithoutImages.zipWithIndex)  {	
 		  <tr>
 		  <td>@index</td>
 		  <td>@dish.id</td>
@@ -54,23 +53,6 @@
 		  }
 		</table>
 
-      	<h3>Reservations (@reservations.size)</h3>
-      	<table class="table table-striped">
-      	@for((reservation, index) <- reservations.zipWithIndex)  {	
-		  <tr>
-		  <td>@index</td>
-		  <td>@reservation.user_id</td>
-		  <td>@reservation.restaurant_id</td>
-		  <td>@reservation.id</td>
-		  <td>@reservation.reservationtime.format("dd MMM YYYY HH:MM")</td>
-		  <td>@reservation.guestcount</td>
-		  <td>@reservation.special_requests</td>
-		  <td>@reservation.lastupdate.format("dd MMM YYYY HH:MM")</td>
-		  <td>@reservation.status</td>
-		  </tr>
-		  }
-		</table>
-
       	<h3>Activities (@activities.size)</h3>
       	<div>(here we don't show the values for activity_type == 7, because there are too many)</div>
       	<table class="table table-striped">
@@ -86,27 +68,6 @@
 		  </tr>
 		  }
 		</table>
-
-      	<h3>Images (@images.size)</h3>
-      	<table style="display:none;" class="table table-striped">
-      	@for((image, index) <- images.zipWithIndex)  {	
-		  <tr>
-		  <td>@index</td>
-		  <td>@image.id</td>
-		  <td>@image.filename</td>
-		  <td><a href="@image.url">@image.url</a></td>
-		  <td>@image.restaurant_id</td>
-		  <td>@image.dish_id</td>
-		  <td>@image.lastupdate.format("dd MMM YYYY HH:MM")</td>
-		  </tr>
-		  }
-		</table>
-		
-		<h3>Tags (@Tag.findAll.size)</h3>
-		<h3>Tags References (@TagRef.findAll.size)</h3>
-		
-		<h3>System Info</h3>
-		<pre>@Html(adminStats)</pre>
       </div>
 
     </div><!-- /.container -->

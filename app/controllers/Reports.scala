@@ -24,9 +24,8 @@ object Reports extends Controller with Secured {
   }
   def loaddaily() = IsAuthenticated { username =>
     implicit request => {
-      Ok(views.html.dailyreports(Restaurant.findAll, Dish.findAll, User.findAll, 
-          Friend.findAll, Reservation.findAll, ActivityLog.findAll, 
-          Image.findAll, AdminHelper.generateStats()))
+      Ok(views.html.dailyreports(Restaurant.findAll, Dish.findAllInactive, Dish.findAllWithoutImages, User.findAll, 
+          Friend.findAll, Reservation.findAll, ActivityLog.findAll))
     }
   }
   
