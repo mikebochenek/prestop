@@ -1,0 +1,9 @@
+<appender name="DAILY_ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <File>logs/app.log</File>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    <FileNamePattern>logs/app.%d{yyyyMMdd}.log</FileNamePattern>
+  </rollingPolicy>
+  <encoder>
+    <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'} [%p] %c{2} - %m%n</pattern>
+  </encoder>
+</appender>
