@@ -51,7 +51,7 @@ object Friends extends Controller with Secured {
       
       val friends = user.isDefined match {
         case false => Seq.empty[Friend]
-        case true => Friend.findAllFriends(user.get)
+        case true => Friend.findAllByUser(user.get)
       }
       friends.foreach(f => Logger.info("suggestFriendsToFollow EXISTIN userID: " + f.user_id + " friend:" + f.friend_user_id))
       

@@ -19,8 +19,8 @@ case class Friend(friend_user_id: Long, user_id: Long, id: Long, status: Int, la
 
 object Friend {
   val simple = {
-      get[Long]("friend.user_id") ~
       get[Long]("friend.friend_user_id") ~
+      get[Long]("friend.user_id") ~
       get[Long]("friend.id") ~
       get[Int]("friend.status") ~
       get[Date]("friend.lastupdate") map {
@@ -79,7 +79,6 @@ object Friend {
     }
   }
   
-  //TODO findAllFriends and findAllByUser are actually revered
   def findAllByUser(user_id: Long): Seq[Friend] = {
     DB.withConnection { implicit connection =>
       SQL("select user_id, friend_user_id, id, status, lastupdate from friend where user_id = {user_id}"
