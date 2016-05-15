@@ -17,7 +17,7 @@ import javax.imageio.ImageIO
 import org.imgscalr.Scalr
 import play.api.libs.Files
 import scala.collection.mutable.MutableList
-import common.Recommendation
+import common.RecommendationUtils
 
 object Dishes extends Controller with Secured {
 
@@ -140,7 +140,7 @@ object Dishes extends Controller with Secured {
 
       
         val r = restaurants.get(dish.restaurant_id).head
-        val ri = new RecommendationItem(dish.id, Recommendation.makePriceString(dish.price), dish.name, like, calculateGreenScore(greenscoretags.size), 
+        val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, like, calculateGreenScore(greenscoretags.size), 
           greenscoretags,
           Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
           Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,

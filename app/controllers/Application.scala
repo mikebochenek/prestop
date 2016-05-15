@@ -11,7 +11,7 @@ import play.api.data._
 import play.api.data.Forms._
 import models._
 import views._
-import common.Recommendation
+import common.RecommendationUtils
 
 object Application extends Controller {
   /** serve the index page app/views/index.scala.html */
@@ -22,7 +22,7 @@ object Application extends Controller {
   def permalink(id: String) = Action { implicit request =>
     val dish = Dish.findById(null, id.toLong)(0)
     dish.url = Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
-    Ok(views.html.permalink("title", dish.url, dish.name, Recommendation.makePriceString(dish.price)))
+    Ok(views.html.permalink("title", dish.url, dish.name, RecommendationUtils.makePriceString(dish.price)))
   }
 
   /** resolve "any" into the corresponding HTML page URI */

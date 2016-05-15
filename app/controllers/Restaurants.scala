@@ -47,7 +47,7 @@ object Restaurants extends Controller with Secured {
         restaurant.smallurl = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 72 && x.status == 1}.headOption.getOrElse(defaultImage).asInstanceOf[Image].url
         
         restaurant.schedule_text = restaurant.schedule.split("\r\n")
-        restaurant.open_now = common.Recommendation.checkSchedule(restaurant.schedule)
+        restaurant.open_now = common.RecommendationUtils.checkSchedule(restaurant.schedule)
         
         val friends = List(new RestaurantFriends(1, "Mike Bochenek", Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url))
         restaurant.friendsWhoBooked = friends;

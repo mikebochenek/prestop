@@ -19,8 +19,8 @@ case class Friend(friend_user_id: Long, user_id: Long, id: Long, status: Int, la
 
 object Friend {
   val simple = {
-      get[Long]("friend.user_id") ~
       get[Long]("friend.friend_user_id") ~
+      get[Long]("friend.user_id") ~
       get[Long]("friend.id") ~
       get[Int]("friend.status") ~
       get[Date]("friend.lastupdate") map {
