@@ -45,11 +45,21 @@ object Friends extends Controller with Secured {
   def suggestFriendsToFollow() = Action {
     implicit request => {
       val phones = (request.body.asJson.get \ "phones").as[Array[String]]
+      val user = (request.body.asJson.get \ "user_id").asOpt[Long]
+      
+      Logger.info("suggestFriendsToFollow for user defined: " + user.isDefined + " " + user.getOrElse(-1))
+      
+      val friends = user.isDefined match {
+        case false => Seq.empty[Friend]
+        case true => Friend.findAllFriends(user.get)
+      }
+      friends.foreach(f => Logger.info("suggestFriendsToFollow EXISTIN userID: " + f.user_id + " friend:" + f.friend_user_id))
+      
       Logger.info("suggestFriendsToFollow " + phones.length)
       val all = MutableList.empty[FriendSuggestion]
       for (phone <- phones) {
         val user = User.getFullUserByPhone(Settings.cleanPhoneString(phone))
-        if (user.size > 0) {
+        if (user.size > 0 && !friends.exists(f => f.friend_user_id == user(0).id)) {
           val newFriend = new FriendSuggestion(user(0).id, 
               Image.findByUser(user(0).id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
               user(0).username, user(0).fullname, user(0).phone)
