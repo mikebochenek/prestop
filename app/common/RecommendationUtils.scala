@@ -2,20 +2,7 @@ package common
 
 import models._
 import play.api.Logger
-import models.RecommendationItem
-import scala.collection.mutable.ArraySeq
-import scala.collection.mutable.MutableList
-import scala.collection.mutable.SortedSet
 import java.text.DecimalFormat
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
-import controllers.Activities
-import controllers.Dishes
-import play.cache.Cache
-import java.util.concurrent.Callable
-import play.api.libs.json._
-import controllers._
-import com.fasterxml.jackson.core.JsonParseException
 import java.util.{ Calendar, GregorianCalendar, TimeZone }
 import Calendar.{ DAY_OF_WEEK, HOUR_OF_DAY, MINUTE, SUNDAY, SATURDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY }
 
