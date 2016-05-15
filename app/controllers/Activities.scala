@@ -16,7 +16,7 @@ import views._
 import models.json.DishLikers
 import models.json.DishLikes
 import scala.collection.mutable.MutableList
-import common.Recommendation
+import common.RecommendationUtils
 import models.json.DishLikesContainer
 
 object Activities extends Controller with Secured {
@@ -44,7 +44,7 @@ object Activities extends Controller with Secured {
         val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.name)
         
         val r = restaurants.get(dish.restaurant_id).head
-        val ri = new DishLikes(id, dish.id, dish.id, Recommendation.makePriceString(dish.price), dish.name, like, Dishes.calculateGreenScore(greenscoretags.size), 
+        val ri = new DishLikes(id, dish.id, dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, like, Dishes.calculateGreenScore(greenscoretags.size), 
           greenscoretags,
           Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
           Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
