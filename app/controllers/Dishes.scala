@@ -73,7 +73,7 @@ object Dishes extends Controller with Secured {
       Logger.info("calling dish edit - load data for id:" + id)
       val dish = Dish.findById(username, id)
       val tags = Tag.findByRef(id, 11).map(_.name).mkString(", ")
-      val greenscoretags = Tag.findByRef(id, Tag.TYPE_GREENSCORE).map(_.name)
+      val greenscoretags = Tag.findByRef(id, Tag.TYPE_GREENSCORE).map(_.name) //here we must return name (not the english/german text)
       val diet = Tag.findByRef(id, 34).map(_.name).mkString(", ")
       val dishtype = Tag.findByRef(id, 35).map(_.name).mkString(", ")
       val meatorigin = Tag.findByRef(id, 36).map(_.name).mkString(", ")
@@ -136,7 +136,7 @@ object Dishes extends Controller with Secured {
         val friendLikedDishURLs = allLikes.map(x => x.profileImageURL)
         //Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url  :: Nil
         
-        val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.name)
+        val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.en_text.getOrElse(""))
 
       
         val r = restaurants.get(dish.restaurant_id).head
