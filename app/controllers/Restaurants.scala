@@ -49,6 +49,10 @@ object Restaurants extends Controller with Secured {
         restaurant.schedule_text = restaurant.schedule.split("\r\n")
         restaurant.open_now = common.RecommendationUtils.checkSchedule(restaurant.schedule)
         
+        if (restaurant.city != null) {
+          restaurant.city = restaurant.city + ", Switzerland" //TODO remove this when we add country field
+        }
+        
         val friends = List(new RestaurantFriends(1, "Mike Bochenek", Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url))
         restaurant.friendsWhoBooked = friends;
       }
