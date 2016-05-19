@@ -49,8 +49,8 @@ object RecommendationUtils {
     def timeWithin(from: String, to: String) = {
       val ft = from.replace('.',':').replaceAll(",", "").split(":")
       val tt = to.replace('.',':').replaceAll(",", "").split(":")
-      val toHour = tt(0).toLong match { 
-        case 0 => 24
+      val toHour = tt(0).toLong < 5 match { 
+        case true => 24
         case default => tt(0).toLong
       } 
       val retval = ft(0).toLong <= hour && toHour > hour //TODO should also handle minutes here!

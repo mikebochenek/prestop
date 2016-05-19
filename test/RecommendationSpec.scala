@@ -18,26 +18,31 @@ class RecommendationSpec extends Specification {
     "check schedule 1" in new WithApplication {
       val s = "Mo - Mi: 07:30 - 24:00\r\nDo - Fr: 07:30 ? 01:00\r\nSa: 09:00 ? 01:00\r\nSo: 10:00 ? 24:00   "
       println(new Date().toString + " --> " + RecommendationUtils.checkSchedule(s) + "  schedule:" + s)    
+      //RecommendationUtils.checkSchedule(s) must equalTo(true)
     }
     
     "check schedule 2" in new WithApplication {
-      val s = "Mon ? Sun: 11:30 ? 23:00 "
-      println(new Date().toString + " --> " + RecommendationUtils.checkSchedule(s) + "  schedule:" + s)    
+      val s = "Mon ? Sun: 11:30 ? 01:00 "
+      println(new Date().toString + " --> " + RecommendationUtils.checkSchedule(s) + "  schedule 2:" + s)
+      //RecommendationUtils.checkSchedule(s) must equalTo(true)
     }
 
    "check schedule 3" in new WithApplication {
       val s = "Mon ? Sun: 10:30 bis 23:45"
       println(new Date().toString + " --> " + RecommendationUtils.checkSchedule(s) + "  schedule:" + s)    
+      //RecommendationUtils.checkSchedule(s) must equalTo(true)
     }
 
    "check schedule 4" in new WithApplication {
       val s = "Mon ? Wed: 11:30 ? 14:00, 17:00 ? 01:00\r\nThu ? Fri: 11:30 ? 14:00, 17:00 ? 02:00\r\nSat: 17:00 ? 02:00 & 03:00 - 04:00"
       println(new Date().toString + " --> " + RecommendationUtils.checkSchedule(s) + "  schedule:" + s)    
+      //RecommendationUtils.checkSchedule(s) must equalTo(true)
     }
 
    "check schedule 5" in new WithApplication {
       val s = "Tue: 17:00 ? 22:00\r\nWed ? Fri: 11:30 ? 22:00\r\nSat: 10:00 ? 22:00\r\nSun: 10:00 ? 20:00 "
       println(new Date().toString + " --> " + RecommendationUtils.checkSchedule(s) + "  schedule:" + s)    
+      //RecommendationUtils.checkSchedule(s) must equalTo(false)
     }
    
    
