@@ -81,7 +81,7 @@ object Activities extends Controller with Secured {
          Image.findByUser(user.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
          user.fullname, user.city, id))
       
-      Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(all)))))
+      Ok(Json.prettyPrint(Json.toJson(all)))
     }
   } 
   
