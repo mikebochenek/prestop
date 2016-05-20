@@ -74,7 +74,7 @@ object Activities extends Controller with Secured {
   def getByDish(dishId: Long, userId: Long) = Action { 
     implicit request => {
       Logger.info("calling getlikers (getByDish) dishId:" + dishId + "  userId:" + userId)
-      val all = Friend.findDishLikers(dishId, userId)
+      val all = Friend.findDishLikers(List(dishId), userId)
       Logger.info("getlikers returns " + all.size)
       Ok(Json.prettyPrint(Json.toJson(all)))
     }
