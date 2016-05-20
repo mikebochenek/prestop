@@ -99,14 +99,16 @@ object Recommendation {
       .filter { x => !openNow || RecommendationUtils.checkOpenTime(restaurants, x.restaurant_id)} // filter out restaurants currently closed
       .filter { x => !dishesAlreadyRecommended.contains(x.id) } // filter out dishes already recommended (list would be empty if lastDishID is 0 or null)
       .take(maxDishes.toInt) 
-    
+
+    val dishLikers = Friend.findDishLikers((dishes.map { x => x.id }).toList, user.id)  
     val result = new Recommendations(MutableList.empty);
     
     for (dish <- dishes) {
-      val allLikes = Activities.getLikeActivitiesByDish(dish.id)
-      val like = !(allLikes.find { x => x.id == user.id }.isEmpty)
+      val allLikes = Activities.getLikeActivitiesByDish(dish.id)//TODO!
+      val like = !(allLikes.find { x => x.id == user.id }.isEmpty)//TODO!
       
-      val friendLikedDishURLs = allLikes.map(x => x.profileImageURL).filter { url => url != null }  //TODO in cases where its null, should we show a default image?
+      val friendLikedDishURLs = dishLikers.filter { x => x.dish_id == dish.id && x.friend_image_url != null}.map { y => y.friend_image_url }  //TODO in cases where its null, should we show a default image?
+      //val friendLikedDishURLs = allLikes.map(x => x.profileImageURL).filter { url => url != null }  //TODO in cases where its null, should we show a default image?
       //Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url  :: Nil
 
       val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.en_text.getOrElse(""))
