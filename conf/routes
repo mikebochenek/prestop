@@ -42,6 +42,7 @@ GET      /api/getfriendswhobooked/:id  controllers.Reservations.getByRestaurant(
 GET      /api/restaurants            controllers.Restaurants.getAll
 POST     /api/restaurants/new        controllers.Restaurants.create
 GET      /api/dishes/:restId         controllers.Dishes.getAll(restId: Long)
+GET      /api/restdishes/:restId,:userId   controllers.Dishes.getAllForUser(restId: Long, userId: Long)
 POST     /api/dishes/new             controllers.Dishes.create
 
 POST     /api/user/new               controllers.Settings.createUser

@@ -120,6 +120,45 @@ object Dishes extends Controller with Secured {
       Redirect(routes.Dishes.getById(id.toLong))
   }
 
+  def getAllForUser(restId: Long, userId: Long) = Action {
+    implicit request => {
+      val dishes = Dish.findAll(restId)
+
+      //TODO all the below is way too similar to Recommendation.recommend and should be refactored into a common method
+      val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*)
+
+      val allLikes = ActivityLog.findAllByUserType(userId, 11)
+      val dishLikers = Friend.findDishLikers((dishes.map { x => x.id }).toList, userId)  
+      val result = new Recommendations(MutableList.empty);
+    
+      for (dish <- dishes) {
+        val like = !(allLikes.find { x => x.activity_subtype == dish.id }.isEmpty)
+      
+        val friendLikedDishURLs = dishLikers.filter { x => x.dish_id == dish.id && x.friend_image_url != null}.map { y => y.friend_image_url }  //TODO in cases where its null, should we show a default image?
+              
+        val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.en_text.getOrElse(""))
+
+      
+        val r = restaurants.get(dish.restaurant_id).head
+        val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, like, calculateGreenScore(greenscoretags.size), 
+          greenscoretags,
+          Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+          Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+          null,
+          Tag.findByRef(dish.id, 11).map(_.name),
+          r.id,
+          r.name, Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
+          friendLikedDishURLs,
+          Tag.findByRef(dish.id, 34).map(_.name),
+          Tag.findByRef(dish.id, 35).map(_.name),
+          Tag.findByRef(dish.id, 36).map(_.name), 0)
+        result.dishes += ri
+      }
+      
+      Ok(Json.prettyPrint(Json.toJson(result.dishes.map(a => Json.toJson(a)))))
+    }
+  } 
+  
   def getAll(restId: Long) = Action {
     implicit request => {
       val dishes = Dish.findAll(restId)
