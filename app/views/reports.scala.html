@@ -19,6 +19,15 @@
 		
       	<h3>Dishes (@dishes.size)</h3>
       	<table class="table table-striped">
+      	<thead>
+      	  <tr>
+      	    <td>#</td>
+      	    <td>id</td>
+      	    <td>lastupdate</td>
+      	    <td><b>name</b></td>
+      	    <td><b>price</b></td>
+      	  </tr>
+      	 </thead>
       	@for((dish, index) <- dishes.zipWithIndex)  {	
 		  <tr>
 		  <td>@index</td>
@@ -32,6 +41,14 @@
 
       	<h3>Users (@users.size)</h3>
       	<table class="table table-striped">
+      	<thead>
+      	  <tr>
+      	    <td>#</td>
+      	    <td>id</td>
+      	    <td><b>email</b></td>
+      	    <td><b>username (Facebook ID)</b></td>
+      	  </tr>
+      	 </thead>
       	@for((user, index) <- users.zipWithIndex)  {	
 		  <tr>
 		  <td>@index</td>
@@ -44,12 +61,21 @@
 
       	<h3>Friends (@friends.size)</h3>
       	<table class="table table-striped">
+      	<thead>
+      	  <tr>
+      	    <td>#</td>
+      	    <td>id</td>
+      	    <td><b>user_id</b></td>
+      	    <td><b>friend_user_id</b></td>
+      	    <td>lastupdate</td>
+      	  </tr>
+      	 </thead>
       	@for((friend, index) <- friends.zipWithIndex)  {	
 		  <tr>
 		  <td>@index</td>
 		  <td>@friend.id</td>
-		  <td>@friend.friend_user_id</td>
 		  <td>@friend.user_id</td>
+		  <td>@friend.friend_user_id</td>
 		  <td>@friend.lastupdate.format("dd MMM YYYY HH:MM")</td>
 		  </tr>
 		  }
@@ -72,9 +98,21 @@
 		  }
 		</table>
 
-      	<h3>Activities (@activities.size)</h3>
+      	<h3>Activities / Likes (@activities.size)</h3>
       	<div>(here we don't show the values for activity_type == 7, because there are too many)</div>
       	<table class="table table-striped">
+      	<table class="table table-striped">
+      	<thead>
+      	  <tr>
+      	    <td>#</td>
+      	    <td>id</td>
+      	    <td><b>user_id</b></td>
+      	    <td><b>activity_type (11=like)</b></td>
+      	    <td><b>activity_subtype (dish_id)</b></td>
+      	    <td><b>activity_details</b></td>
+      	    <td>lastupdate</td>
+      	  </tr>
+      	 </thead>
       	@for((activity, index) <- activities.filter{x => x.activity_type != 7}.zipWithIndex)  {	
 		  <tr>
 		  <td>@index</td>
