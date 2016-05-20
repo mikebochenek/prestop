@@ -98,10 +98,10 @@ object Friend {
       get[Long]("friend_user_id") ~
       get[String]("url") ~
       get[String]("fullname") ~
-      get[String]("city") ~
+      get[Option[String]]("city") ~
       get[Long]("activity_log.activity_subtype") map {
         case friend_user_id ~ url ~ fullname ~ city ~ dish_id => 
-          DishLikers(friend_user_id, url, fullname, city, dish_id)
+          DishLikers(friend_user_id, url, fullname, city.getOrElse(""), dish_id)
       }
   }
 
