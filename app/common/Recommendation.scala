@@ -100,12 +100,12 @@ object Recommendation {
       .filter { x => !dishesAlreadyRecommended.contains(x.id) } // filter out dishes already recommended (list would be empty if lastDishID is 0 or null)
       .take(maxDishes.toInt) 
 
+    val allLikes = ActivityLog.findAllByUserType(user.id, 11)
     val dishLikers = Friend.findDishLikers((dishes.map { x => x.id }).toList, user.id)  
     val result = new Recommendations(MutableList.empty);
     
     for (dish <- dishes) {
-      val allLikes = Activities.getLikeActivitiesByDish(dish.id)//TODO!
-      val like = !(allLikes.find { x => x.id == user.id }.isEmpty)//TODO!
+      val like = !(allLikes.find { x => x.activity_subtype == dish.id }.isEmpty)
       
       val friendLikedDishURLs = dishLikers.filter { x => x.dish_id == dish.id && x.friend_image_url != null}.map { y => y.friend_image_url }  //TODO in cases where its null, should we show a default image?
       //val friendLikedDishURLs = allLikes.map(x => x.profileImageURL).filter { url => url != null }  //TODO in cases where its null, should we show a default image?
