@@ -71,16 +71,11 @@ object Activities extends Controller with Secured {
     }
   } 
 
-  def getByDish(id: Long) = Action { 
+  def getByDish(dishId: Long, userId: Long) = Action { 
     implicit request => {
-      Logger.info("calling getlikers (getByDish) id:" + id)
-      val activities = ActivityLog.findAll().filter { x => x.activity_type == 11 && x.activity_subtype == id } // TODO this should be optimized on the DB as well
-      val allUsers = activities.map(a => User.getFullUser(a.user_id)) //TODO this should be optimized as well
-      
-      val all = allUsers.distinct.map(user => new DishLikers(user.id, 
-         Image.findByUser(user.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
-         user.fullname, user.city, id))
-      
+      Logger.info("calling getlikers (getByDish) dishId:" + dishId + "  userId:" + userId)
+      val all = Friend.findDishLikers(dishId, userId)
+      Logger.info("getlikers returns " + all.size)
       Ok(Json.prettyPrint(Json.toJson(all)))
     }
   } 

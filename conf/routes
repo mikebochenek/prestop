@@ -35,7 +35,7 @@ GET      /api/getlikes/:id             controllers.Activities.getLikesByUser(id:
 GET      /api/like/:userId,:dishId     controllers.Activities.like(userId: Long, dishId: Long)
 GET      /api/unlike/:userId,:dishId   controllers.Activities.unlike(userId: Long, dishId: String)
 POST     /api/unlike                   controllers.Activities.unlikeSeveral
-GET      /api/getlikers/:id            controllers.Activities.getByDish(id: Long)
+GET      /api/getlikers/:dishId,:userId  controllers.Activities.getByDish(dishId: Long, userId: Long)
 
 GET      /api/getfriendswhobooked/:id  controllers.Reservations.getByRestaurant(id: Long)
 

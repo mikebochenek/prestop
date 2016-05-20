@@ -14,6 +14,7 @@ import play.api.libs.json.JsString
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.Logger
+import models.json.DishLikers
 
 case class Friend(friend_user_id: Long, user_id: Long, id: Long, status: Int, lastupdate: Date)
 
@@ -91,7 +92,30 @@ object Friend {
       SQL("select user_id, friend_user_id, id, status, lastupdate from friend where friend_user_id = {friend_user_id}"
           + " order by id asc").on('friend_user_id-> friend_user_id).as(Friend.simple *)
     }
-  }  
+  }
+
+  val simpleDishLikers = {
+      get[Long]("friend_user_id") ~
+      get[String]("url") ~
+      get[String]("fullname") ~
+      get[String]("city") ~
+      get[Long]("activity_log.activity_subtype") map {
+        case friend_user_id ~ url ~ fullname ~ city ~ dish_id => 
+          DishLikers(friend_user_id, url, fullname, city, dish_id)
+      }
+  }
+
+  def findDishLikers(dish_id: Long, user_id: Long): Seq[DishLikers] = {
+    DB.withConnection { implicit connection =>
+      SQL("""
+        select distinct f.friend_user_id, i.url, u.fullname, u.city, a.activity_subtype as dish_id from friend f 
+        inner join user u on f.friend_user_id = u.id and f.status >= 0
+        inner join image i on i.user_id = f.friend_user_id and i.width = 72 and i.status >= 0
+        inner join activity_log a on a.user_id = f.friend_user_id and a.activity_type = 11 and a.activity_subtype = {dish_id}
+        where f.user_id = {user_id}
+      """).on('user_id-> user_id, 'dish_id -> dish_id).as(Friend.simpleDishLikers *)
+    }
+  }
   
   implicit val friendReads = Json.reads[Friend]
   implicit val friendWrites = Json.writes[Friend]
