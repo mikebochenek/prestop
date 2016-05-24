@@ -16,7 +16,7 @@ import play.api.libs.functional.syntax._
 import play.api.Logger
 
 case class Dish(id: Long, restaurant_id: Long, price: Double, name: String, serving: Option[String], description: Option[String], 
-    var greenScore: Double, lastupdate: Date, status: Int, var url: String, var distance: Double, var tags: Seq[String])
+    var greenScore: Double, lastupdate: Date, status: Int, source: String, var url: String, var distance: Double, var tags: Seq[String])
 
 object Dish {
   val simple = {
@@ -28,9 +28,10 @@ object Dish {
       get[Option[String]]("dish.description") ~
       get[Double]("dish.greenscore") ~
       get[Date]("dish.lastupdate") ~
-      get[Int]("dish.status") map {
-        case id ~ restaurant_id ~ price ~ name ~ serving ~ description ~ greenscore ~ lastupdate ~ status => 
-          Dish(id, restaurant_id, price, name, serving, description, greenscore, lastupdate, status, null, 0.0, Seq.empty[String])
+      get[Int]("dish.status") ~
+      get[Option[String]]("dish.source") map {
+        case id ~ restaurant_id ~ price ~ name ~ serving ~ description ~ greenscore ~ lastupdate ~ status ~ source => 
+          Dish(id, restaurant_id, price, name, serving, description, greenscore, lastupdate, status, source.getOrElse(""), null, 0.0, Seq.empty[String])
       }
   }
 
@@ -52,11 +53,11 @@ object Dish {
   }
 
 
-  def update(id: Long, price: Double, name: String, greenscore: Double, status: Int, serving: String, description: String) = {
+  def update(id: Long, price: Double, name: String, greenscore: Double, status: Int, serving: String, description: String, source: String) = {
     DB.withConnection { implicit connection =>
       SQL(
         """
-         update dish set price = {price}, name = {name}, serving = {serving}, description = {description},
+         update dish set price = {price}, name = {name}, serving = {serving}, description = {description}, source = {source},
          greenscore = {greenscore}, lastupdate = {lastupdate}, status = {status} where id = {id}
         """).on(
           'id -> id,
@@ -65,6 +66,7 @@ object Dish {
           'serving -> serving,
           'description -> description,
           'greenscore -> greenscore,
+          'source -> source,
           'lastupdate -> new Date(),
           'status -> status).executeUpdate
     }
@@ -76,7 +78,7 @@ object Dish {
     }
   }
   
-  val columns = " id, restaurant_id, price, name, serving, description, greenscore, lastupdate, status "
+  val columns = " id, restaurant_id, price, name, serving, description, greenscore, lastupdate, status, source "
 
   def findById(username: String, id: Long): Seq[Dish] = {
     DB.withConnection { implicit connection =>

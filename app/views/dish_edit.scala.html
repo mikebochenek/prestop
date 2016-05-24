@@ -1,4 +1,4 @@
-@(form: Form[(String,String,String,String,String,String,String,String,String,String,String,String,String)], 
+@(form: Form[(String,String,String,String,String,String,String,String,String,String,String,String,String,String)], 
 	dish: Dish, url: String, tags: String, greenscoretags: String, diet: String, dishtype: String, meatorigin: String)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
@@ -80,6 +80,11 @@
             <input class="form-control span4" type="text" name="serving" id="serving" value="@dish.serving">
           </div>
 
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Submitted by (source)</span>
+            <input class="form-control span4" type="text" name="source" id="source" value="@dish.source">
+          </div>
+          
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Description</span>
             <textarea NAME="description" cols=70 rows=9>@dish.description</textarea>
