@@ -17,21 +17,6 @@
             <span class="input-group-addon" id="basic-addon1">Name</span>
             <input class="form-control span4" type="text" name="name" id="name" value="@restaurant.name">
           </div>
-
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Phone</span>
-            <input class="form-control span4" type="phone" name="phone" id="city" value="@restaurant.phone">
-          </div>
-                      
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Email</span>
-            <input class="form-control span4" type="text" name="email" id="email" value="@restaurant.email">
-          </div>
-                      
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">website</span>
-            <input class="form-control span4" type="text" name="website" id="website" value="@restaurant.website">
-          </div>
                       
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Address</span>
@@ -39,13 +24,13 @@
           </div>
           
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">City</span>
-            <input class="form-control span4" type="text" name="city" id="city" value="@restaurant.city">
+            <span class="input-group-addon" id="basic-addon1">Postal Code</span>
+            <input class="form-control span4" type="text" name="postalcode" id="postalcode" value="@restaurant.postalcode">
           </div>
                       
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Postal Code</span>
-            <input class="form-control span4" type="text" name="postalcode" id="postalcode" value="@restaurant.postalcode">
+            <span class="input-group-addon" id="basic-addon1">City</span>
+            <input class="form-control span4" type="text" name="city" id="city" value="@restaurant.city">
           </div>
                       
           <div class="input-group">
@@ -61,6 +46,21 @@
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Longitude</span>
             <input class="form-control span4" type="text" name="longitude" id="longitude" value="@restaurant.longitude">
+          </div>
+
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Phone</span>
+            <input class="form-control span4" type="phone" name="phone" id="city" value="@restaurant.phone">
+          </div>
+                      
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Email</span>
+            <input class="form-control span4" type="text" name="email" id="email" value="@restaurant.email">
+          </div>
+                      
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Website</span>
+            <input class="form-control span4" type="text" name="website" id="website" value="@restaurant.website">
           </div>
           
           <div class="input-group">
@@ -81,18 +81,18 @@
 
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Payment type</span>
-            <input class="form-control span4" type="text" name="tags" id="tags" value="@tags">
+            <input class="form-control span4" type="text" name="ptags" id="ptags" value="@tags">
           </div>
           
           <div>&emsp;<u>possible tags:</u> @Tag.findAll.filter(_.status == 12).map(_.name).mkString(", ")</div>
-          <script>var availableTags = @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 12).map(_.name)).toString) ;</script>
 
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Cuisines</span>
-            <input class="form-control span4" type="text" name="cuisines" id="cuisines" value="@cuisines">
+            <input class="form-control span4" type="text" name="tags" id="tags" value="@cuisines">
           </div>
           
           <div>&emsp;<u>possible cuisines:</u> @Tag.findAll.filter(_.status == 21).map(_.name).mkString(", ")</div>
+          <script>var availableTags = @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 21).map(_.name)).toString) ;</script>
           
           </br>
                       

@@ -70,6 +70,9 @@ object Restaurants extends Controller with Secured {
       val logourl = Image.findByRestaurant(id).filter { x => x.status == 1 }.sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       val reservations = Reservation.findAllByRestaurant(id)
       val childRestaurants = Restaurant.findAllByParent(id)
+      
+      if ("".equals(all(0).city)) { all(0).city = "Zürich" }
+      if ("".equals(all(0).state.getOrElse(""))) { all(0).state = Option("Zürich") }
       Ok(views.html.restaurant_edit(restaurantForm, all(0), url, logourl, tags, cuisines, reservations, childRestaurants))
     }
   }
@@ -90,15 +93,15 @@ object Restaurants extends Controller with Secured {
       "schedule" -> text,
       "restype" -> text,
       "status" -> text,
-      "cuisines" -> text,
+      "ptags" -> text,
       "tags" -> text))
 
   def save = IsAuthenticated { username =>
     implicit request => { 
-      val (id, name, phone, email, address, city, postalcode, state, website, longitude, latitude, schedule, restype, status, cuisines, tags) = restaurantForm.bindFromRequest.get
+      val (id, name, phone, email, address, city, postalcode, state, website, longitude, latitude, schedule, restype, status, ptags, tags) = restaurantForm.bindFromRequest.get
       Restaurant.update(id.toLong, name, city, address, longitude.toDouble, latitude.toDouble, schedule, restype.toInt, status.toInt, phone, email, postalcode, state, website)
-      Tag.updateTags(id.toLong, tags, 12)
-      Tag.updateTags(id.toLong, cuisines, 21)
+      Tag.updateTags(id.toLong, ptags, 12)
+      Tag.updateTags(id.toLong, tags, 21)
       Logger.info("calling restaurant update for id:" + id)
       Redirect(routes.Restaurants.edit(id.toLong))
     }

@@ -23,7 +23,7 @@ object RestaurantFriends {
 
 case class Restaurant(id: Long, name: String, var city: String, address: String, longitude: Double, latitude: Double, 
     schedule: String, var schedule_text: Seq[String], var open_now: Boolean, restype: Int, status: Int, 
-    phone: Option[String], email: Option[String], postalcode: Option[String], state: Option[String], website: Option[String],
+    phone: Option[String], email: Option[String], postalcode: Option[String], var state: Option[String], website: Option[String],
     var url: String, var smallurl: String, var paymentoptions: Seq[String], var cuisines: Seq[String],
     var friendsWhoBooked: Seq[RestaurantFriends])
 
