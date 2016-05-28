@@ -17,6 +17,8 @@ import play.api.Logger
 
 case class Tag(id: Long, name: String, en_text: Option[String], de_text: Option[String], it_text: Option[String], fr_text: Option[String], status: Int, lastupdate: Date)
 
+case class TagRefSimple(tagid: Long, name: String, status: Int, refid: Long)
+
 object Tag {
 
   val simple = {
@@ -32,10 +34,28 @@ object Tag {
       }
   }
 
+  val optimized = {
+      get[Long]("tag.id") ~
+      get[String]("tag.name") ~
+      get[Int]("tag.status") ~
+      get[Long]("tagref.refid") map {
+        case id ~ name ~ status ~ refid => TagRefSimple(id, name, status, refid)
+      }
+  }
+  
   def findByRef(id: Long, status: Int): Seq[Tag] = {
     DB.withConnection { implicit connection =>
       SQL(selectSQL + " join tagref tr on t.id = tr.tagid where tr.refid = {id} and tr.status = {status}")
         .on('id -> id, 'status -> status).as(Tag.simple *)
+    }
+  }
+  
+  def findByRefList(id: List[Long], status: Int): Seq[TagRefSimple] = {
+    val ids = id.mkString(",")
+    Logger.info("findByRefList: " + id.size + " --> " + ids)
+    DB.withConnection { implicit connection =>
+      SQL(" select t.id, t.name, t.status, tr.refid from tag t join tagref tr on t.id = tr.tagid where tr.refid in (%s) and tr.status = {status}".format(ids))
+        .on('status -> status).as(Tag.optimized *)
     }
   }
 
