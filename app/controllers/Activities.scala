@@ -35,28 +35,31 @@ object Activities extends Controller with Secured {
 
       for (ac <- activities) {
         val dish = Dish.findById(null, ac.activity_subtype)(0)
-        val allLikes = Activities.getLikeActivitiesByDish(dish.id)
-        val like = true
-      
-        val friendLikedDishURLs = allLikes.map(x => x.profileImageURL)
-        //Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url  :: Nil
-
-        val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.en_text.getOrElse(""))
         
-        val r = restaurants.get(dish.restaurant_id).head
-        val ri = new DishLikes(id, dish.id, dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, like, Dishes.calculateGreenScore(greenscoretags.size), 
-          greenscoretags,
-          Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
-          Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
-          null,
-          Tag.findByRef(dish.id, 11).map(_.name),
-          r.id,
-          r.name, Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
-          friendLikedDishURLs,
-          Tag.findByRef(dish.id, 34).map(_.name),
-          Tag.findByRef(dish.id, 35).map(_.name),
-          Tag.findByRef(dish.id, 36).map(_.name))
-        result.likes += ri
+        if (dish.status >= 0 && !restaurants.get(dish.restaurant_id).isEmpty) {
+          val allLikes = Activities.getLikeActivitiesByDish(dish.id)
+          val like = true
+       
+          val friendLikedDishURLs = allLikes.map(x => x.profileImageURL)
+          //Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url  :: Nil
+
+          val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.en_text.getOrElse(""))
+        
+          val r = restaurants.get(dish.restaurant_id).head
+          val ri = new DishLikes(id, dish.id, dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, like, Dishes.calculateGreenScore(greenscoretags.size), 
+            greenscoretags,
+            Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+            Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+            null,
+            Tag.findByRef(dish.id, 11).map(_.name),
+            r.id,
+            r.name, Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
+            friendLikedDishURLs,
+            Tag.findByRef(dish.id, 34).map(_.name),
+            Tag.findByRef(dish.id, 35).map(_.name),
+            Tag.findByRef(dish.id, 36).map(_.name))
+          result.likes += ri
+        }
       }
       
       Ok(Json.prettyPrint(Json.toJson(result.likes.map(a => Json.toJson(a)))))
