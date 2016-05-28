@@ -111,7 +111,7 @@ object Recommendation {
       
       val r = restaurants.get(dish.restaurant_id).head
       
-      var score = 0.0 //random.nextDouble / 10 // one hack could be to score += random(0.01 to 0.09)
+      var score = random.nextDouble / 10 // one hack could be to score += random(0.01 to 0.09)
       userSettings.favCuisines.foreach { fav => if (r.cuisines.contains(fav.tag)) score += fav.rating.get } 
 
       val dishDietTags = allDietTags.filter { x => x.refid == dish.id }.map(_.name) //Tag.findByRef(dish.id, Tag.TYPE_DIET ).map(_.name)
