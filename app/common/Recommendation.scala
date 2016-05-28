@@ -135,6 +135,12 @@ object Recommendation {
     }
     
     val sortedResult = result.dishes.sortBy(_.score).reverse.take(maxDishes.toInt)
+    val allSortedDishIDs = sortedResult.map { x => x.id }.toList
+    //val allGreenScoreTags = Tag.findByRefList(allSortedDishIDs, Tag.TYPE_GREENSCORE)
+    val allIngredientTags = Tag.findByRefList(allSortedDishIDs, 11)
+    val allMeatOriginTags = Tag.findByRefList(allSortedDishIDs, Tag.TYPE_MEATORIGIN)
+    val allDishTypeTags = Tag.findByRefList(allSortedDishIDs, Tag.TYPE_DISHTYPE)
+    
     for (r <- sortedResult) {
       val imgUrl = Image.findByDish(r.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       r.url = imgUrl
@@ -144,14 +150,14 @@ object Recommendation {
       r.greenScoreTags = greenscoretags
       r.greenScore = Dishes.calculateGreenScore(greenscoretags.size)
 
-      r.ingredients = Tag.findByRef(r.id, 11).map(_.name)
-      r.meatOrigin = Tag.findByRef(r.id, Tag.TYPE_MEATORIGIN).map(_.name) 
-      r.dishType = Tag.findByRef(r.id, Tag.TYPE_DISHTYPE).map(_.name)
+      r.ingredients = allIngredientTags.filter { x => x.refid == r.id}.map(_.name)
+      r.meatOrigin = allMeatOriginTags.filter { x => x.refid == r.id}.map(_.name) 
+      r.dishType = allDishTypeTags.filter{ x => x.refid == r.id}.map(_.name)
       r.friendLikeUrls = dishLikers.filter { x => x.dish_id == r.id && x.friend_image_url != null}.map { y => y.friend_image_url }  //TODO in cases where its null, should we show a default image?
       r.restaurantUrl = Image.findByRestaurant(r.restaurantID).filter{x => x.width.get == 72 && x.status == 1}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
     }
     
-    // this is how we ensure that we only show dishes with photos
+    // and lastly, this is how we ensure that we only show dishes with photos
     new Recommendations(sortedResult.filter { x => x.url != null })
   }
 
