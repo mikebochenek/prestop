@@ -101,6 +101,7 @@ object Recommendation {
       .filter { x => !dishesAlreadyRecommended.contains(x.id) } // filter out dishes already recommended (list would be empty if lastDishID is 0 or null)
 
     val allDietTags = Tag.findByRefList((dishes.map { x => x.id }).toList, Tag.TYPE_DIET)
+    val allIngredientTags = Tag.findByRefList((dishes.map { x => x.id }).toList, 11)
     val allLikes = ActivityLog.findAllByUserType(user.id, 11)
     val dishLikers = Friend.findDishLikers((dishes.map { x => x.id }).toList, user.id)  
     val result = new Recommendations(MutableList.empty);
@@ -117,6 +118,12 @@ object Recommendation {
       val dishDietTags = allDietTags.filter { x => x.refid == dish.id }.map(_.name) //Tag.findByRef(dish.id, Tag.TYPE_DIET ).map(_.name)
       userSettings.preferToAvoid.get.foreach { avoid => if (dishDietTags.contains(avoid.tag)) score -= (avoid.rating.get * 1.5) }
       
+      allIngredientTags.filter { x => x.refid == dish.id }.foreach { ingredient => if (likedDishes.count { y => y.tagId == ingredient.tagid } > 0) {
+        val count = likedDishes.count { y => y.tagId == ingredient.tagid }
+        Logger.debug("it looks like user: " + user.id + "  liked: " + ingredient.tagid + "," + ingredient.name + 
+            " " + count + " times, and dish: " + dish.id + "," + dish.name.take(15) + " contains it")
+        score += (0.1 * count)
+      }}
      
       val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, like, 0.0, 
         null,
@@ -137,7 +144,6 @@ object Recommendation {
     val sortedResult = result.dishes.sortBy(_.score).reverse.take(maxDishes.toInt)
     val allSortedDishIDs = sortedResult.map { x => x.id }.toList
     //val allGreenScoreTags = Tag.findByRefList(allSortedDishIDs, Tag.TYPE_GREENSCORE)
-    val allIngredientTags = Tag.findByRefList(allSortedDishIDs, 11)
     val allMeatOriginTags = Tag.findByRefList(allSortedDishIDs, Tag.TYPE_MEATORIGIN)
     val allDishTypeTags = Tag.findByRefList(allSortedDishIDs, Tag.TYPE_DISHTYPE)
     
