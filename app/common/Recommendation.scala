@@ -100,6 +100,7 @@ object Recommendation {
       .filter { x => !openNow || RecommendationUtils.checkOpenTime(restaurants, x.restaurant_id)} // filter out restaurants currently closed
       .filter { x => !dishesAlreadyRecommended.contains(x.id) } // filter out dishes already recommended (list would be empty if lastDishID is 0 or null)
 
+    val allDietTags = Tag.findByRefList((dishes.map { x => x.id }).toList, Tag.TYPE_DIET)
     val allLikes = ActivityLog.findAllByUserType(user.id, 11)
     val dishLikers = Friend.findDishLikers((dishes.map { x => x.id }).toList, user.id)  
     val result = new Recommendations(MutableList.empty);
@@ -113,7 +114,7 @@ object Recommendation {
       var score = 0.0 //random.nextDouble / 10 // one hack could be to score += random(0.01 to 0.09)
       userSettings.favCuisines.foreach { fav => if (r.cuisines.contains(fav.tag)) score += fav.rating.get } 
 
-      val dishDietTags = Tag.findByRef(dish.id, Tag.TYPE_DIET ).map(_.name)
+      val dishDietTags = allDietTags.filter { x => x.refid == dish.id }.map(_.name) //Tag.findByRef(dish.id, Tag.TYPE_DIET ).map(_.name)
       userSettings.preferToAvoid.get.foreach { avoid => if (dishDietTags.contains(avoid.tag)) score -= (avoid.rating.get * 1.5) }
       
      
