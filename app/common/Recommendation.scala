@@ -122,7 +122,7 @@ object Recommendation {
         null,
         null,
         RecommendationUtils.makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
-        Tag.findByRef(dish.id, 11).map(_.name),
+        null,
         r.id,
         r.name, null, 
         null,
@@ -143,6 +143,7 @@ object Recommendation {
       r.greenScoreTags = greenscoretags
       r.greenScore = Dishes.calculateGreenScore(greenscoretags.size)
 
+      r.ingredients = Tag.findByRef(r.id, 11).map(_.name)
       r.meatOrigin = Tag.findByRef(r.id, Tag.TYPE_MEATORIGIN).map(_.name) 
       r.dishType = Tag.findByRef(r.id, Tag.TYPE_DISHTYPE).map(_.name)
       r.friendLikeUrls = dishLikers.filter { x => x.dish_id == r.id && x.friend_image_url != null}.map { y => y.friend_image_url }  //TODO in cases where its null, should we show a default image?
