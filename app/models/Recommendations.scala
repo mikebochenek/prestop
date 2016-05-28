@@ -18,10 +18,11 @@ import scala.collection.mutable.MutableList
 case class Recommendations(dishes: MutableList[RecommendationItem])
 
 case class RecommendationItem(id: Long, price: String, name: String, liked: Boolean, 
-    greenScore: Double, greenScoreTags: Seq[String], url: String, url_large: String, distance: String, ingredients: Seq[String],
+    var greenScore: Double, var greenScoreTags: Seq[String], var url: String, var url_large: String, 
+    var distance: String, var ingredients: Seq[String],
     restaurantID: Long, var restaurantName: String, var restaurantUrl: String, 
     var friendLikeUrls: Seq[String],
-    diet: Seq[String], dishType: Seq[String], meatOrigin: Seq[String], var score: Double)
+    var diet: Seq[String], var dishType: Seq[String], var meatOrigin: Seq[String], var score: Double)
 
 object RecommendationItem {
   implicit val recommendationItemsReads = Json.reads[RecommendationItem]
