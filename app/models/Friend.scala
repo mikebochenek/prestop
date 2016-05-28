@@ -108,14 +108,17 @@ object Friend {
   def findDishLikers(dish_id: List[Long], user_id: Long): Seq[DishLikers] = {
     val dishIds = dish_id.mkString(",") 
     Logger.info("findDishLikers user_id: " + user_id + "   dishIds: " + dishIds)
-    DB.withConnection { implicit connection =>
-      SQL("""
-        select distinct f.friend_user_id, i.url, u.fullname, u.city, a.activity_subtype as dish_id from friend f 
-        inner join user u on f.friend_user_id = u.id and f.status >= 0
-        inner join image i on i.user_id = f.friend_user_id and i.width = 72 and i.status >= 0
-        inner join activity_log a on a.user_id = f.friend_user_id and a.activity_type = 11 and a.activity_subtype in (%s)
-        where f.user_id = {user_id}
-      """.format(dishIds)).on('user_id-> user_id).as(Friend.simpleDishLikers *)
+    dish_id.size match {
+      case 0 => Seq.empty[DishLikers]
+      case default => DB.withConnection { implicit connection =>
+        SQL("""
+          select distinct f.friend_user_id, i.url, u.fullname, u.city, a.activity_subtype as dish_id from friend f 
+          inner join user u on f.friend_user_id = u.id and f.status >= 0
+          inner join image i on i.user_id = f.friend_user_id and i.width = 72 and i.status >= 0
+          inner join activity_log a on a.user_id = f.friend_user_id and a.activity_type = 11 and a.activity_subtype in (%s)
+          where f.user_id = {user_id}
+        """.format(dishIds)).on('user_id-> user_id).as(Friend.simpleDishLikers *)
+      }
     }
   }
   
