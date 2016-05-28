@@ -98,7 +98,6 @@ object Recommendation {
       .filter { x => (maxPrice >= x.price && minPrice <= x.price) } // filter by price
       .filter { x => !openNow || RecommendationUtils.checkOpenTime(restaurants, x.restaurant_id)} // filter out restaurants currently closed
       .filter { x => !dishesAlreadyRecommended.contains(x.id) } // filter out dishes already recommended (list would be empty if lastDishID is 0 or null)
-      .take(maxDishes.toInt) 
 
     val allLikes = ActivityLog.findAllByUserType(user.id, 11)
     val dishLikers = Friend.findDishLikers((dishes.map { x => x.id }).toList, user.id)  
@@ -117,14 +116,17 @@ object Recommendation {
       
       var score = 0.0
       userSettings.favCuisines.foreach { fav => if (r.cuisines.contains(fav.tag)) score += fav.rating.get } 
+      // one hack could be to score += random(0.01 to 0.09)
 
       val dishDietTags = Tag.findByRef(dish.id, Tag.TYPE_DIET ).map(_.name)
       userSettings.preferToAvoid.get.foreach { avoid => if (dishDietTags.contains(avoid.tag)) score -= (avoid.rating.get * 1.5) }
       
+      val imgUrl = Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+     
       val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, like, Dishes.calculateGreenScore(greenscoretags.size), 
         greenscoretags,
-        Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
-        Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+        imgUrl,
+        imgUrl,
         RecommendationUtils.makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
         Tag.findByRef(dish.id, 11).map(_.name),
         r.id,
@@ -139,7 +141,7 @@ object Recommendation {
       }
     }
     
-    new Recommendations(result.dishes.sortBy(_.score).reverse)
+    new Recommendations(result.dishes.sortBy(_.score).reverse.take(maxDishes.toInt))
   }
 
 }
