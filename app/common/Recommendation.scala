@@ -42,6 +42,7 @@ object Recommendation {
   
   
   def recommend(user: UserFull, latitude: Double, longitude: Double, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean, lastDishID: Long, maxDishes: Long) = {
+    val random = new java.util.Random
     
     def getDishesAlreadyRecommended() :SortedSet[Long] = {
       val dar = SortedSet[Long]()
@@ -106,20 +107,18 @@ object Recommendation {
     for (dish <- dishes) {
       val like = !(allLikes.find { x => x.activity_subtype == dish.id }.isEmpty)
       
-      val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.en_text.getOrElse(""))
       
       val r = restaurants.get(dish.restaurant_id).head
       
-      var score = 0.0
+      var score = 0.0 //random.nextDouble / 10 // one hack could be to score += random(0.01 to 0.09)
       userSettings.favCuisines.foreach { fav => if (r.cuisines.contains(fav.tag)) score += fav.rating.get } 
-      // one hack could be to score += random(0.01 to 0.09)
 
       val dishDietTags = Tag.findByRef(dish.id, Tag.TYPE_DIET ).map(_.name)
       userSettings.preferToAvoid.get.foreach { avoid => if (dishDietTags.contains(avoid.tag)) score -= (avoid.rating.get * 1.5) }
       
      
-      val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, like, Dishes.calculateGreenScore(greenscoretags.size), 
-        greenscoretags,
+      val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, like, 0.0, 
+        null,
         null,
         null,
         RecommendationUtils.makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
@@ -139,6 +138,11 @@ object Recommendation {
       val imgUrl = Image.findByDish(r.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       r.url = imgUrl
       r.url_large = imgUrl
+      
+      val greenscoretags = Tag.findByRef(r.id, Tag.TYPE_GREENSCORE).map(_.en_text.getOrElse(""))
+      r.greenScoreTags = greenscoretags
+      r.greenScore = Dishes.calculateGreenScore(greenscoretags.size)
+
       r.meatOrigin = Tag.findByRef(r.id, Tag.TYPE_MEATORIGIN).map(_.name) 
       r.dishType = Tag.findByRef(r.id, Tag.TYPE_DISHTYPE).map(_.name)
       r.friendLikeUrls = dishLikers.filter { x => x.dish_id == r.id && x.friend_image_url != null}.map { y => y.friend_image_url }  //TODO in cases where its null, should we show a default image?
