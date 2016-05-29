@@ -286,12 +286,15 @@ object Settings extends Controller with Secured {
       Logger.debug("userByUsername: " + userByUsername)
       Logger.debug("userByPhone: " + userByPhone)
       
-      val existingUser = (userByUsername.isDefined || userByPhone.size > 0)
+      val existingUser = (userByUsername.isDefined || (userByPhone.size > 0 && cleanPhoneString(phone.as[String]).size > 0))
       
-     
+      val emailString = email.isInstanceOf[JsUndefined] match { 
+        case true => ""
+        case false => email.as[String]
+      }
       val newid = existingUser match {
         case true => { if (userByUsername.isDefined) userByUsername.get.id else userByPhone(0).id } 
-        case false => User.create(new UserFull(-1, null, null, false, "test", null, email.as[String], id.as[String], "1", null, name.as[String], null, null, null, cleanPhoneString(phone.as[String]))).get
+        case false => User.create(new UserFull(-1, null, null, false, "test", null, emailString, id.as[String], "1", null, name.as[String], null, null, null, cleanPhoneString(phone.as[String]))).get
       }
       
       val userStatus = existingUser match {
