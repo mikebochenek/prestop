@@ -124,6 +124,12 @@ object Recommendation {
             " " + count + " times, and dish: " + dish.id + "," + dish.name.take(15) + " contains it")
         score += (0.1 * count)
       }}
+      
+      val thisDishLikersCount = dishLikers.filter { x => x.dish_id == dish.id}.size
+      if (thisDishLikersCount > 0) {
+        Logger.debug ("dish: " + dish.id + "," + dish.name.take(15) + " was liked by " + thisDishLikersCount + " friends")
+        score +=  thisDishLikersCount * 0.4       
+      }
      
       val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, like, 0.0, 
         null,
@@ -166,5 +172,4 @@ object Recommendation {
     // and lastly, this is how we ensure that we only show dishes with photos
     new Recommendations(sortedResult.filter { x => x.url != null })
   }
-
 }
