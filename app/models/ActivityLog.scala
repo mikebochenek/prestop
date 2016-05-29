@@ -90,6 +90,15 @@ object ActivityLog {
     }
   }  
 
+  def findRecentByUserType(user_id: Long, atype: Long): Seq[ActivityLog] = {
+    DB.withConnection { implicit connection =>
+      SQL("select id, user_id, createdate, activity_type, activity_subtype, activity_details from activity_log " 
+          + " where user_id = {user_id} and activity_type = {atype}"
+          + " and createdate >= DATE(NOW()) - INTERVAL 5 DAY "
+          + " order by id asc").on('user_id -> user_id, 'atype -> atype).as(ActivityLog.simple *)
+    }
+  }  
+  
   implicit val activityLogReads = Json.reads[ActivityLog]
   implicit val activityLogWrites = Json.writes[ActivityLog]
 }
