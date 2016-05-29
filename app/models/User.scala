@@ -36,7 +36,7 @@ case class User(id: Long, email: String, username: String, password: String)
 
 case class UserFull(id: Long, createdate: Date, lastlogindate: Option[Date], deleted: Boolean, 
     var password: String, settings: String, email: String, username: String, ttype: String,
-    openidtoken: String, fullname: String, city: String, state: String, country: String, phone: String)
+    openidtoken: String, fullname: String, city: String, state: String, country: String, var phone: String)
 
 case class UserProfile(id: Long, email: String, username: String, 
     var following: Int, var followers: Int, var likes: Int, var reservations: Int, var profileImageURL: String)
@@ -125,11 +125,12 @@ object User {
     DB.withConnection { implicit connection =>
       SQL(
         """
-         update user set email = {email}, settings = {settings} where 
+         update user set email = {email}, settings = {settings}, phone = {phone} where 
          id = {id} 
         """).on(
           'email -> email,
           'settings -> settings,
+          'phone -> user.phone,
           'id -> user.id).executeUpdate
     }
   }

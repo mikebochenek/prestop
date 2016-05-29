@@ -309,6 +309,11 @@ object Settings extends Controller with Secured {
       //TODO cleanup work
       
       val fullUser = User.getFullUser(newid)
+      
+      if (cleanPhoneString(phone.as[String]).size > 0) {
+        fullUser.phone = cleanPhoneString(phone.as[String])
+      }
+      
       val previousSettings = getPreviousSettingsSafely(fullUser)
 
       if (!deviceOS.isInstanceOf[JsUndefined]) { previousSettings.deviceOS = Option(deviceOS.as[String]) }

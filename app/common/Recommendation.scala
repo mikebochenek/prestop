@@ -50,7 +50,7 @@ object Recommendation {
       if (lastDishID <= 0) return dar
       
       val dishesAlreadyRecommended = ActivityLog.findAllByUserType(user.id, 7).reverse
-      dishesAlreadyRecommended.foreach {x => Logger.debug("___ dishesAlreadyRecommended:  " + x)}
+      //dishesAlreadyRecommended.foreach {x => Logger.debug("___ dishesAlreadyRecommended:  " + x)}
 
       var _prevLastDishID = lastDishID
       for (actDish <- dishesAlreadyRecommended) {
