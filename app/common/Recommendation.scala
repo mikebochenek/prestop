@@ -142,13 +142,15 @@ object Recommendation {
     
     // after we sort, we can skip the dishes which were already shown (recently?) to the user
     var startIdx = 0
-    val a = dishesAlreadyRecommendedActivities.head.activity_details // only consider very last set of dishes recommended
-    if (a.contains("[") && a.indexOf(']') > 0) {
-      Logger.debug("___  dishesAlreadyRecommendedActivities : " + a.substring(1, a.indexOf(']')))
-      val ids = a.substring(1, a.indexOf(']')).split(",")
-      for (i <- 0 until sortedResult.length) {
-        if (ids.size > (maxDishes - 5) && ids((maxDishes - 5).toInt).toInt == sortedResult(i).id) { // -5 because iOS performs call to API before user reaches last 5
-          startIdx = i
+    if (dishesAlreadyRecommendedActivities.isEmpty) {
+      val a = dishesAlreadyRecommendedActivities.head.activity_details // only consider very last set of dishes recommended
+      if (a.contains("[") && a.indexOf(']') > 0) {
+        Logger.debug("___  dishesAlreadyRecommendedActivities : " + a.substring(1, a.indexOf(']')))
+        val ids = a.substring(1, a.indexOf(']')).split(",")
+        for (i <- 0 until sortedResult.length) {
+          if (ids.size > (maxDishes - 5) && ids((maxDishes - 5).toInt).toInt == sortedResult(i).id) { // -5 because iOS performs call to API before user reaches last 5
+            startIdx = i
+          }
         }
       }
     }
