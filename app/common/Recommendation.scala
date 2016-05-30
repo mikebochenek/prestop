@@ -142,7 +142,7 @@ object Recommendation {
     
     // after we sort, we can skip the dishes which were already shown (recently?) to the user
     var startIdx = 0
-    if (dishesAlreadyRecommendedActivities.isEmpty) {
+    if (!dishesAlreadyRecommendedActivities.isEmpty) {
       val a = dishesAlreadyRecommendedActivities.head.activity_details // only consider very last set of dishes recommended
       if (a.contains("[") && a.indexOf(']') > 0) {
         Logger.debug("___  dishesAlreadyRecommendedActivities : " + a.substring(1, a.indexOf(']')))
