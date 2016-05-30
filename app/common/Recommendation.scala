@@ -107,12 +107,13 @@ object Recommendation {
     for (dish <- dishes) {
       val like = !(allLikes.find { x => x.activity_subtype == dish.id }.isEmpty)
       
-      
       val r = restaurants.get(dish.restaurant_id).head
       
       var score = random.nextDouble / 100 // one hack could be to score += random(0.01 to 0.09)
       userSettings.favCuisines.foreach { fav => if (r.cuisines.contains(fav.tag)) score += (fav.rating.get * 0.2) } 
 
+      //TODO score does not take into account original dish ratings (from user setup!!)
+      
       val dishDietTags = allDietTags.filter { x => x.refid == dish.id }.map(_.name) //Tag.findByRef(dish.id, Tag.TYPE_DIET ).map(_.name)
       userSettings.preferToAvoid.get.foreach { avoid => if (dishDietTags.contains(avoid.tag)) score -= (avoid.rating.get * 1.5) }
       
@@ -130,17 +131,9 @@ object Recommendation {
       }
      
       val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, like, 0.0, 
-        null,
-        null,
-        null,
+        null, null, null,
         RecommendationUtils.makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
-        null,
-        r.id,
-        r.name, null, 
-        null,
-        dishDietTags,
-        null,
-        null, score)
+        null, r.id, r.name, null, null, dishDietTags, null, null, score)
       
       result.dishes += ri
     }
@@ -149,12 +142,12 @@ object Recommendation {
     
     // after we sort, we can skip the dishes which were already shown (recently?) to the user
     var startIdx = 0
-    val a = dishesAlreadyRecommendedActivities.head.activity_details
+    val a = dishesAlreadyRecommendedActivities.head.activity_details // only consider very last set of dishes recommended
     if (a.contains("[") && a.indexOf(']') > 0) {
       Logger.debug("___  dishesAlreadyRecommendedActivities : " + a.substring(1, a.indexOf(']')))
       val ids = a.substring(1, a.indexOf(']')).split(",")
       for (i <- 0 until sortedResult.length) {
-        if (ids.size > (maxDishes - 5) && ids((maxDishes - 5).toInt).toInt == sortedResult(i).id) {
+        if (ids.size > (maxDishes - 5) && ids((maxDishes - 5).toInt).toInt == sortedResult(i).id) { // -5 because iOS performs call to API before user reaches last 5
           startIdx = i
         }
       }
@@ -167,13 +160,13 @@ object Recommendation {
       if (sortedResult(i).restaurantID == prevRestaurantID) {
         //Logger.debug(" we should probably swap " + i)
         var swapDone = false;
-        for (j <- i until sortedResult.length) {
+        for (j <- i until sortedResult.length) { // only compare to restaurants after duplicate
           if (!swapDone && sortedResult(i).restaurantID != sortedResult(j).restaurantID) {
             //Logger.debug(" swap " + i + "   "+ j)
             val tmp = sortedResult(i)
             sortedResult.update(i, sortedResult(j))
             sortedResult.update(j, tmp)
-            swapDone = true
+            swapDone = true // only swap once
           }
         }
       }
@@ -182,21 +175,21 @@ object Recommendation {
     
     Logger.debug("------startIdx-------- " + startIdx + "    " + sortedResult.size)
     
-    //http://stackoverflow.com/questions/3256169/iterating-circular-way
+    // create circular stream (list) and double the contents, and then extract (slice) based on startIdx - http://stackoverflow.com/questions/3256169/iterating-circular-way
     val sortedResultSubset = Stream.continually(sortedResult.toStream).take(2).flatten.toList.slice(startIdx, startIdx+maxDishes.toInt)
     
     val allSortedDishIDs = sortedResult.map { x => x.id }.toList
-    //val allGreenScoreTags = Tag.findByRefList(allSortedDishIDs, Tag.TYPE_GREENSCORE)
     val allMeatOriginTags = Tag.findByRefList(allSortedDishIDs, Tag.TYPE_MEATORIGIN)
     val allDishTypeTags = Tag.findByRefList(allSortedDishIDs, Tag.TYPE_DISHTYPE)
 
     
+    // populate other relevant dish information for display (but only for the maxDishes, not for all!)
     for (r <- sortedResultSubset) {
       val imgUrl = Image.findByDish(r.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       r.url = imgUrl
       r.url_large = imgUrl
       
-      val greenscoretags = Tag.findByRef(r.id, Tag.TYPE_GREENSCORE).map(_.en_text.getOrElse(""))
+      val greenscoretags = Tag.findByRef(r.id, Tag.TYPE_GREENSCORE).map(_.en_text.getOrElse("")) // greenscore tags needs the english text
       r.greenScoreTags = greenscoretags
       r.greenScore = Dishes.calculateGreenScore(greenscoretags.size)
 
