@@ -43,17 +43,15 @@ object Recommendation {
   
   def recommend(user: UserFull, latitude: Double, longitude: Double, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean, lastDishID: Long, maxDishes: Long) = {
     val random = new java.util.Random
+    val dishesAlreadyRecommendedActivities = ActivityLog.findRecentByUserType(user.id, 7).reverse
     
     def getDishesAlreadyRecommended() :SortedSet[Long] = {
       val dar = SortedSet[Long]()
       
       if (lastDishID <= 0) return dar
-      
-      val dishesAlreadyRecommended = ActivityLog.findRecentByUserType(user.id, 7).reverse
-      //dishesAlreadyRecommended.foreach {x => Logger.debug("___ dishesAlreadyRecommended:  " + x)}
 
       var _prevLastDishID = lastDishID
-      for (actDish <- dishesAlreadyRecommended) {
+      for (actDish <- dishesAlreadyRecommendedActivities) {
         val a = actDish.activity_details
         if (a.contains("[") && a.indexOf(']') > 0) {
           Logger.debug("___ part 1 : " + a.substring(1, a.indexOf(']'))  +  " _prevLastDishID: " + _prevLastDishID)
@@ -112,8 +110,8 @@ object Recommendation {
       
       val r = restaurants.get(dish.restaurant_id).head
       
-      var score = random.nextDouble / 2 // one hack could be to score += random(0.01 to 0.09)
-      userSettings.favCuisines.foreach { fav => if (r.cuisines.contains(fav.tag)) score += (fav.rating.get * 0.1) } 
+      var score = random.nextDouble / 100 // one hack could be to score += random(0.01 to 0.09)
+      userSettings.favCuisines.foreach { fav => if (r.cuisines.contains(fav.tag)) score += (fav.rating.get * 0.2) } 
 
       val dishDietTags = allDietTags.filter { x => x.refid == dish.id }.map(_.name) //Tag.findByRef(dish.id, Tag.TYPE_DIET ).map(_.name)
       userSettings.preferToAvoid.get.foreach { avoid => if (dishDietTags.contains(avoid.tag)) score -= (avoid.rating.get * 1.5) }
@@ -147,13 +145,53 @@ object Recommendation {
       result.dishes += ri
     }
     
-    val sortedResult = result.dishes.sortBy(_.score).reverse.take(maxDishes.toInt)
+    val sortedResult = result.dishes.sortBy(_.score).reverse
+    
+    // after we sort, we can skip the dishes which were already shown (recently?) to the user
+    var startIdx = 0
+    val a = dishesAlreadyRecommendedActivities.head.activity_details
+    if (a.contains("[") && a.indexOf(']') > 0) {
+      Logger.debug("___  dishesAlreadyRecommendedActivities : " + a.substring(1, a.indexOf(']')))
+      val ids = a.substring(1, a.indexOf(']')).split(",")
+      for (i <- 0 until sortedResult.length) {
+        if (ids.size > (maxDishes - 5) && ids((maxDishes - 5).toInt).toInt == sortedResult(i).id) {
+          startIdx = i
+        }
+      }
+    }
+    
+    
+    // we can also reorganize the dishes: swap if subsequent dishes are from the same restaurant (for the first 100 dishes or so)
+    var prevRestaurantID = 0L
+    for (i <- 0 until sortedResult.length) {
+      if (sortedResult(i).restaurantID == prevRestaurantID) {
+        //Logger.debug(" we should probably swap " + i)
+        var swapDone = false;
+        for (j <- i until sortedResult.length) {
+          if (!swapDone && sortedResult(i).restaurantID != sortedResult(j).restaurantID) {
+            //Logger.debug(" swap " + i + "   "+ j)
+            val tmp = sortedResult(i)
+            sortedResult.update(i, sortedResult(j))
+            sortedResult.update(j, tmp)
+            swapDone = true
+          }
+        }
+      }
+      prevRestaurantID = sortedResult(i).restaurantID 
+    }
+    
+    Logger.debug("------startIdx-------- " + startIdx + "    " + sortedResult.size)
+    
+    //http://stackoverflow.com/questions/3256169/iterating-circular-way
+    val sortedResultSubset = Stream.continually(sortedResult.toStream).take(2).flatten.toList.slice(startIdx, startIdx+maxDishes.toInt)
+    
     val allSortedDishIDs = sortedResult.map { x => x.id }.toList
     //val allGreenScoreTags = Tag.findByRefList(allSortedDishIDs, Tag.TYPE_GREENSCORE)
     val allMeatOriginTags = Tag.findByRefList(allSortedDishIDs, Tag.TYPE_MEATORIGIN)
     val allDishTypeTags = Tag.findByRefList(allSortedDishIDs, Tag.TYPE_DISHTYPE)
+
     
-    for (r <- sortedResult) {
+    for (r <- sortedResultSubset) {
       val imgUrl = Image.findByDish(r.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       r.url = imgUrl
       r.url_large = imgUrl
@@ -170,6 +208,8 @@ object Recommendation {
     }
     
     // and lastly, this is how we ensure that we only show dishes with photos
-    new Recommendations(sortedResult.filter { x => x.url != null })
+    result.dishes.clear
+    result.dishes ++= (sortedResultSubset.filter { x => x.url != null })
+    result
   }
 }

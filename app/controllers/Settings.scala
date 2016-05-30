@@ -310,7 +310,7 @@ object Settings extends Controller with Secured {
       
       val fullUser = User.getFullUser(newid)
       
-      if (cleanPhoneString(phone.as[String]).size > 0) {
+      if (cleanPhoneString(phone.as[String]).size > 0) { // only update the phone number when we have something valid
         fullUser.phone = cleanPhoneString(phone.as[String])
       }
       
