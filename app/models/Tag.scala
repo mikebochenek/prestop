@@ -56,7 +56,7 @@ object Tag {
     id.size match {
       case 0 => Seq.empty[TagRefSimple]
       case default => DB.withConnection { implicit connection =>
-        SQL(" select t.id, t.name, t.status, tr.refid from tag t join tagref tr on t.id = tr.tagid where tr.refid in (%s) and tr.status = {status}".format(ids))
+        SQL(" select t.id, t.name, t.status, tr.refid from tag t join tagref tr on t.id = tr.tagid where t.status >= 0 and tr.refid in (%s) and tr.status = {status}".format(ids))
           .on('status -> status).as(Tag.optimized *)
       }
     }
