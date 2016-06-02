@@ -130,7 +130,7 @@ object Recommendation {
         score +=  thisDishLikersCount * 0.4       
       }
      
-      val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, like, 0.0, 
+      val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, dish.source, dish.description.getOrElse(""), like, 0.0, 
         null, null, null,
         RecommendationUtils.makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
         null, r.id, r.name, null, null, dishDietTags, null, null, score)

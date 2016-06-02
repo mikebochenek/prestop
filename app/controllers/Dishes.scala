@@ -141,7 +141,7 @@ object Dishes extends Controller with Secured {
 
       
         val r = restaurants.get(dish.restaurant_id).head
-        val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, like, calculateGreenScore(greenscoretags.size), 
+        val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, dish.source, dish.description.getOrElse(""), like, calculateGreenScore(greenscoretags.size), 
           greenscoretags,
           Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
           Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
@@ -180,7 +180,7 @@ object Dishes extends Controller with Secured {
 
       
         val r = restaurants.get(dish.restaurant_id).head
-        val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, like, calculateGreenScore(greenscoretags.size), 
+        val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, dish.source, dish.description.getOrElse(""), like, calculateGreenScore(greenscoretags.size), 
           greenscoretags,
           Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
           Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
