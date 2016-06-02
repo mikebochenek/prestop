@@ -44,6 +44,7 @@ object Friends extends Controller with Secured {
   
   def suggestFriendsToFollow() = Action {
     implicit request => {
+      Logger.info("HTTP post to /api/friends/suggest with: " + request.body.asJson.get)
       val phones = (request.body.asJson.get \ "phones").as[Array[String]]
       val user = (request.body.asJson.get \ "user_id").asOpt[Long]
       
@@ -82,6 +83,7 @@ object Friends extends Controller with Secured {
 
   def create() = Action {
     implicit request => {
+      Logger.info("HTTP post to /api/friends/new with: " + request.body.asJson.get)
       val user_id_input = (request.body.asJson.get \ "user_id").as[String]
       val friend_array = (request.body.asJson.get \ "friend_user_id").as[Array[String]]
       for (friend_id_str <- friend_array) {
@@ -94,6 +96,7 @@ object Friends extends Controller with Secured {
 
   def update() = Action {
     implicit request => {
+      Logger.info("HTTP post to /api/friends/update with: " + request.body.asJson.get)
       val id = (request.body.asJson.get \ "id").as[String].toLong
       val user_id = (request.body.asJson.get \ "user_id").as[String].toLong
       val friend_user_id = (request.body.asJson.get \ "friend_user_id").as[String].toLong
@@ -106,6 +109,7 @@ object Friends extends Controller with Secured {
   
   def invite() = IsAuthenticated { username =>
     implicit request => {
+      Logger.info("HTTP post to /api/invite with: " + request.body.asJson.get)
       val txt = (request.body.asJson.get \ "donetext")
       val restId = (request.body.asJson.get \ "restaurantID")
       val id = 13;
