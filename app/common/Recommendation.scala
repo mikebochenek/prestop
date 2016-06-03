@@ -104,6 +104,8 @@ object Recommendation {
     val dishLikers = Friend.findDishLikers((dishes.map { x => x.id }).toList, user.id)  
     val result = new Recommendations(MutableList.empty);
     
+    val sampleDishIngredients = Tag.findByRefList(userSettings.sampleDishLikes.get.map { sample => sample.tag.toLong }.toList, 11)
+    
     for (dish <- dishes) {
       val like = !(allLikes.find { x => x.activity_subtype == dish.id }.isEmpty)
       
@@ -112,14 +114,21 @@ object Recommendation {
       var score = random.nextDouble / 100 // one hack could be to score += random(0.01 to 0.09)
       userSettings.favCuisines.foreach { fav => if (r.cuisines.contains(fav.tag)) score += (fav.rating.get * 0.2) } 
 
-      //TODO score does not take into account original dish ratings (from user setup!!)
-      
       val dishDietTags = allDietTags.filter { x => x.refid == dish.id }.map(_.name) //Tag.findByRef(dish.id, Tag.TYPE_DIET ).map(_.name)
       userSettings.preferToAvoid.get.foreach { avoid => if (dishDietTags.contains(avoid.tag)) score -= (avoid.rating.get * 1.5) }
       
-      allIngredientTags.filter { x => x.refid == dish.id }.foreach { ingredient => if (likedDishes.count { y => y.tagId == ingredient.tagid } > 0) {
+      val thisDishIngredients = allIngredientTags.filter { x => x.refid == dish.id }
+      thisDishIngredients.foreach { ingredient => if (likedDishes.count { y => y.tagId == ingredient.tagid } > 0) {
         val count = likedDishes.count { y => y.tagId == ingredient.tagid }
         Logger.debug("it looks like user: " + user.id + "  liked: " + ingredient.tagid + "," + ingredient.name + 
+            " " + count + " times, and dish: " + dish.id + "," + dish.name.take(15) + " contains it")
+        score += (0.1 * count)
+      }}
+
+      // score needs take into account original dish ratings (from user setup!)
+      thisDishIngredients.foreach { ingredient => if (sampleDishIngredients.contains(ingredient)) { 
+        val count = sampleDishIngredients.count { y => y.tagid == ingredient.tagid } //TODO no distinction between like and really like
+        Logger.debug("sampleDishIngredients: it looks like user: " + user.id + "  liked: " + ingredient.tagid + "," + ingredient.name + 
             " " + count + " times, and dish: " + dish.id + "," + dish.name.take(15) + " contains it")
         score += (0.1 * count)
       }}
