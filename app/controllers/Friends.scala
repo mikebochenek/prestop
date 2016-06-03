@@ -87,8 +87,13 @@ object Friends extends Controller with Secured {
       val user_id_input = (request.body.asJson.get \ "user_id").as[String]
       val friend_array = (request.body.asJson.get \ "friend_user_id").as[Array[String]]
       for (friend_id_str <- friend_array) {
-        val id = Friend.create(checkAndConvertUserID(user_id_input), checkAndConvertUserID(friend_id_str), 0)
-        Logger.info("Create Friend entity with id: " + id.get + " user_id: " + user_id_input + " friend: " + friend_id_str)
+        val f = checkAndConvertUserID(friend_id_str)
+        if (f < 10000000) {
+          val id = Friend.create(checkAndConvertUserID(user_id_input), f, 0)
+          Logger.info("Create Friend entity with id: " + id.get + " user_id: " + user_id_input + " friend: " + friend_id_str)
+        } else {
+          Logger.info("SKIPPING Create Friend entity with user_id: " + user_id_input + " friend: " + friend_id_str)
+        }
       }
       Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
     }
