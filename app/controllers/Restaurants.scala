@@ -46,7 +46,6 @@ object Restaurants extends Controller with Secured {
         restaurant.url = defaultImage.url
         restaurant.smallurl = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 72 && x.status == 1}.headOption.getOrElse(defaultImage).asInstanceOf[Image].url
         
-        restaurant.schedule_text = restaurant.schedule.split("\r\n")
         restaurant.open_now = common.RecommendationUtils.checkSchedule(restaurant.schedule)
         
         if (restaurant.city != null) {

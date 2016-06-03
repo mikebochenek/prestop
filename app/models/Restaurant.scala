@@ -21,11 +21,18 @@ object RestaurantFriends {
   implicit val recommendationFriendsWrites = Json.writes[RestaurantFriends]
 }
 
+case class RestaurantMiscInfo(postalcode: Option[String], var state: Option[String], website: Option[String], country: Option[String])
+
+object RestaurantMiscInfo {
+  implicit val restaurantMiscInfoReads = Json.reads[RestaurantMiscInfo]
+  implicit val restaurantMiscInfoWrites = Json.writes[RestaurantMiscInfo]
+}
+
 case class Restaurant(id: Long, name: String, var city: String, address: String, longitude: Double, latitude: Double, 
-    schedule: String, var schedule_text: Seq[String], var open_now: Boolean, restype: Int, status: Int, 
+    schedule: String, var open_now: Boolean, restype: Int, status: Int, 
     phone: Option[String], email: Option[String], postalcode: Option[String], var state: Option[String], website: Option[String],
     var url: String, var smallurl: String, var paymentoptions: Seq[String], var cuisines: Seq[String],
-    var friendsWhoBooked: Seq[RestaurantFriends])
+    var friendsWhoBooked: Seq[RestaurantFriends], misc: RestaurantMiscInfo)
 
 object Restaurant {
   val simple = {
@@ -42,12 +49,13 @@ object Restaurant {
       get[Option[String]]("restaurant.email") ~
       get[Option[String]]("restaurant.postalcode") ~
       get[Option[String]]("restaurant.state") ~
+      get[Option[String]]("restaurant.country") ~
       get[Option[String]]("restaurant.website") map {
         case id ~ name ~ city ~ address ~ longitude ~ latitude ~ schedulecron ~ restype 
-        ~ status ~ phone ~ email ~ postalcode ~ state ~ website => Restaurant(id, name, city, address, 
-              longitude, latitude, schedulecron, Seq.empty[String], true, 
+        ~ status ~ phone ~ email ~ postalcode ~ state ~ country ~ website => Restaurant(id, name, city, address, 
+              longitude, latitude, schedulecron, true, 
               restype, status, phone, email, postalcode, state, website, null, null, 
-              Seq.empty[String], Seq.empty[String], Seq.empty[RestaurantFriends])
+              Seq.empty[String], Seq.empty[String], Seq.empty[RestaurantFriends], RestaurantMiscInfo(postalcode, state, website, country))
       }
   }
 
@@ -109,7 +117,7 @@ object Restaurant {
     }
   }
 
-  val selectString = "select id, name, city, address, longitude, latitude, schedulecron, restype, status, phone, email, postalcode, state, website from restaurant "
+  val selectString = "select id, name, city, address, longitude, latitude, schedulecron, restype, status, phone, email, postalcode, state, country, website from restaurant "
     
   
   def findById(username: String, id: Long): Seq[Restaurant] = {
