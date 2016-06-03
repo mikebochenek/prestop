@@ -22,23 +22,24 @@ import views._
 object Recommend extends Controller with Secured  {
   def test() = IsAuthenticated { username =>
     implicit request => {
-      Ok(views.html.test(testForm, null, null, null, "1", "47.385740", "8.518084", "", "10", ""))
+      Ok(views.html.test(testForm, null, null, null, "1", "47.385740", "8.518084", "false", "10", "0.0", "100.0", "100", "-1"))
     }
   }
 
   def testsubmit() = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling recommend test submit")
-      val (id, longitude, latitude, jsonoptions, maxdistance, time) = testForm.bindFromRequest.get
+      val (id, longitude, latitude, openNow, maxdistance, minPrice, maxPrice, maxDishes, lastDishID) = testForm.bindFromRequest.get
       val fullUser = User.getFullUser(id.toLong)
       var favs = ""
       if (fullUser.settings != null) {
         val settings = Json.parse(fullUser.settings).validate[UserSettings].get
         favs = Json.prettyPrint(Json.toJson(settings.favCuisines))
       }
-      val response = Recommendation.recommend(User.getFullUser(id.toLong), longitude.toDouble, latitude.toDouble, maxdistance.toDouble, 0, 4000.0, false, 0, 100)
-      //testForm.fill(User.getFullUser(id.toLong).id.toString, "47.385740", "8.518084", "", "10", "")
-      Ok(views.html.test(testForm, response, Json.prettyPrint(Json.toJson(response)), favs, id, longitude, latitude, jsonoptions, maxdistance, time))
+      val response = Recommendation.recommend(User.getFullUser(id.toLong), longitude.toDouble, latitude.toDouble, maxdistance.toDouble, 
+          minPrice.toDouble, maxPrice.toDouble, openNow.toBoolean, lastDishID.toLong, maxDishes.toLong)
+      Ok(views.html.test(testForm, response, Json.prettyPrint(Json.toJson(response)), favs, id, longitude, latitude, openNow, maxdistance, 
+          minPrice, maxPrice, maxDishes, lastDishID))
     }
   }
   
@@ -47,9 +48,12 @@ object Recommend extends Controller with Secured  {
       "id" -> text,
       "longitude" -> text,
       "latitude" -> text,
-      "jsonoptions" -> text,
+      "openNow" -> text,
       "maxdistance" -> text,
-      "time" -> text))  
+      "minPrice" -> text,
+      "maxPrice" -> text,
+      "maxDishes" -> text,
+      "lastDishID" -> text))  
   
   def getWithFilters(id: Long, longitude: String, latitude: String, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean, lastDishID: Long, maxDishes: Long) = Action {
     implicit request => {

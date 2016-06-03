@@ -1,4 +1,6 @@
-@(form: Form[(String,String,String,String,String,String)], re: Recommendations, resp: String, userFavs: String, id: String, longitude: String, latitude: String, jsonoptions: String, maxdistance: String, time: String)(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String,String,String,String)], re: Recommendations, resp: String, 
+	userFavs: String, id: String, longitude: String, latitude: String, openNow: String, maxdistance: String, 
+	minPrice: String, maxPrice: String, maxDishes: String, lastDishID: String)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 <div class="container">
@@ -24,16 +26,28 @@
             <input class="form-control span4" type="text" name="longitude" id="longitude" value="@longitude">
           </div>
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">JSON</span>
-            <input class="form-control span4" type="text" name="jsonoptions" id="jsonoptions" value="@jsonoptions">
+            <span class="input-group-addon" id="basic-addon1">Open Now Only</span>
+            <input class="form-control span4" type="text" name="openNow" id="openNow" value="@openNow">
           </div>
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Max distance (km)</span>
             <input class="form-control span4" type="text" name="maxdistance" id="maxdistance" value="@maxdistance">
           </div>
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Time</span>
-            <input class="form-control span4" type="text" name="time" id="time" value="@time">
+            <span class="input-group-addon" id="basic-addon1">Minimum price</span>
+            <input class="form-control span4" type="text" name="minPrice" id="minPrice" value="@minPrice">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Maximum price</span>
+            <input class="form-control span4" type="text" name="maxPrice" id="maxPrice" value="@maxPrice">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Maximum dishes to return</span>
+            <input class="form-control span4" type="text" name="maxDishes" id="maxDishes" value="@maxDishes">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Last dish ID</span>
+            <input class="form-control span4" type="text" name="lastDishID" id="lastDishID" value="@lastDishID">
           </div>
           
           </br>
