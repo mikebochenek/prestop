@@ -93,6 +93,12 @@ object Dish {
           + " order by id asc").on().as(Dish.simple *)
     }
   }
+
+  def findAllDeleted(): Seq[Dish] = {
+    DB.withConnection { implicit connection =>
+      SQL("select " + columns + " from dish  where status < 0 order by id asc").on().as(Dish.simple *)
+    }
+  }
   
   def findAll(restaurant: Long): Seq[Dish] = {
     DB.withConnection { implicit connection =>

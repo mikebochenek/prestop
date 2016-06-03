@@ -1,4 +1,4 @@
-@(restaurants: Seq[Restaurant], dishes: Seq[Dish], users: Seq[User], 
+@(restaurants: Seq[Restaurant], dishes: Seq[Dish], deletedDishes: Seq[Dish], users: Seq[User], 
 	friends: Seq[Friend], reservations: Seq[Reservation], activities: Seq[ActivityLog], 
 	images: Seq[Image], adminStats: String)(implicit session: Session, lang: Lang)
 @main(title = "reports") {
@@ -26,6 +26,7 @@
       	    <td>lastupdate</td>
       	    <td><b>name</b></td>
       	    <td><b>price</b></td>
+      	    <td><b>restaurant</b></td>
       	  </tr>
       	 </thead>
       	@for((dish, index) <- dishes.zipWithIndex)  {	
@@ -35,6 +36,31 @@
 		  <td>@dish.lastupdate.format("dd MMM YYYY HH:MM")</td>
 		  <td>@dish.name</td>
 		  <td>@("%.2f".format(dish.price))</td>
+		  <td>@dish.restaurant_id</td>
+		  </tr>
+		  }
+		</table>
+
+      	<h3>DELETED Dishes (@deletedDishes.size)</h3>
+      	<table class="table table-striped">
+      	<thead>
+      	  <tr>
+      	    <td>#</td>
+      	    <td>id</td>
+      	    <td>lastupdate</td>
+      	    <td><b>name</b></td>
+      	    <td><b>price</b></td>
+      	    <td><b>restaurant</b></td>
+      	  </tr>
+      	 </thead>
+      	@for((dish, index) <- deletedDishes.zipWithIndex)  {	
+		  <tr>
+		  <td>@index</td>
+		  <td>@dish.id</td>
+		  <td>@dish.lastupdate.format("dd MMM YYYY HH:MM")</td>
+		  <td>@dish.name</td>
+		  <td>@("%.2f".format(dish.price))</td>
+		  <td>@dish.restaurant_id</td>
 		  </tr>
 		  }
 		</table>
