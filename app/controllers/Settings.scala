@@ -342,4 +342,16 @@ object Settings extends Controller with Secured {
       } 
     }
   }
+  
+  def deleteUser(id: Long) = Action {
+    implicit request => {
+      Logger.info("deleting user: " + id)
+      //TODO probably 4 seperate model calls:
+      //delete from activity_log where user_id in (48);
+      //delete from friend where user_id in (48);
+      //delete from friend where friend_user_id in (48);
+      //delete from user where id in (48);
+      Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
+    }
+  }
 }
