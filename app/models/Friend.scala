@@ -31,17 +31,24 @@ object Friend {
   }
 
   def create(user_id: Long, friend_user_id: Long, status: Int): Option[Long] = {
-    DB.withConnection { implicit connection =>
-      SQL(
-        """
-          insert into friend (user_id, friend_user_id, status, lastupdate) values (
-          {user_id}, {friend_user_id}, {status}, {lastupdate}
-          )
-        """).on(
-          'user_id -> user_id,
-          'lastupdate-> new Date(),
-          'status -> status,
-          'friend_user_id -> friend_user_id).executeInsert()
+    val alreadyExists = findAllByUser(user_id).exists { x => x.friend_user_id == friend_user_id }
+    if (alreadyExists) {
+      Logger.info("alreadyExists=true so we return existing one - user_id:" + user_id + " friend_user_id:" + friend_user_id)
+    }
+    alreadyExists match {
+      case true => Option(findAllByUser(user_id).filter { x => x.friend_user_id == friend_user_id }(0).id)
+      case false =>     DB.withConnection { implicit connection =>
+        SQL(
+          """
+            insert into friend (user_id, friend_user_id, status, lastupdate) values (
+            {user_id}, {friend_user_id}, {status}, {lastupdate}
+            )
+          """).on(
+            'user_id -> user_id,
+            'lastupdate-> new Date(),
+            'status -> status,
+            'friend_user_id -> friend_user_id).executeInsert()
+      }
     }
   }
 
