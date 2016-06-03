@@ -21,7 +21,7 @@ object RestaurantFriends {
   implicit val recommendationFriendsWrites = Json.writes[RestaurantFriends]
 }
 
-case class RestaurantMiscInfo(postalcode: Option[String], var state: Option[String], website: Option[String], country: Option[String])
+case class RestaurantMiscInfo(postalcode: Option[String], var state: Option[String], website: Option[String], var country: Option[String])
 
 object RestaurantMiscInfo {
   implicit val restaurantMiscInfoReads = Json.reads[RestaurantMiscInfo]
@@ -83,14 +83,16 @@ object Restaurant {
 
 
   def update(id: Long, name: String, city: String, address: String, longitude: Double, latitude: Double, 
-      scheduleCron: String, restype: Int, status: Int, phone: String, email: String, postalcode: String, state: String, website: String) = {
+      scheduleCron: String, restype: Int, status: Int, phone: String, email: String, postalcode: String, state: String, 
+      country: String, website: String) = {
     DB.withConnection { implicit connection =>
       SQL(
         """
          update restaurant set name = {name}, city = {city}, address = {address},
          longitude = {longitude}, latitude = {latitude}, schedulecron = {schedulecron}, 
-         restype = {restype}, lastupdate = {lastupdate}, status = {status},
-         phone = {phone}, email = {email}, postalcode = {postalcode}, state = {state}, website = {website} 
+         restype = {restype}, lastupdate = {lastupdate}, status = {status}, 
+         phone = {phone}, email = {email}, postalcode = {postalcode}, state = {state}, 
+         country = {country}, website = {website} 
          where id = {id}
         """).on(
           'id -> id,
@@ -105,6 +107,7 @@ object Restaurant {
           'email -> email,
           'postalcode -> postalcode,
           'state -> state,
+          'country -> country,
           'website -> website,
           'lastupdate -> new Date(),
           'status -> status).executeUpdate

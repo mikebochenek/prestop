@@ -72,6 +72,7 @@ object Restaurants extends Controller with Secured {
       
       if ("".equals(all(0).city)) { all(0).city = "Zürich" }
       if ("".equals(all(0).state.getOrElse(""))) { all(0).state = Option("Zürich") }
+      if ("".equals(all(0).misc.country.getOrElse(""))) { all(0).misc.country = Option("Switzerland") }
       Ok(views.html.restaurant_edit(restaurantForm, all(0), url, logourl, tags, cuisines, reservations, childRestaurants))
     }
   }
@@ -86,6 +87,7 @@ object Restaurants extends Controller with Secured {
       "city" -> text,
       "postalcode" -> text,
       "state" -> text,
+      "country" -> text,
       "website" -> text,
       "longitude" -> text,
       "latitude" -> text,
@@ -97,8 +99,9 @@ object Restaurants extends Controller with Secured {
 
   def save = IsAuthenticated { username =>
     implicit request => { 
-      val (id, name, phone, email, address, city, postalcode, state, website, longitude, latitude, schedule, restype, status, ptags, tags) = restaurantForm.bindFromRequest.get
-      Restaurant.update(id.toLong, name, city, address, longitude.toDouble, latitude.toDouble, schedule, restype.toInt, status.toInt, phone, email, postalcode, state, website)
+      val (id, name, phone, email, address, city, postalcode, state, country, website, longitude, latitude, schedule, restype, status, ptags, tags) = restaurantForm.bindFromRequest.get
+      Restaurant.update(id.toLong, name, city, address, longitude.toDouble, latitude.toDouble, schedule, restype.toInt, status.toInt, 
+          phone, email, postalcode, state, country, website)
       Tag.updateTags(id.toLong, ptags, 12)
       Tag.updateTags(id.toLong, tags, 21)
       Logger.info("calling restaurant update for id:" + id)
@@ -176,7 +179,7 @@ object Restaurants extends Controller with Secured {
       val (id, phone, email, address, city, postalcode, state, longitude, latitude, schedule, status) = restaurantLocationsForm.bindFromRequest.get
       Logger.info("calling restaurant locations edit - load data for id:" + id)
       val rest = Restaurant.findById(username, id.toLong)(0)
-      Restaurant.update(id.toLong, rest.name, city, address, longitude.toDouble, latitude.toDouble, schedule, rest.restype, status.toInt, phone, email, postalcode, state, rest.website.getOrElse(""))
+      Restaurant.update(id.toLong, rest.name, city, address, longitude.toDouble, latitude.toDouble, schedule, rest.restype, status.toInt, phone, email, postalcode, state, rest.misc.country.getOrElse(""), rest.website.getOrElse(""))
       Logger.info("done calling restaurant CHILD update for id:" + id)
       Ok(views.html.restaurant_locations(restaurantLocationsForm, Restaurant.findById(username, id.toLong)(0)))
     }
