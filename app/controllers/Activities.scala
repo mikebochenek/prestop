@@ -33,6 +33,8 @@ object Activities extends Controller with Secured {
       val activities = ActivityLog.findAllByUserType(id, 11).filter { x => x.activity_type == 11} //still needs to be optimized
       Logger.info("activities " + activities + " size:" + activities.size)
 
+      val dishLikers = Friend.findDishLikers((activities.map { x => x.activity_subtype}).toList, id)  
+
       for (ac <- activities) {
         val dish = Dish.findById(null, ac.activity_subtype)(0)
         
@@ -40,8 +42,8 @@ object Activities extends Controller with Secured {
           val allLikes = Activities.getLikeActivitiesByDish(dish.id)
           val like = true
        
-          val friendLikedDishURLs = allLikes.map(x => x.profileImageURL)
-          //Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url  :: Nil
+          //val friendLikedDishURLs = allLikes.map(x => x.profileImageURL) 
+          val friendLikedDishURLs = dishLikers.filter { x => x.dish_id == dish.id && x.friend_image_url != null}.map { y => y.friend_image_url }
 
           val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.en_text.getOrElse(""))
         
