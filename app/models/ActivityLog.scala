@@ -53,6 +53,13 @@ object ActivityLog {
           'user_id -> user_id, 'activity_subtype -> activity_subtype).executeUpdate
     }
   }
+
+  def delete(user_id: Long): Long = {
+    DB.withConnection { implicit connection =>
+      SQL("delete from activity_log where user_id = {user_id} ").on(
+          'user_id -> user_id).executeUpdate
+    }
+  }
   
   def countAll(): Long = {
     DB.withConnection { implicit connection =>

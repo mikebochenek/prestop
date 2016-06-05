@@ -128,7 +128,19 @@ object Friend {
       }
     }
   }
+
+  def deleteByUserId(user_id: Long): Long = {
+    DB.withConnection { implicit connection =>
+      SQL("delete from friend where user_id = {user_id} ").on('user_id -> user_id).executeUpdate
+    }
+  }
   
+  def deleteByFriendUserId(friend_user_id : Long): Long = {
+    DB.withConnection { implicit connection =>
+      SQL("delete from friend where friend_user_id = {friend_user_id} ").on('friend_user_id  -> friend_user_id ).executeUpdate
+    }
+  }
+ 
   implicit val friendReads = Json.reads[Friend]
   implicit val friendWrites = Json.writes[Friend]
 

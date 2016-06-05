@@ -155,6 +155,12 @@ object User {
           'password -> hash(password)).executeUpdate
     }
   }
+
+  def delete(id: Long) = {
+    DB.withConnection { implicit connection =>
+      SQL("delete from user where id = {id} ").on('id -> id).executeUpdate
+    }
+  }
   
   def authenticate(email: String, password: String): Option[User] = {
     DB.withConnection { implicit connection =>

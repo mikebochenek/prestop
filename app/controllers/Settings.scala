@@ -346,11 +346,11 @@ object Settings extends Controller with Secured {
   def deleteUser(id: Long) = Action {
     implicit request => {
       Logger.info("deleting user: " + id)
-      //TODO probably 4 seperate model calls:
-      //delete from activity_log where user_id in (48);
-      //delete from friend where user_id in (48);
-      //delete from friend where friend_user_id in (48);
-      //delete from user where id in (48);
+      val activityDel = ActivityLog.delete(id)
+      val friendDel = Friend.deleteByUserId(id)
+      val friendFDel = Friend.deleteByFriendUserId(id)
+      val userDel = User.delete(id)
+      Logger.info("deleted " + activityDel + " activities, " + friendDel + " friends, " + friendFDel + " ffriends, " + userDel + " users")
       Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
     }
   }
