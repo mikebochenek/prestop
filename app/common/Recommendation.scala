@@ -143,6 +143,8 @@ object Recommendation {
         null, null, null,
         RecommendationUtils.makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
         null, r.id, r.name, null, null, dishDietTags, null, null, score)
+
+      ri.score += scoreDistance(ri.distance)
       
       result.dishes += ri
     }
@@ -215,5 +217,20 @@ object Recommendation {
     result.dishes.clear
     result.dishes ++= (sortedResultSubset.filter { x => x.url != null })
     result
+  }
+  
+  def scoreDistance(distStr: String) : Double = {
+    val d = distStr.split(" ")
+    val dist = d(1) match {
+      case "km" => d(0).toDouble * 1000
+      case "m" => d(0).toDouble
+      case default => 0
+    }
+    
+    if (dist > 100000) return -4.0
+    if (dist > 10000) return -2.0
+    if (dist > 1000) return -0.1
+    
+    return 0.0
   }
 }
