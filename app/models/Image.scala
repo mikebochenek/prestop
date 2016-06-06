@@ -52,7 +52,6 @@ object Image {
     }
   }
 
-
   def findByRestaurant(id: Long): Seq[Image] = {
     DB.withConnection { implicit connection =>
       SQL(select + " where status >= 0 and restaurant_id = {restaurant_id} order by id asc ")
@@ -78,6 +77,18 @@ object Image {
     DB.withConnection { implicit connection =>
       SQL(select + " where status >= 0 and user_id = {user_id} order by width desc ")
          .on('user_id -> id).as(Image.simple *)
+    }
+  }
+
+  def findByDishIDs(dish_id: List[Long], desiredWidth: Long, user_id: Long): Seq[Image] = {
+    val dishIds = dish_id.mkString(",") 
+    Logger.info("findByDishIDs user_id: " + user_id + "  desiredWidth: " + desiredWidth + "  dishIds: " + dishIds)
+    dish_id.size match {
+      case 0 => Seq.empty[Image]
+      case default => DB.withConnection { implicit connection =>
+        SQL(select + " where status >= 0 and dish_id in (%s) and width = {width}".format(dishIds))
+          .on('width -> desiredWidth).as(Image.simple *)
+      }
     }
   }
   

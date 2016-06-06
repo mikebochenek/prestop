@@ -102,6 +102,7 @@ object Recommendation {
     val allIngredientTags = Tag.findByRefList((dishes.map { x => x.id }).toList, 11)
     val allLikes = ActivityLog.findAllByUserType(user.id, 11)
     val dishLikers = Friend.findDishLikers((dishes.map { x => x.id }).toList, user.id)  
+    val dishImages = Image.findByDishIDs((dishes.map { x => x.id }).toList, desiredWidth, user.id)
     val result = new Recommendations(MutableList.empty);
     
     val sampleDishIngredients = Tag.findByRefList(userSettings.sampleDishLikes.get.map { sample => sample.tag.toLong }.toList, 11)
@@ -198,7 +199,7 @@ object Recommendation {
     
     // populate other relevant dish information for display (but only for the maxDishes, not for all!)
     for (r <- sortedResultSubset) {
-      val imgUrl = Image.findByDish(r.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+      val imgUrl = dishImages.filter { x => x.dish_id == r.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       r.url = imgUrl
       r.url_large = imgUrl
       
