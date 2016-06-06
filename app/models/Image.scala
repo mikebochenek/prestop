@@ -44,36 +44,39 @@ object Image {
       }
   }
 
+  val select = "select id, filename, url, restaurant_id, dish_id, user_id, width, height, status, lastupdate from image "
+
   def findAll(): Seq[Image] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, filename, url, restaurant_id, dish_id, user_id, width, height, status, lastupdate from image ").on().as(Image.simple *)
+      SQL(select).on().as(Image.simple *)
     }
   }
 
+
   def findByRestaurant(id: Long): Seq[Image] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, filename, url, restaurant_id, dish_id, user_id, width, height, status, lastupdate from image where status >= 0 and restaurant_id = {restaurant_id} order by id asc ")
+      SQL(select + " where status >= 0 and restaurant_id = {restaurant_id} order by id asc ")
          .on('restaurant_id -> id).as(Image.simple *)
     }
   }
 
   def findById(id: Long): Image = {
     DB.withConnection { implicit connection =>
-      SQL("select id, filename, url, restaurant_id, dish_id, user_id, width, height, status, lastupdate from image where status >= 0 and id = {id} order by width desc ")
+      SQL(select + " where status >= 0 and id = {id} order by width desc ")
          .on('id -> id).as(Image.simple.single)
     }
   }
   
   def findByDish(id: Long): Seq[Image] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, filename, url, restaurant_id, dish_id, user_id, width, height, status, lastupdate from image where status >= 0 and dish_id = {dish_id} order by id asc ")
+      SQL(select + " where status >= 0 and dish_id = {dish_id} order by id asc ")
          .on('dish_id -> id).as(Image.simple *)
     }
   }
 
   def findByUser(id: Long): Seq[Image] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, filename, url, restaurant_id, dish_id, user_id, width, height, status, lastupdate from image where status >= 0 and user_id = {user_id} order by width desc ")
+      SQL(select + " where status >= 0 and user_id = {user_id} order by width desc ")
          .on('user_id -> id).as(Image.simple *)
     }
   }
@@ -247,6 +250,5 @@ object Image {
   
   implicit val imageReads = Json.reads[Image]
   implicit val imageWrites = Json.writes[Image]
-
 }
 
