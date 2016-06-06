@@ -36,7 +36,9 @@ object Activities extends Controller with Secured {
       val dishIDList = (activities.map { x => x.activity_subtype}).toList
       val dishLikers = Friend.findDishLikers(dishIDList, id)  
       val dishImages172 = Image.findByDishIDs(dishIDList, 172, id)
-      val dishImages750 = Image.findByDishIDs(dishIDList.toList, 750, id)
+      val dishImages750 = Image.findByDishIDs(dishIDList, 750, id)
+      val allDietTags = Tag.findByRefList(dishIDList, Tag.TYPE_DIET)
+      val allIngredientTags = Tag.findByRefList(dishIDList, 11)
 
       for (ac <- activities) {
         val dish = Dish.findById(null, ac.activity_subtype)(0)
@@ -56,11 +58,11 @@ object Activities extends Controller with Secured {
             dishImages172.filter{x => x.dish_id == dish.id}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
             dishImages750.filter{x => x.dish_id == dish.id}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
             null,
-            Tag.findByRef(dish.id, 11).map(_.name),
+            allIngredientTags.filter{x => x.refid == dish.id}.map(_.name),
             r.id,
             r.name, Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
             friendLikedDishURLs,
-            Tag.findByRef(dish.id, 34).map(_.name),
+            allDietTags.filter{x => x.refid == dish.id}.map(_.name),
             Tag.findByRef(dish.id, 35).map(_.name),
             Tag.findByRef(dish.id, 36).map(_.name))
           result.likes += ri
