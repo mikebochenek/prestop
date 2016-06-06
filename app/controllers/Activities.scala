@@ -33,7 +33,10 @@ object Activities extends Controller with Secured {
       val activities = ActivityLog.findAllByUserType(id, 11).filter { x => x.activity_type == 11} //still needs to be optimized
       Logger.info("activities " + activities + " size:" + activities.size)
 
-      val dishLikers = Friend.findDishLikers((activities.map { x => x.activity_subtype}).toList, id)  
+      val dishIDList = (activities.map { x => x.activity_subtype}).toList
+      val dishLikers = Friend.findDishLikers(dishIDList, id)  
+      val dishImages172 = Image.findByDishIDs(dishIDList, 172, id)
+      val dishImages750 = Image.findByDishIDs(dishIDList.toList, 750, id)
 
       for (ac <- activities) {
         val dish = Dish.findById(null, ac.activity_subtype)(0)
@@ -50,8 +53,8 @@ object Activities extends Controller with Secured {
           val r = restaurants.get(dish.restaurant_id).head
           val ri = new DishLikes(id, dish.id, dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, dish.source, dish.description.getOrElse(""), like, Dishes.calculateGreenScore(greenscoretags.size), 
             greenscoretags,
-            Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
-            Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+            dishImages172.filter{x => x.dish_id == dish.id}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+            dishImages750.filter{x => x.dish_id == dish.id}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
             null,
             Tag.findByRef(dish.id, 11).map(_.name),
             r.id,
