@@ -1,7 +1,7 @@
 package actors
 
 import akka.actor.Actor
-import models.User
+import models._
 import java.text.SimpleDateFormat
 import java.util.Date
 import com.typesafe.plugin._
@@ -25,7 +25,7 @@ class EmailJobActor() extends Actor {
   val sdf = new SimpleDateFormat("yyyyMMdd")
   val prettySdf = new SimpleDateFormat("EEE, dd MMM yyyy")
 
-  def sendemail(user: User) {
+  def sendemail(user: UserFull) {
     Logger.info ("processing sendemail to email:" + user.email)
 
     val dateStr = prettySdf.format(new Date())

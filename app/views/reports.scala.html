@@ -1,4 +1,4 @@
-@(restaurants: Seq[Restaurant], dishes: Seq[Dish], deletedDishes: Seq[Dish], users: Seq[User], 
+@(restaurants: Seq[Restaurant], dishes: Seq[Dish], deletedDishes: Seq[Dish], users: Seq[UserFull], 
 	friends: Seq[Friend], reservations: Seq[Reservation], activities: Seq[ActivityLog], 
 	images: Seq[Image], adminStats: String)(implicit session: Session, lang: Lang)
 @main(title = "reports") {
@@ -73,6 +73,7 @@
       	    <td>id</td>
       	    <td><b>email</b></td>
       	    <td><b>username (Facebook ID)</b></td>
+      	    <td><b>createdate</b></td>
       	  </tr>
       	 </thead>
       	@for((user, index) <- users.zipWithIndex)  {	
@@ -81,6 +82,7 @@
 		  <td>@user.id</td>
 		  <td>@user.email</td>
 		  <td>@user.username</td>
+		  <td>@user.createdate.format("dd MMM YYYY HH:MM")</td>
 		  </tr>
 		  }
 		</table>

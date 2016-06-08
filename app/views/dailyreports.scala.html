@@ -1,4 +1,4 @@
-@(restaurants: Seq[Restaurant], dishesInactive: Seq[Dish], dishesWithoutImages: Seq[Dish], users: Seq[User], 
+@(restaurants: Seq[Restaurant], dishesInactive: Seq[Dish], dishesWithoutImages: Seq[Dish], users: Seq[UserFull], 
 	friends: Seq[Friend], reservations: Seq[Reservation], activities: Seq[ActivityLog])(implicit session: Session, lang: Lang)
     @if(session.get("usertype").get.toString.equals("7")) {
     <div class="container">

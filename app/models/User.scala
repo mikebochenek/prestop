@@ -115,9 +115,9 @@ object User {
     }
   }
 
-  def findAll: Seq[User] = {
+  def findAll: Seq[UserFull] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, email, username, password from user").as(User.simple *)
+      SQL("select " + columns + " from user").as(User.all. *)
     }
   }
 
