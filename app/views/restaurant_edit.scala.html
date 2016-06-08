@@ -1,4 +1,4 @@
-@(form: Form[(String,String,String,String,String,String,String,String,String,String,String,String,String,String,String,String,String)], restaurant: Restaurant, url: String, logourl: String, tags: String, cuisines: String, reservations: Seq[Reservation], children: Seq[Restaurant])(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String,String,String,String,String,String,String,String,String,String,String)], restaurant: Restaurant, url: String, logourl: String, tags: String, cuisines: String, reservations: Seq[Reservation], children: Seq[Restaurant])(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -44,13 +44,8 @@
           </div>
                       
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Latitude</span>
-            <input class="form-control span4" type="text" name="latitude" id="latitude" value="@restaurant.latitude">
-          </div>
-          
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Longitude</span>
-            <input class="form-control span4" type="text" name="longitude" id="longitude" value="@restaurant.longitude">
+            <span class="input-group-addon" id="basic-addon1">Latitude, Longitude</span>
+            <input class="form-control span4" type="text" name="latitudelongitude" id="latitudelongitude" value="@restaurant.latitude, @restaurant.longitude">
           </div>
 
           <div class="input-group">
