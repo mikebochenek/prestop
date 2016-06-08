@@ -70,6 +70,7 @@ object Restaurants extends Controller with Secured {
       val reservations = Reservation.findAllByRestaurant(id)
       val childRestaurants = Restaurant.findAllByParent(id)
       
+      if ("".equals(all(0).phone.getOrElse(""))) { all(0).phone = Option("+41") }
       if ("".equals(all(0).city)) { all(0).city = "Zürich" }
       if ("".equals(all(0).state.getOrElse(""))) { all(0).state = Option("Zürich") }
       if ("".equals(all(0).misc.country.getOrElse(""))) { all(0).misc.country = Option("Switzerland") }
