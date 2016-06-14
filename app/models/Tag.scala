@@ -64,6 +64,12 @@ object Tag {
 
   val selectSQL = "select t.id, t.name, t.en_text, t.de_text, t.it_text, t.fr_text, t.status, t.lastupdate from tag t "
 
+  def countAll(): Long = {
+    DB.withConnection { implicit connection =>
+      SQL("select count(*) from tag ").as(scalar[Long].single)
+    }
+  }
+  
   def findAll(): Seq[Tag] = {
     DB.withConnection { implicit connection =>
       SQL(selectSQL + " order by t.name ").on().as(Tag.simple *)

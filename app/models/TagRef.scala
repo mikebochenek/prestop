@@ -28,6 +28,12 @@ object TagRef {
       }
   }
 
+  def countAll(): Long = {
+    DB.withConnection { implicit connection =>
+      SQL("select count(*) from tagref ").as(scalar[Long].single)
+    }
+  }
+  
   def findAll(): Seq[TagRef] = {
     DB.withConnection { implicit connection =>
       SQL("select id, tagid, refid, status, lastupdate from tagref ").as(TagRef.simple *)
