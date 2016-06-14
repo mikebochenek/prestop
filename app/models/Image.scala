@@ -46,6 +46,12 @@ object Image {
 
   val select = "select id, filename, url, restaurant_id, dish_id, user_id, width, height, status, lastupdate from image "
 
+  def countAll(): Long = {
+    DB.withConnection { implicit connection =>
+      SQL("select count(*) from image ").as(scalar[Long].single)
+    }
+  }
+  
   def findAll(): Seq[Image] = {
     DB.withConnection { implicit connection =>
       SQL(select).on().as(Image.simple *)
