@@ -220,15 +220,15 @@ object Recommendation {
     result
   }
 
-  val friendLikesScoreWeight = 0.4
+  val friendLikesScoreWeight = 0.4 // for each friend who had liked this dish, increase score by X
 
-  val sampleDishesScoreWeight = 0.1 
+  val sampleDishesScoreWeight = 0.1 // for each sample dish ingredient that matches this dish, increase score by X
 
-  val likedDishesScoreWeight = 0.1 
+  val likedDishesScoreWeight = 0.1  // for each liked dish ingredient that matches this dish, increase score by X
 
-  val settingsPreferToAvoidScoreWeight = 1.5
+  val settingsPreferToAvoidScoreWeight = 1.5 // for each ingredient (from prefer to avoid) that matches this dish, penalize score by X
 
-  val settingsFavCuisinesScoreWeight = 0.2
+  val settingsFavCuisinesScoreWeight = 0.2 // for each favorite cuisine that matches this restaurant, increase by X
   
   def scoreDistance(distStr: String) : Double = {
     val d = distStr.split(" ")
@@ -238,9 +238,9 @@ object Recommendation {
       case default => 0
     }
     
-    if (dist > 100000) return -4.0
-    if (dist > 10000) return -2.0
-    if (dist > 1000) return -0.1
+    if (dist > 100000) return -4.0 // if distance is more than 100km, penalize score by -4
+    if (dist > 10000) return -2.0  // if distance is more than  10km, penalize score by -2
+    if (dist > 1000) return -0.1   // if distance is more than   1km, penalize score by -0.1
     
     return 0.0
   }
