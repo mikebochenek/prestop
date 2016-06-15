@@ -113,31 +113,31 @@ object Recommendation {
       val r = restaurants.get(dish.restaurant_id).head
       
       var score = random.nextDouble / 100 // one hack could be to score += random(0.01 to 0.09)
-      userSettings.favCuisines.foreach { fav => if (r.cuisines.contains(fav.tag)) score += (fav.rating.get * 0.2) } 
+      userSettings.favCuisines.foreach { (fav => if (r.cuisines.contains(fav.tag)) score += (fav.rating.get * settingsFavCuisinesScoreWeight)) } 
 
       val dishDietTags = allDietTags.filter { x => x.refid == dish.id }.map(_.name) //Tag.findByRef(dish.id, Tag.TYPE_DIET ).map(_.name)
-      userSettings.preferToAvoid.get.foreach { avoid => if (dishDietTags.contains(avoid.tag)) score -= (avoid.rating.get * 1.5) }
+      userSettings.preferToAvoid.get.foreach { (avoid => if (dishDietTags.contains(avoid.tag)) score -= (avoid.rating.get * settingsPreferToAvoidScoreWeight)) }
       
       val thisDishIngredients = allIngredientTags.filter { x => x.refid == dish.id }
-      thisDishIngredients.foreach { ingredient => if (likedDishes.count { y => y.tagId == ingredient.tagid } > 0) {
+      thisDishIngredients.foreach { (ingredient => if (likedDishes.count { y => y.tagId == ingredient.tagid } > 0) {
         val count = likedDishes.count { y => y.tagId == ingredient.tagid }
         Logger.debug("it looks like user: " + user.id + "  liked: " + ingredient.tagid + "," + ingredient.name + 
             " " + count + " times, and dish: " + dish.id + "," + dish.name.take(15) + " contains it")
-        score += (0.1 * count)
-      }}
+        score += (likedDishesScoreWeight * count)
+      })}
 
       // score needs take into account original dish ratings (from user setup!)
-      thisDishIngredients.foreach { ingredient => if (sampleDishIngredients.contains(ingredient)) { 
+      thisDishIngredients.foreach { (ingredient => if (sampleDishIngredients.contains(ingredient)) { 
         val count = sampleDishIngredients.count { y => y.tagid == ingredient.tagid } //TODO no distinction between like and really like
         Logger.debug("sampleDishIngredients: it looks like user: " + user.id + "  liked: " + ingredient.tagid + "," + ingredient.name + 
             " " + count + " times, and dish: " + dish.id + "," + dish.name.take(15) + " contains it")
-        score += (0.1 * count)
-      }}
+        score += (sampleDishesScoreWeight * count)
+      })}
       
       val thisDishLikersCount = dishLikers.filter { x => x.dish_id == dish.id}.size
       if (thisDishLikersCount > 0) {
         Logger.debug ("dish: " + dish.id + "," + dish.name.take(15) + " was liked by " + thisDishLikersCount + " friends")
-        score +=  thisDishLikersCount * 0.4       
+        score +=  thisDishLikersCount * friendLikesScoreWeight       
       }
      
       val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, dish.source, dish.description.getOrElse(""), like, 0.0, 
@@ -219,6 +219,16 @@ object Recommendation {
     result.dishes ++= (sortedResultSubset.filter { x => x.url != null })
     result
   }
+
+  val friendLikesScoreWeight = 0.4
+
+  val sampleDishesScoreWeight = 0.1 
+
+  val likedDishesScoreWeight = 0.1 
+
+  val settingsPreferToAvoidScoreWeight = 1.5
+
+  val settingsFavCuisinesScoreWeight = 0.2
   
   def scoreDistance(distStr: String) : Double = {
     val d = distStr.split(" ")
