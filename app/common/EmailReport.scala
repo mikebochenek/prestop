@@ -43,7 +43,7 @@ object EmailReport {
       val mail = use[MailerPlugin].email
       mail.setSubject(subject)
       mail.setRecipient(user.email)
-      mail.setFrom("info@bochenek.ch")
+      mail.setFrom("info@idone.ch")
   
       Logger.info("about to send email to: " + user.email + " with " + html)
       if (isValid(user.email)) {
