@@ -135,6 +135,10 @@
             postalcode = 
               (place.address_components[8] && place.address_components[8].short_name || '');
           }
+          var schedule = ""
+          if (place.opening_hours && place.opening_hours.weekday_text) {
+        	schedule = place.opening_hours.weekday_text.join(':::');
+          }
           
           console.log('name:' + place.name);
           console.log('website:' + place.website);
@@ -143,11 +147,13 @@
           console.log('phone:' + place.international_phone_number);
           console.log('street:' + address);
           console.log('postalcode:' + postalcode);
-          
+          console.log('schedule:' + schedule);
+
           var url = '/api/restaurant_populate?id=0&phone=' + place.international_phone_number 
             + '&website=' + place.website
             + '&name=' + place.name
             + '&street=' + address
+            + '&schedule=' + schedule
             + '&postalcode=' + postalcode
             + '&longitude=' + place.geometry.location.lng()
             + '&latitude=' + place.geometry.location.lat() ;
