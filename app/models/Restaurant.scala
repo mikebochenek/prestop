@@ -28,7 +28,7 @@ object RestaurantMiscInfo {
   implicit val restaurantMiscInfoWrites = Json.writes[RestaurantMiscInfo]
 }
 
-case class Restaurant(id: Long, name: String, var city: String, address: String, longitude: Double, latitude: Double, 
+case class Restaurant(id: Long, name: String, var city: String, address: String, var longitude: Double, var latitude: Double, 
     schedule: String, var open_now: Boolean, restype: Int, status: Int, 
     var phone: Option[String], email: Option[String], postalcode: Option[String], var state: Option[String], website: Option[String],
     var url: String, var smallurl: String, var paymentoptions: Seq[String], var cuisines: Seq[String],
@@ -150,6 +150,13 @@ object Restaurant {
       SQL(selectString + " where status >= 0 "
           + " and parent_id = {parent_id} order by id asc").on(
               'parent_id -> parentId).as(Restaurant.simple *)
+    }
+  }
+
+  def findAllSublocations(): Seq[Restaurant] = {
+    DB.withConnection { implicit connection =>
+      SQL(selectString + " where status >= 0 and parent_id is not null "
+          + " order by id asc").on().as(Restaurant.simple *)
     }
   }
   

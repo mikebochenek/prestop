@@ -74,6 +74,8 @@ object Recommendation {
     val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*) //getAllRestaurants()
     restaurants.foreach {case(key, r) => r.cuisines =  Tag.findByRef(r.id, 21).map(_.name) } //TODO this must be optimized and cached?
     
+    val restaurantSublocations = Restaurant.findAllSublocations
+    
     val likedDishes = Recommendations.getLikedDishes(user.id)
     
     //TODO we can not iterate in a dumb for-loop because this would not scale
