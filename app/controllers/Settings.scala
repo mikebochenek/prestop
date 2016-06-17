@@ -119,9 +119,9 @@ object Settings extends Controller with Secured {
 
   def generateXML = IsAuthenticated { username =>
     implicit request => {
-      val xstream = new XStream
-      val all = Restaurant.findAll()
-      Ok(xstream.toXML(all))
+      val fullUser = User.getFullUser(username) //TODO instead of generating XML we send email as a test only!
+      common.EmailReport.sendemail(fullUser)
+      Ok(Json.toJson(models.CommonJSONResponse.OK))
     }
   }
   

@@ -63,8 +63,8 @@ object Global extends WithFilters(LangFromSubdomain, LoggingFilter) {
 
   override def onStart(application: play.api.Application) {
 
-    play.api.Logger.info("NOT Scheduling jobs...")
-/*    
+    play.api.Logger.info("Scheduling jobs...")
+    
     import scala.concurrent.duration._
     import play.api.Play.current
 
@@ -73,7 +73,6 @@ object Global extends WithFilters(LangFromSubdomain, LoggingFilter) {
 
     Akka.system.scheduler.schedule(calculateDelayForSchedule.seconds, 1.days, actor, "send")
     //Akka.system.scheduler.schedule(0.seconds, 1.minutes, actor, "send")
-*/
 }
 
   /**
