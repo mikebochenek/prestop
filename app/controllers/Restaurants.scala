@@ -19,6 +19,7 @@ import models.Reservation
 import models.User
 import models.RestaurantOwner
 import models.UserFull
+import models.RestaurantMiscInfo
 
 object Restaurants extends Controller with Secured {
 
@@ -35,6 +36,21 @@ object Restaurants extends Controller with Secured {
     Ok(html.contact());
   }
 
+  def createAndPopulate(id: Long, longitude: String, latitude: String, name: String, 
+      street: String, postalcode: String, phone: String, website: String, schedule: String) = IsAuthenticated { username =>
+    implicit request => {
+      Logger.info("calling restaurant edit AND populate - load data for id:" + id)
+      val newid = Restaurant.create(name, "", "", 0.0, 0.0, "", 0, None);
+      Logger.info("restaurant created with " + name + " with id:" + newid)
+      
+      val misc = new RestaurantMiscInfo(Option(postalcode), Option(""), Option(website), Option("Switzerland"))
+      val r = new Restaurant(newid.get, name, "Zürich", street, longitude.toDouble, latitude.toDouble, schedule, false, 0, 0, 
+          Option("+"+phone.trim), Option(""), Option(postalcode), Option("Zürich"), Option(website), null, null, Seq.empty[String], Seq.empty[String],
+          Seq.empty[RestaurantFriends], misc)
+      
+      Ok(views.html.restaurant_edit(restaurantForm, r, "", "", "", "", Reservation.findAllByRestaurant(id), Restaurant.findAllByParent(id)))
+    }
+  }
 
   def getById(id: Long) = Action {
     implicit request => {
