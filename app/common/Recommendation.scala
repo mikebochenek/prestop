@@ -76,6 +76,19 @@ object Recommendation {
     
     val restaurantSublocations = Restaurant.findAllSublocations
     
+    for (rsubloc <- restaurantSublocations) {
+      val sublocationDistance = Haversine.haversine(rsubloc.latitude, rsubloc.longitude, latitude, longitude)
+      for (r <- restaurants.values) {
+        if (r.id == rsubloc.misc.parentRestaurantId.get) { 
+          if (Haversine.haversine(r.latitude, r.longitude, latitude, longitude) > sublocationDistance) {
+            Logger.info("sublocation " + rsubloc.id + " is closer, so we will swap with parent " + r.id)
+            r.latitude = rsubloc.latitude
+            r.longitude = rsubloc.longitude
+          }
+        }
+      }
+    } //TODO this double for loop should be optimized, especially since I don't need to re-calc the distances each time
+    
     val likedDishes = Recommendations.getLikedDishes(user.id)
     
     //TODO we can not iterate in a dumb for-loop because this would not scale

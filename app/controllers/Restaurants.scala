@@ -43,7 +43,7 @@ object Restaurants extends Controller with Secured {
       val newid = Restaurant.create(name, "", "", 0.0, 0.0, "", 0, None);
       Logger.info("restaurant created with " + name + " with id:" + newid)
       
-      val misc = new RestaurantMiscInfo(Option(postalcode), Option(""), Option(website), Option("Switzerland"))
+      val misc = new RestaurantMiscInfo(Option(postalcode), Option(""), Option(website), Option("Switzerland"), Option(0))
       val r = new Restaurant(newid.get, name, "Zürich", street, longitude.toDouble, latitude.toDouble, schedule.replaceAll(":::", "\n"), false, 0, 0, 
           Option("+"+phone.trim), Option(""), Option(postalcode), Option("Zürich"), Option(website), null, null, Seq.empty[String], Seq.empty[String],
           Seq.empty[RestaurantFriends], misc)

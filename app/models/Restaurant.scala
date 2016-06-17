@@ -21,7 +21,8 @@ object RestaurantFriends {
   implicit val recommendationFriendsWrites = Json.writes[RestaurantFriends]
 }
 
-case class RestaurantMiscInfo(postalcode: Option[String], var state: Option[String], website: Option[String], var country: Option[String])
+case class RestaurantMiscInfo(postalcode: Option[String], var state: Option[String], website: Option[String], 
+    var country: Option[String], parentRestaurantId: Option[Long])
 
 object RestaurantMiscInfo {
   implicit val restaurantMiscInfoReads = Json.reads[RestaurantMiscInfo]
@@ -50,12 +51,13 @@ object Restaurant {
       get[Option[String]]("restaurant.postalcode") ~
       get[Option[String]]("restaurant.state") ~
       get[Option[String]]("restaurant.country") ~
+      get[Option[Long]]("restaurant.parent_id") ~
       get[Option[String]]("restaurant.website") map {
         case id ~ name ~ city ~ address ~ longitude ~ latitude ~ schedulecron ~ restype 
-        ~ status ~ phone ~ email ~ postalcode ~ state ~ country ~ website => Restaurant(id, name, city, address, 
+        ~ status ~ phone ~ email ~ postalcode ~ state ~ country ~ parent_id ~ website => Restaurant(id, name, city, address, 
               longitude, latitude, schedulecron, true, 
               restype, status, phone, email, postalcode, state, website, null, null, 
-              Seq.empty[String], Seq.empty[String], Seq.empty[RestaurantFriends], RestaurantMiscInfo(postalcode, state, website, country))
+              Seq.empty[String], Seq.empty[String], Seq.empty[RestaurantFriends], RestaurantMiscInfo(postalcode, state, website, country, parent_id))
       }
   }
 
@@ -120,7 +122,7 @@ object Restaurant {
     }
   }
 
-  val selectString = "select id, name, city, address, longitude, latitude, schedulecron, restype, status, phone, email, postalcode, state, country, website from restaurant "
+  val selectString = "select id, name, city, address, longitude, latitude, schedulecron, restype, status, phone, email, postalcode, state, country, parent_id, website from restaurant "
     
   
   def findById(username: String, id: Long): Seq[Restaurant] = {
