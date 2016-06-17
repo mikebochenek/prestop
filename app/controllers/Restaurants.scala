@@ -143,10 +143,6 @@ object Restaurants extends Controller with Secured {
     implicit request => {
       val user = User.getFullUser(username)
       val all = getRestaurantsForUser(user)
-      /* if (!user.ttype.equals("7")) {
-        val ro = RestaurantOwner.findByUser(user.id)
-        Logger.info("find restaurants that user owns: " + user.id + "  found:" + ro.size)
-      } */
       for (restaurant <- all) {
         restaurant.paymentoptions =  Tag.findByRef(restaurant.id, 12).map(_.name)
         restaurant.cuisines =  Tag.findByRef(restaurant.id, 21).map(_.name)
