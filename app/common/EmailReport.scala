@@ -19,22 +19,26 @@ object EmailReport {
   }  
   
   def sendemail(user: UserFull) {
-    Logger.info ("processing sendemail to email:" + user.email + "  " + user.ttype)
+    Logger.debug ("processing sendemail to email:" + user.email + "  " + user.ttype)
     if ("7".equals(user.ttype) && (user.email.contains("sebastian") || user.email.contains("mike"))) {
   
       val dateStr = prettySdf.format(new Date())
   
       var html = "<html><body><h1>Stats " + dateStr + "</h1>"
   
-      val body = views.html.dailyreports.render(Restaurant.findAll, Dish.findAllInactive, Dish.findAllWithoutImages, 
+      val body = views.html.dailyreports.render(Restaurant.findAll, 
+          Dish.findAll.filter  { x => inLastDay(x.lastupdate) },
+          Dish.findAllWithoutImages, 
           User.findAll.filter { x => inLastDay(x.createdate) }, 
           Friend.findAll.filter { x => inLastDay(x.lastupdate) }, 
           Reservation.findAll, 
           ActivityLog.findAll.filter { x => inLastDay(x.createdate) }).body
-          
+      
       Logger.debug(body)
       
       html += body
+      
+      html += "<hr/><code>" + models.AdminHelper.generateStats + "</code>"
       
       html += "</body></html>"
   

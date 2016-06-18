@@ -163,6 +163,7 @@ object User {
   }
   
   def authenticate(email: String, password: String): Option[User] = {
+    Logger.info("try to authenticate user: " + email)
     DB.withConnection { implicit connection =>
       SQL(
         """

@@ -1,4 +1,4 @@
-@(restaurants: Seq[Restaurant], dishesInactive: Seq[Dish], dishesWithoutImages: Seq[Dish], users: Seq[UserFull], 
+@(restaurants: Seq[Restaurant], newDishes: Seq[Dish], dishesWithoutImages: Seq[Dish], users: Seq[UserFull], 
 	friends: Seq[Friend], reservations: Seq[Reservation], activities: Seq[ActivityLog])
 
       	<h3>New users in the last 24h (@users.size)</h3>
@@ -8,7 +8,7 @@
 		  <td>@user.id</td>
 		  <td>@user.email</td>
 		  <td>@user.username</td>
-		  <td>@user.createdate.format("dd MMM YYYY HH:mm")</td>
+		  <td>@user.createdate.format("dd.MM.YYYY HH:mm")</td>
 		  </tr>
 		  }
 		</table>
@@ -18,10 +18,9 @@
       	<table class="table table-striped">
       	@for((friend, index) <- friends.zipWithIndex)  {	
 		  <tr>
-		  <td>@friend.id</td>
 		  <td>@friend.friend_user_id</td>
 		  <td>@friend.user_id</td>
-		  <td>@friend.lastupdate.format("dd MMM YYYY HH:mm")</td>
+		  <td>@friend.lastupdate.format("dd.MM.YYYY HH:mm")</td>
 		  </tr>
 		  }
 		</table>
@@ -30,36 +29,47 @@
       	<table class="table table-striped">
       	@for((activity, index) <- activities.filter{x => x.activity_type != 7}.zipWithIndex)  {	
 		  <tr>
-		  <td>@activity.id</td>
 		  <td>@activity.user_id</td>
-		  <td>@activity.activity_type</td>
 		  <td>@activity.activity_subtype</td>
 		  <td>@activity.activity_details</td>
-		  <td>@activity.createdate.format("dd MMM YYYY HH:mm")</td>
+		  <td>@activity.createdate.format("dd.MM.YYYY HH:mm")</td>
+		  </tr>
+		  }
+		</table>
+
+      	<h3>New dishes in the last 24h (@newDishes.size)</h3>
+      	<table class="table table-striped">
+      	@for((dish, index) <- newDishes.zipWithIndex)  {	
+		  <tr>
+		  <td>@dish.id</td>
+		  <td>@dish.name</td>
+		  <td>@dish.lastupdate.format("dd.MM.YYYY HH:mm")</td>
+		  <td>@("%.2f".format(dish.price))</td>
 		  </tr>
 		  }
 		</table>
 
         <hr/>
-              
-      	<h3>Restaurants (@restaurants.size)</h3>
+        
+      	<h3>All Restaurants (@restaurants.size)</h3>
       	<table class="table table-striped">
       	@for((restaurant, index) <- restaurants.zipWithIndex)  {	
 		  <tr>
 		  <td>@restaurant.id</td>
 		  <td>@restaurant.name</td>
+		  <td>@restaurant.status</td>
 		  </tr>
 		  }
 		</table>
-		
+              
       	<h3>Dishes without images (@dishesWithoutImages.size)</h3>
       	<table class="table table-striped">
       	@for((dish, index) <- dishesWithoutImages.zipWithIndex)  {	
 		  <tr>
 		  <td>@dish.id</td>
-		  <td>@dish.lastupdate.format("dd MMM YYYY HH:mm")</td>
-		  <td>@dish.name</td>
+		  <td>@dish.lastupdate.format("dd.MM.YYYY HH:mm")</td>
 		  <td>@("%.2f".format(dish.price))</td>
+		  <td>@dish.name</td>
 		  </tr>
 		  }
 		</table>
