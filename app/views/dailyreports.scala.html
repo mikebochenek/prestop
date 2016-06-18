@@ -1,5 +1,16 @@
 @(restaurants: Seq[Restaurant], newDishes: Seq[Dish], dishesWithoutImages: Seq[Dish], users: Seq[UserFull], 
-	friends: Seq[Friend], reservations: Seq[Reservation], activities: Seq[ActivityLog])
+	friends: Seq[Friend], reservations: Seq[Reservation], recommendCalls: Seq[ActivityLogUserStats], activities: Seq[ActivityLog])
+
+      	<h3>Calls to /api/recommend by user the last 24h (@recommendCalls.foldLeft(0)(_ + _.count.toInt))</h3>
+      	<table class="table table-striped">
+      	@for((call, index) <- recommendCalls.zipWithIndex)  {	
+		  <tr>
+		  <td>@call.user_id</td>
+		  <td>@call.email</td>
+		  <td>@call.count</td>
+		  </tr>
+		  }
+		</table>
 
       	<h3>New users in the last 24h (@users.size)</h3>
       	<table class="table table-striped">
@@ -12,7 +23,6 @@
 		  </tr>
 		  }
 		</table>
-
 
       	<h3>New friends in the last 24h (@friends.size)</h3>
       	<table class="table table-striped">

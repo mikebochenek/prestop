@@ -31,7 +31,8 @@ object EmailReport {
           Dish.findAllWithoutImages, 
           User.findAll.filter { x => inLastDay(x.createdate) }, 
           Friend.findAll.filter { x => inLastDay(x.lastupdate) }, 
-          Reservation.findAll, 
+          Reservation.findAll,
+          ActivityLog.findRecentStats(7, 1),
           ActivityLog.findAll.filter { x => inLastDay(x.createdate) }).body
       
       Logger.debug(body)

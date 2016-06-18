@@ -105,7 +105,36 @@ object ActivityLog {
           + " order by id asc").on('user_id -> user_id, 'atype -> atype).as(ActivityLog.simple *)
     }
   }  
+
+  def findRecentStats(atype: Long, interval: Long): Seq[ActivityLogUserStats] = {
+    DB.withConnection { implicit connection =>
+      SQL("select u.email, al.user_id, al.activity_type, count(*) as ccount "
+       + " from activity_log al, user u "
+       + " where u.id = al.user_id  "
+       + " and al.activity_type = {atype} "
+       + " and al.createdate >= DATE(NOW()) - INTERVAL " + interval + " DAY "
+       + " group by u.email, al.user_id, al.activity_type"
+      ).on('atype -> atype).as(ActivityLogUserStats.simple *)
+    }
+  }  
   
   implicit val activityLogReads = Json.reads[ActivityLog]
   implicit val activityLogWrites = Json.writes[ActivityLog]
+}
+
+case class ActivityLogUserStats(email: String, user_id: Long, activity_type: Long, count: Long)
+
+object ActivityLogUserStats {
+  val simple = {
+      get[String]("user.email") ~
+      get[Long]("activity_log.user_id") ~
+      get[Long]("activity_log.activity_type") ~
+      get[Long]("ccount") map {
+        case email ~ user_id ~ activity_type ~ ccount => 
+          ActivityLogUserStats(email, user_id, activity_type, ccount)
+      }
+  }
+  implicit val activityLogUSReads = Json.reads[ActivityLogUserStats]
+  implicit val activityLogUSWrites = Json.writes[ActivityLogUserStats]
+
 }
