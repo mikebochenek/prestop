@@ -90,7 +90,7 @@ object Restaurant {
 
   def update(id: Long, name: String, city: String, address: String, longitude: Double, latitude: Double, 
       scheduleCron: String, restype: Int, status: Int, phone: String, email: String, postalcode: String, state: String, 
-      country: String, website: String) = {
+      country: String, website: String, google_places_id: String) = {
     DB.withConnection { implicit connection =>
       SQL(
         """
@@ -98,7 +98,7 @@ object Restaurant {
          longitude = {longitude}, latitude = {latitude}, schedulecron = {schedulecron}, 
          restype = {restype}, lastupdate = {lastupdate}, status = {status}, 
          phone = {phone}, email = {email}, postalcode = {postalcode}, state = {state}, 
-         country = {country}, website = {website} 
+         country = {country}, website = {website}, google_places_id = {google_places_id}
          where id = {id}
         """).on(
           'id -> id,
@@ -115,6 +115,7 @@ object Restaurant {
           'state -> state,
           'country -> country,
           'website -> website,
+          'google_places_id -> google_places_id,
           'lastupdate -> new Date(),
           'status -> status).executeUpdate
     }

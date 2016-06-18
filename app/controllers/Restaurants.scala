@@ -111,11 +111,12 @@ object Restaurants extends Controller with Secured {
       "restype" -> text,
       "status" -> text,
       "ptags" -> text,
+      "google_places_id" -> text,
       "tags" -> text))
 
   def save = IsAuthenticated { username =>
     implicit request => { 
-      val (id, name, phone, email, address, city, postalcode, state, country, website, latitudelongitude, schedule, restype, status, ptags, tags) = restaurantForm.bindFromRequest.get
+      val (id, name, phone, email, address, city, postalcode, state, country, website, latitudelongitude, schedule, restype, status, ptags, google_places_id, tags) = restaurantForm.bindFromRequest.get
       val ll = latitudelongitude.split(",")
       val latitude = (ll(0).size match {
         case 0 => "0"
@@ -126,7 +127,7 @@ object Restaurants extends Controller with Secured {
         case default => "0"
       }).toDouble
       Restaurant.update(id.toLong, name, city, address, longitude, latitude, schedule, restype.toInt, status.toInt, 
-          phone, email, postalcode, state, country, website)
+          phone, email, postalcode, state, country, website, google_places_id)
       Tag.updateTags(id.toLong, ptags, 12)
       Tag.updateTags(id.toLong, tags, 21)
       Logger.info("calling restaurant update for id:" + id)
@@ -200,7 +201,7 @@ object Restaurants extends Controller with Secured {
       val (id, phone, email, address, city, postalcode, state, longitude, latitude, schedule, status) = restaurantLocationsForm.bindFromRequest.get
       Logger.info("calling restaurant locations edit - load data for id:" + id)
       val rest = Restaurant.findById(username, id.toLong)(0)
-      Restaurant.update(id.toLong, rest.name, city, address, longitude.toDouble, latitude.toDouble, schedule, rest.restype, status.toInt, phone, email, postalcode, state, rest.misc.country.getOrElse(""), rest.website.getOrElse(""))
+      Restaurant.update(id.toLong, rest.name, city, address, longitude.toDouble, latitude.toDouble, schedule, rest.restype, status.toInt, phone, email, postalcode, state, rest.misc.country.getOrElse(""), rest.website.getOrElse(""), rest.misc.place_id.getOrElse(""))
       Logger.info("done calling restaurant CHILD update for id:" + id)
       Ok(views.html.restaurant_locations(restaurantLocationsForm, Restaurant.findById(username, id.toLong)(0)))
     }
