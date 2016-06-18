@@ -37,13 +37,13 @@ object Restaurants extends Controller with Secured {
   }
 
   def createAndPopulate(id: Long, longitude: String, latitude: String, name: String, 
-      street: String, postalcode: String, phone: String, website: String, schedule: String) = IsAuthenticated { username =>
+      street: String, postalcode: String, phone: String, website: String, schedule: String, place_id: String) = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling restaurant edit AND populate - load data for id:" + id)
       val newid = Restaurant.create(name, "", "", 0.0, 0.0, "", 0, None);
       Logger.info("restaurant created with " + name + " with id:" + newid)
       
-      val misc = new RestaurantMiscInfo(Option(postalcode), Option(""), Option(website), Option("Switzerland"), Option(0))
+      val misc = new RestaurantMiscInfo(Option(postalcode), Option(""), Option(website), Option("Switzerland"), Option(0), Option(place_id), null)
       val r = new Restaurant(newid.get, name, "Zürich", street, longitude.toDouble, latitude.toDouble, schedule.replaceAll(":::", "\n"), false, 0, 0, 
           Option("+"+phone.trim), Option(""), Option(postalcode), Option("Zürich"), Option(website), null, null, Seq.empty[String], Seq.empty[String],
           Seq.empty[RestaurantFriends], misc)

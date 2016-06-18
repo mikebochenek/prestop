@@ -140,6 +140,7 @@
         	schedule = place.opening_hours.weekday_text.join(':::');
           }
           
+          console.log('place_id:' + place.place_id);
           console.log('name:' + place.name);
           console.log('website:' + place.website);
           console.log('latitude:' + place.geometry.location.lat());
@@ -155,6 +156,7 @@
             + '&street=' + address
             + '&schedule=' + schedule
             + '&postalcode=' + postalcode
+            + '&place_id=' + place.place_id
             + '&longitude=' + place.geometry.location.lng()
             + '&latitude=' + place.geometry.location.lat() ;
 
