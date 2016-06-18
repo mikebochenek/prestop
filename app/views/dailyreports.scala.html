@@ -1,7 +1,7 @@
 @(restaurants: Seq[Restaurant], newDishes: Seq[Dish], dishesWithoutImages: Seq[Dish], users: Seq[UserFull], 
 	friends: Seq[Friend], reservations: Seq[Reservation], recommendCalls: Seq[ActivityLogUserStats], activities: Seq[ActivityLog])
 
-      	<h3>Calls to /api/recommend by user the last 24h (@recommendCalls.foldLeft(0)(_ + _.count.toInt))</h3>
+      	<h3>Calls to /api/recommend grouped by user the last 24h (@recommendCalls.foldLeft(0)(_ + _.count.toInt))</h3>
       	<table class="table table-striped">
       	@for((call, index) <- recommendCalls.zipWithIndex)  {	
 		  <tr>
@@ -83,3 +83,6 @@
 		  </tr>
 		  }
 		</table>
+
+		<hr/><h1>System Info</h1><code>@Html(models.AdminHelper.generateStats)</code>
+		

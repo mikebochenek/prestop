@@ -11,7 +11,7 @@ import play.api.Logger
 object EmailReport {
 
   val sdf = new SimpleDateFormat("yyyyMMdd")
-  val prettySdf = new SimpleDateFormat("EEE, dd MMM yyyy")
+  val prettySdf = new SimpleDateFormat("EEE dd.MM.yyyy")
 
   val DAY = 24 * 60 * 60 * 1000;
   def inLastDay(aDate: Date) = {
@@ -24,7 +24,7 @@ object EmailReport {
   
       val dateStr = prettySdf.format(new Date())
   
-      var html = "<html><body><h1>Stats " + dateStr + "</h1>"
+      var html = "<html><body><h1>Stats for: " + dateStr + "</h1>"
   
       val body = views.html.dailyreports.render(Restaurant.findAll, 
           Dish.findAll.filter  { x => inLastDay(x.lastupdate) },
@@ -39,11 +39,9 @@ object EmailReport {
       
       html += body
       
-      html += "<hr/><code>" + models.AdminHelper.generateStats + "</code>"
-      
       html += "</body></html>"
   
-      val subject = "backend stats today: " + dateStr
+      val subject = "Presto backend stats for: " + dateStr
   
       val mail = use[MailerPlugin].email
       mail.setSubject(subject)
