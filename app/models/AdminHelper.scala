@@ -14,6 +14,7 @@ object AdminHelper {
         + "image storage size: " + image_storage_size + mybr
         + "user count:" + User.countAll + "<br>" 
         + "restaurant count:" + Restaurant.countAll + "<br>" 
+        + "dish count:" + Dish.countAll + "<br>" 
         + "friend count:" + Friend.countAll + "<br>" 
         + "reservations:" + Reservation.countAll + "<br>" 
         + "activitylog count:" + ActivityLog.countAll + "<br>" 
