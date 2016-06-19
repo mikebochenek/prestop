@@ -149,7 +149,7 @@ object Settings extends Controller with Secured {
       val email = (request.body.asJson.get \ "email").as[String]
       val username = (request.body.asJson.get \ "username")
       val id = 13; 
-      User.update(null, email, null) // TODO
+      //User.update(null, email, null) // TODO
       Logger.info("TODO:  nothing has been created yet - " + email + " with id:" + id)
       Ok("ok")
     }
@@ -358,4 +358,41 @@ object Settings extends Controller with Secured {
       Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
     }
   }
+  
+  def userList() = Action {
+    implicit request => {
+      Logger.info("userList")
+      Ok(views.html.userlist_edit(User.findAll))
+    }
+  }
+  
+  def userEdit(id: Long) = Action {
+    implicit request => {
+      Logger.info("userEdit: " + id)
+      val user = User.getFullUser(id)
+      Ok(views.html.user_edit(userForm, user, getPreviousSettingsSafely(user)))
+    }
+  }
+
+  val userForm = Form(
+    tuple(
+      "id" -> text,
+      "email" -> text,
+      "username" -> text,
+      "fullname" -> text,
+      "phone" -> text,
+      "city" -> text,
+      "settings" -> text))
+      
+  def saveUser() = IsAuthenticated { username =>
+    implicit request =>  
+      val (id, email, username, fullname, phone, city, settings) = userForm.bindFromRequest.get
+      Logger.info("calling saveUser for id: " + id + " email: " + email)
+      val user = User.getFullUser(id.toInt)
+      val newUser = new UserFull(user.id, user.createdate, user.lastlogindate, user.deleted, user.password, 
+          settings, email, username, user.ttype, user.openidtoken, fullname, city, user.state, user.country, phone)
+      User.update(newUser, email, settings)
+      Redirect(routes.Settings.userEdit(id.toLong))
+  }  
+  
 }

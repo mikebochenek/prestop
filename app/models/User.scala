@@ -125,12 +125,16 @@ object User {
     DB.withConnection { implicit connection =>
       SQL(
         """
-         update user set email = {email}, settings = {settings}, phone = {phone} where 
-         id = {id} 
+         update user set email = {email}, username = {username}, fullname = {fullname}, 
+         settings = {settings}, phone = {phone}, city = {city}
+         where id = {id} 
         """).on(
           'email -> email,
+          'username -> user.username,
+          'fullname -> user.fullname,
           'settings -> settings,
           'phone -> user.phone,
+          'city -> user.city,
           'id -> user.id).executeUpdate
     }
   }

@@ -1,0 +1,22 @@
+@(users: Seq[UserFull])(implicit session: Session, lang: Lang)
+@main(title = "users") {
+    @if(session.get("usertype").get.toString.equals("7")) {
+    <div class="container">
+
+      <div class="starter-template">
+      	<h1>All @users.size users</h1>
+      	
+      	<table class="table table-striped">
+		@for((user, index) <- users.zipWithIndex)  {	
+		  <tr>
+		  <td><a href="useredit/@user.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @user.id</td>
+		  <td>@user.email</td><td>@user.username</td><td>@user.fullname</td><td>@user.phone</td><td>@user.createdate</td>
+		  </tr>
+		}
+		</table>
+		
+      </div>
+
+    </div><!-- /.container -->
+}
+}

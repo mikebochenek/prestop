@@ -1,0 +1,62 @@
+@(form: Form[(String,String,String,String,String,String,String)], user: UserFull, settings: UserSettings)(implicit flash: Flash, session: Session, lang: Lang)
+
+@main(title = "settings") {
+@if(session.get("usertype").get.toString.equals("7")) {
+
+<div class="container">
+
+    @helper.form(routes.Settings.saveUser) {
+
+  <div class="starter-template">
+    <h3>User Info</h3>
+
+      <div class="row ">
+        <div class="col-sm-8 col-md-offset-2">
+          <input class="hidden form-control span4" type="text" name="id" id="id" value="@user.id">
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Email</span>
+            <input class="form-control span4" type="text" name="email" id="email" value="@user.email">
+          </div>
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Username</span>
+            <input class="form-control span4" type="text" name="username" id="username" value="@user.username">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Full name</span>
+            <input class="form-control span4" type="text" name="fullname" id="fullname" value="@user.fullname">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Phone</span>
+            <input class="form-control span4" type="text" name="phone" id="phone" value="@user.phone">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">City</span>
+            <input class="form-control span4" type="text" name="city" id="city" value="@user.city">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">State</span>
+            <input class="form-control span4" type="text" name="state" id="state" value="@user.state" readonly>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Country</span>
+            <input class="form-control span4" type="text" name="country" id="country" value="@user.country" readonly>
+          </div>
+          
+          <textarea NAME="settings" cols=80 rows=9>@play.api.libs.json.Json.toJson(settings).toString</textarea>
+          
+          <br>
+                      
+          <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">@Messages("save")</button>
+          <button class="span4 btn btn-primary" type="reset" id="generalsavebutton">reset</button>
+        </div>
+      </div>
+	}      
+      
+  </div>
+
+
+    </div><!-- /.container -->
+    }
+}
