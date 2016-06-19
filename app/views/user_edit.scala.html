@@ -1,4 +1,5 @@
-@(form: Form[(String,String,String,String,String,String,String)], user: UserFull, settings: UserSettings)(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String,String)], user: UserFull, settings: UserSettings, 
+	userRecommendations: Seq[ActivityLog], userLikes: Seq[ActivityLog])(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 @if(session.get("usertype").get.toString.equals("7")) {
@@ -52,6 +53,74 @@
           <button class="span4 btn btn-primary" type="reset" id="generalsavebutton">reset</button>
         </div>
       </div>
+      
+    <h3>Dishes recommended (by Presto) in the last 5 days</h3>
+
+      <div class="row ">
+      	<table class="table table-striped">
+      	<thead>
+      	  <tr>
+      	    <td>#</td>
+      	    <td>id</td>
+      	    <td><b>user_id</b></td>
+      	    <td><b>activity_type</b></td>
+      	    <td><b>activity_subtype</b></td>
+      	    <td><b>activity_details</b></td>
+      	    <td>lastupdate</td>
+      	  </tr>
+      	 </thead>
+      	@for((activity, index) <- userRecommendations.zipWithIndex)  {	
+		  <tr>
+		  <td>@index</td>
+		  <td>@activity.id</td>
+		  <td>@activity.user_id</td>
+		  <td>@activity.activity_type</td>
+		  <td>@activity.activity_subtype</td>
+		  <td>@activity.activity_details</td>
+		  <td>@activity.createdate.format("dd MMM YYYY HH:mm")</td>
+		  </tr>
+		  }
+		</table>
+      </div>
+
+    <h3>Dish likes in the last 5 days</h3>
+
+      <div class="row ">
+      	<table class="table table-striped">
+      	<thead>
+      	  <tr>
+      	    <td>#</td>
+      	    <td>id</td>
+      	    <td><b>user_id</b></td>
+      	    <td><b>activity_type</b></td>
+      	    <td><b>dish_id (activity_subtype)</b></td>
+      	    <td><b>activity_details</b></td>
+      	    <td>lastupdate</td>
+      	  </tr>
+      	 </thead>
+      	@for((activity, index) <- userLikes.zipWithIndex)  {	
+		  <tr>
+		  <td>@index</td>
+		  <td>@activity.id</td>
+		  <td>@activity.user_id</td>
+		  <td>@activity.activity_type</td>
+		  <td>@activity.activity_subtype</td>
+		  <td>@activity.activity_details</td>
+		  <td>@activity.createdate.format("dd MMM YYYY HH:mm")</td>
+		  </tr>
+		  }
+		</table>
+      </div>
+
+    <hr/>
+    
+    <h3>Permanently delete user</h3>
+    <div>This deletes all data related to the user (likes, friends, etc.) <b>This can not be undone</b></div>  
+    
+    <a class="span4 btn btn-primary" type="submit" id="backbutton"
+       onclick="return confirm('Are you really sure you want to delete this user?')" 
+       href="../api/deleteuser/@user.id" role="button">Permanently Delete User</a>
+    
 	}      
       
   </div>

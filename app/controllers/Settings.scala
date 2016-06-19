@@ -370,7 +370,8 @@ object Settings extends Controller with Secured {
     implicit request => {
       Logger.info("userEdit: " + id)
       val user = User.getFullUser(id)
-      Ok(views.html.user_edit(userForm, user, getPreviousSettingsSafely(user)))
+      Ok(views.html.user_edit(userForm, user, getPreviousSettingsSafely(user), 
+          ActivityLog.findRecentByUserType(id, 7), ActivityLog.findRecentByUserType(id, 11)))
     }
   }
 
