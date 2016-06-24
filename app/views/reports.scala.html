@@ -1,5 +1,5 @@
 @(restaurants: Seq[Restaurant], dishes: Seq[Dish], deletedDishes: Seq[Dish], users: Seq[UserFull], 
-	friends: Seq[Friend], reservations: Seq[Reservation], activities: Seq[ActivityLog], 
+	friends: Seq[Friend], reservations: Seq[Reservation], activities: Seq[ActivityLog], recent10: Seq[ActivityLog], 
 	imagesCount: Long, adminStats: String)(implicit session: Session, lang: Lang)
 @main(title = "reports") {
     @if(session.get("usertype").get.toString.equals("7")) {
@@ -129,7 +129,6 @@
       	<h3>Activities / Likes (@activities.size)</h3>
       	<div>(here we don't show the values for activity_type == 7, because there are too many)</div>
       	<table class="table table-striped">
-      	<table class="table table-striped">
       	<thead>
       	  <tr>
       	    <td>#</td>
@@ -138,7 +137,7 @@
       	    <td><b>activity_type (11=like)</b></td>
       	    <td><b>activity_subtype (dish_id)</b></td>
       	    <td><b>activity_details</b></td>
-      	    <td>lastupdate</td>
+      	    <td><b>lastupdate</b></td>
       	  </tr>
       	 </thead>
       	@for((activity, index) <- activities.filter{x => x.activity_type != 7}.zipWithIndex)  {	
@@ -149,6 +148,32 @@
 		  <td>@activity.activity_type</td>
 		  <td>@activity.activity_subtype</td>
 		  <td>@activity.activity_details</td>
+		  <td>@activity.createdate.format("dd MMM YYYY HH:mm")</td>
+		  </tr>
+		  }
+		</table>
+
+      	<h3>Ten Most Recent Activities (@recent10.size)</h3>
+      	<table class="table table-striped">
+      	<thead>
+      	  <tr>
+      	    <td>#</td>
+      	    <td>id</td>
+      	    <td><b>user_id</b></td>
+      	    <td><b>activity_type (11=like, 7=recommend)</b></td>
+      	    <td><b>activity_subtype (dish_id)</b></td>
+      	    <td><b>activity_details</b></td>
+      	    <td><b>lastupdate</b></td>
+      	  </tr>
+      	 </thead>
+      	@for((activity, index) <- recent10.zipWithIndex)  {	
+		  <tr>
+		  <td>@index</td>
+		  <td>@activity.id</td>
+		  <td>@activity.user_id</td>
+		  <td>@activity.activity_type</td>
+		  <td>@activity.activity_subtype</td>
+		  <td>@activity.activity_details.toString.take(60)</td>
 		  <td>@activity.createdate.format("dd MMM YYYY HH:mm")</td>
 		  </tr>
 		  }

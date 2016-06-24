@@ -18,7 +18,7 @@ object Reports extends Controller with Secured {
   def load() = IsAuthenticated { username =>
     implicit request => {
       Ok(views.html.reports(Restaurant.findAll, Dish.findAll, Dish.findAllDeleted, User.findAll, 
-          Friend.findAll, Reservation.findAll, ActivityLog.findAll, 
+          Friend.findAll, Reservation.findAll, ActivityLog.findAll, ActivityLog.findRecentActivities,
           Image.countAll, AdminHelper.generateStats()))
     }
   }
