@@ -228,4 +228,17 @@ object Dishes extends Controller with Secured {
         "error" -> "Missing file")
     }
   }  
+  
+  // http://stackoverflow.com/questions/20322528/uploading-images-to-server-android
+  def uploadDish(userId: Long, name: String, price: String) = Action(parse.multipartFormData) { request =>
+    request.body.file("picture").map { picture =>
+      Logger.info("uploadDish userId:" + userId + " name: " + name + " price: " + price)
+      //TODO Image.saveAndResizeImages(picture, id, "dish")
+      Redirect(routes.Dishes.cropImage(1, "dish"))
+    }.getOrElse {
+      Redirect(routes.Restaurants.about).flashing(
+        "error" -> "Missing file")
+    }
+  }  
+  
 }
