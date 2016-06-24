@@ -82,8 +82,8 @@ object Global extends WithFilters(LangFromSubdomain, LoggingFilter) {
    */
   private def calculateDelayForSchedule: Long = {
     var c = Calendar.getInstance();
-    c.set(Calendar.HOUR_OF_DAY, 10);
-    c.set(Calendar.MINUTE, 22);
+    c.set(Calendar.HOUR_OF_DAY, 1); // 1:15am NYC is 7:15 Zurich time
+    c.set(Calendar.MINUTE, 15); 
     c.set(Calendar.SECOND, 0);
     var plannedStart = c.getTime();
     val now = new Date();
