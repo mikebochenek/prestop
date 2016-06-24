@@ -66,46 +66,49 @@ object ActivityLog {
       SQL("select count(*) from activity_log").as(scalar[Long].single)
     }
   }
+  
+  val selectSQL = "select id, user_id, createdate, activity_type, activity_subtype, activity_details from activity_log "
 
   def findById(username: String, id: Long): Seq[ActivityLog] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, user_id, createdate, activity_type, activity_subtype, activity_details from activity_log where id = {id}").on(
+      SQL(selectSQL + " where id = {id}").on(
         'id -> id).as(ActivityLog.simple *)
     }
   }
   
   def findAll(): Seq[ActivityLog] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, user_id, createdate, activity_type, activity_subtype, activity_details "
-          + " from activity_log where activity_type <> 7 "
-          + " order by id asc").on().as(ActivityLog.simple *)
+      SQL(selectSQL + " where activity_type <> 7 order by id asc").on().as(ActivityLog.simple *)
     }
   }
   
   def findAllByUser(user_id: Long): Seq[ActivityLog] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, user_id, createdate, activity_type, activity_subtype, activity_details from activity_log where user_id = {user_id}"
-          + " order by id asc").on('user_id -> user_id).as(ActivityLog.simple *)
+      SQL(selectSQL + "where user_id = {user_id} order by id asc").on('user_id -> user_id).as(ActivityLog.simple *)
     }
   }  
 
   def findAllByUserType(user_id: Long, atype: Long): Seq[ActivityLog] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, user_id, createdate, activity_type, activity_subtype, activity_details from activity_log " 
-          + " where user_id = {user_id} and activity_type = {atype}"
+      SQL(selectSQL + " where user_id = {user_id} and activity_type = {atype}"
           + " order by id asc").on('user_id -> user_id, 'atype -> atype).as(ActivityLog.simple *)
     }
   }  
 
   def findRecentByUserType(user_id: Long, atype: Long): Seq[ActivityLog] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, user_id, createdate, activity_type, activity_subtype, activity_details from activity_log " 
-          + " where user_id = {user_id} and activity_type = {atype}"
+      SQL(selectSQL + " where user_id = {user_id} and activity_type = {atype}"
           + " and createdate >= DATE(NOW()) - INTERVAL 5 DAY "
           + " order by id asc").on('user_id -> user_id, 'atype -> atype).as(ActivityLog.simple *)
     }
   }  
 
+  def findRecentActivities(): Seq[ActivityLog] = {
+    DB.withConnection { implicit connection =>
+      SQL(selectSQL + " order by id desc limit 10").as(ActivityLog.simple *)
+    }
+  }  
+  
   def findRecentStats(atype: Long, interval: Long): Seq[ActivityLogUserStats] = {
     DB.withConnection { implicit connection =>
       SQL("select u.email, al.user_id, al.activity_type, count(*) as ccount "
