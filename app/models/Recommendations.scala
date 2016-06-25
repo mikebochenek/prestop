@@ -20,7 +20,7 @@ case class Recommendations(dishes: MutableList[RecommendationItem])
 case class RecommendationItem(id: Long, price: String, name: String, dishSource: String, dishDescription: String, liked: Boolean, 
     var greenScore: Double, var greenScoreTags: Seq[String], var url: String, var url_large: String, 
     var distance: String, var ingredients: Seq[String],
-    restaurantID: Long, var restaurantName: String, var restaurantUrl: String, 
+    restaurantID: Long, var restaurantName: String, restaurantLocation: String, var restaurantUrl: String,  
     var friendLikeUrls: Seq[String],
     var diet: Seq[String], var dishType: Seq[String], var meatOrigin: Seq[String], var score: Double)
 
