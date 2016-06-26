@@ -21,9 +21,6 @@ import Calendar.{ DAY_OF_WEEK, HOUR_OF_DAY, MINUTE, SUNDAY, SATURDAY, MONDAY, TU
 
 object Recommendation {
   //47.385740, 8.518084 coordinates for Zurich Hardbrucke
-  //47.411875, 8.548024 Zurich Oerlikon Neudorfstrasse 23 
-  //47.356842, 8.514578 Zurich Uetlibergstrasse 231
-  //46.953082, 7.446915 Bern
     
   { //TODO ... but isn't it kinda wrong that I need to place these in the cache myself
     Cache.set("allrestaurants", Map(Restaurant.findAll map { a => a.id -> a}: _*))
@@ -94,8 +91,8 @@ object Recommendation {
     //TODO we can not iterate in a dumb for-loop because this would not scale
     //TODO ideally, we would read the restaurants only once in a while..
     
-    //TODO load favorites cuisines similar to Recommend.testsubmit...
-    //TODO or what about a nightly batch job which re-ranks all dishes for all active users?
+    // ? load favorites cuisines similar to Recommend.testsubmit...
+    // ? or what about a nightly batch job which re-ranks all dishes for all active users?
     
     val userSettings = Settings.getPreviousSettingsSafely(user)
     val desiredWidth = Image.resolutions.contains(userSettings.deviceSWidth.getOrElse(750.0).toLong) match {
