@@ -195,7 +195,7 @@ object Settings extends Controller with Secured {
       Logger.info("personalize taste profile parsed user_id:" + userId + "  favCuisines:" + favCuisines + "  preferToAvoid:" + preferToAvoid)
       
       val desiredWidth = 750
-      val all = Random.shuffle(Dish.findAll).filter { x => restaurantIDs.contains(x.restaurant_id) }.take(3).map { dish => new TasteProfileDish(dish.id, 
+      val all = Random.shuffle(Dish.findAll).filter { x => restaurantIDs.contains(x.restaurant_id) }.take(5).map { dish => new TasteProfileDish(dish.id, 
           Image.findByDish(dish.id).filter{x => x.width.get == desiredWidth}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
           RecommendationUtils.makePriceString(dish.price), dish.name, dish.description.getOrElse("")) }
       
