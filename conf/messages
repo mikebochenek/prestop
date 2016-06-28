@@ -35,10 +35,6 @@ confirmedowners = You will receive updates from the following users:
 unconfirmedowners = You need to confirm that you want to receive updates from the following users:
 newteamemail = new team member email
 addnew = Add New
-comingsoon = Coming soon.... 
-integrations = integrations: github, zenhub, jira, todoist, etc.
-purgedata = purge data: click here and do not log in for 120 days and we will purge all your data forever
-gtdmode = mode to handle GTD - get things done
 
 # login
 invalidlogin = Invalid email or password
@@ -58,18 +54,6 @@ passwordsarehashed = note that passwords are stored in a secure hash, and you we
 # contact
 contactus = contact us
 contactustext = we would really love hearing from you - send us an email mike at bochenek dot ca
-
-# about
-aboutheader = about iDone
-aboutmain = iDone lets you track and showcase your daily accomplishments
-aboutli1 = create an account and start writing in less than a minute
-aboutli2 = built with security and privacy as a primary goals
-aboutli3 = select sharing options from:  private, share with manager, or public
-aboutli4 = export your data or integrate to external systems via secure REST API or Webservices
-aboutli5 = enter iDone items online, via email, or on your smart phone
-aboutli6 = available in 
-aboutli7 = completely free for personal use and corporate use
-aboutclosing = Stop making depressing todo lists, instead celebrate your daily accomplishments!
 
 # index / marketing
 addgamification = Add gamification to workforce for FREE
