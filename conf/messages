@@ -13,7 +13,6 @@ menu.settings = Settings
 menu.logout = Logout
 menu.login = Login
 
-# donelist
 finalizesubmit = Finalize & Submit
 doneheader = Today I''ve completed the following tasks
 
@@ -29,10 +28,6 @@ downloadcsv = download data export as a CSV file
 downloadxml = download data export as an XML file
 downloadjson = download data export as a JSON file
 team = Team
-confirmedtargetslabel = The following users will receive your updates:
-unconfirmedtargetslabel = The following users need to confirm your request (before they receive your updates):
-confirmedowners = You will receive updates from the following users:
-unconfirmedowners = You need to confirm that you want to receive updates from the following users:
 newteamemail = new team member email
 addnew = Add New
 
