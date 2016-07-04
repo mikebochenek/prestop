@@ -173,7 +173,8 @@ object Image {
   }
   
   def saveAndResizeImages(picture: MultipartFormData.FilePart[Files.TemporaryFile], id: Long, kind: String) {
-    val filename = picture.filename
+    val filename = picture.filename.replaceAll("'"," ").replaceAll("\"", "").replaceAll("%22", "")
+    Logger.info("==== " + filename)
     val ts = System.currentTimeMillis()
     
     var restID = 0L; var dishID = 0L; var userID = 0L; var status = 0;
