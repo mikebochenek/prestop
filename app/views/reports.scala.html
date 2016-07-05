@@ -6,7 +6,7 @@
     <div class="container">
 
       <div class="starter-template">
-      	<h3>Restaurants (@restaurants.size)</h3>
+      	<h3>@Messages("reports.restaurants") (@restaurants.size)</h3>
       	<table class="table table-striped">
       	@for((restaurant, index) <- restaurants.zipWithIndex)  {	
 		  <tr>
@@ -17,16 +17,16 @@
 		  }
 		</table>
 		
-      	<h3>Dishes (@dishes.size)</h3>
+      	<h3>@Messages("reports.dishes") (@dishes.size)</h3>
       	<table class="table table-striped">
       	<thead>
       	  <tr>
       	    <td>#</td>
-      	    <td>id</td>
-      	    <td>lastupdate</td>
-      	    <td><b>name</b></td>
-      	    <td><b>price</b></td>
-      	    <td><b>restaurant</b></td>
+      	    <td>@Messages("reports.id")</td>
+      	    <td>@Messages("reports.lastupdate")</td>
+      	    <td><b>@Messages("reports.name")</b></td>
+      	    <td><b>@Messages("reports.price")</b></td>
+      	    <td><b>@Messages("reports.restaurant")</b></td>
       	  </tr>
       	 </thead>
       	@for((dish, index) <- dishes.zipWithIndex)  {	
@@ -41,16 +41,16 @@
 		  }
 		</table>
 
-      	<h3>DELETED Dishes (@deletedDishes.size)</h3>
+      	<h3>@Messages("reports.deleted_dishes") (@deletedDishes.size)</h3>
       	<table class="table table-striped">
       	<thead>
       	  <tr>
       	    <td>#</td>
-      	    <td>id</td>
-      	    <td>lastupdate</td>
-      	    <td><b>name</b></td>
-      	    <td><b>price</b></td>
-      	    <td><b>restaurant</b></td>
+      	    <td>@Messages("reports.id")</td>
+      	    <td>@Messages("reports.lastupdate")</td>
+      	    <td><b>@Messages("reports.name")</b></td>
+      	    <td><b>@Messages("reports.price")</b></td>
+      	    <td><b>@Messages("reports.restaurant")</b></td>
       	  </tr>
       	 </thead>
       	@for((dish, index) <- deletedDishes.zipWithIndex)  {	
@@ -65,15 +65,15 @@
 		  }
 		</table>
 
-      	<h3>Users (@users.size)</h3>
+      	<h3>@Messages("reports.users") (@users.size)</h3>
       	<table class="table table-striped">
       	<thead>
       	  <tr>
       	    <td>#</td>
-      	    <td>id</td>
-      	    <td><b>email</b></td>
-      	    <td><b>username (Facebook ID)</b></td>
-      	    <td><b>createdate</b></td>
+      	    <td>@Messages("reports.id")</td>
+      	    <td><b>@Messages("reports.email")</b></td>
+      	    <td><b>@Messages("reports.username")</b></td>
+      	    <td><b>@Messages("reports.createdate")</b></td>
       	  </tr>
       	 </thead>
       	@for((user, index) <- users.zipWithIndex)  {	
@@ -87,15 +87,15 @@
 		  }
 		</table>
 
-      	<h3>Friends (@friends.size)</h3>
+      	<h3>@Messages("reports.friends") (@friends.size)</h3>
       	<table class="table table-striped">
       	<thead>
       	  <tr>
       	    <td>#</td>
-      	    <td>id</td>
+      	    <td>@Messages("reports.id")</td>
       	    <td><b>user_id</b></td>
       	    <td><b>friend_user_id</b></td>
-      	    <td>lastupdate</td>
+      	    <td>@Messages("reports.lastupdate")</td>
       	  </tr>
       	 </thead>
       	@for((friend, index) <- friends.zipWithIndex)  {	

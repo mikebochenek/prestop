@@ -41,19 +41,19 @@
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
 @session.get("email").map { user =>
-            <li><a href="/restaurant">Restaurant Editor</a></li>
+            <li><a href="/restaurant">@Messages("menu.restaurants")</a></li>
             @if(session.get("usertype").getOrElse("").toString.equals("7")) {
-              <li><a href="/tageditor">Tag Editor</a></li>
+              <li><a href="/tageditor">@Messages("menu.tags")</a></li>
             }
 }          
           </ul>
           <ul class="nav navbar-nav navbar-right">
           
 @session.get("email").map { user =>
-              <li><a href="/test">Test!</a></li>
+              <li><a href="/test">@Messages("menu.test")</a></li>
             @if(session.get("usertype").getOrElse("").toString.equals("7")) {
               <li><a href="/reports">@Messages("menu.reports")</a></li>
-              <li><a href="/users">Users</a></li>
+              <li><a href="/users">@Messages("menu.users")</a></li>
             }
             <li><a href="/settings">@Messages("menu.settings")</a></li>
             <li><a href="/logout">@Messages("menu.logout")</a></li>

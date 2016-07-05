@@ -5,9 +5,11 @@ add = add
 # main
 application.name = presto admin
 menu.home = Home
-menu.myteam = My Team
+menu.restaurants = Restaurant Editor
+menu.tags = Tag Editor
+menu.users = Users
 menu.about = About
-menu.contact = Contact
+menu.test = Test!
 menu.reports = Reports
 menu.settings = Settings
 menu.logout = Logout
@@ -53,3 +55,20 @@ contactustext = we would really love hearing from you - send us an email mike at
 # index / marketing
 welcome = Welcome
 usemenu = use menu to navigate or
+
+
+# reports
+reports.restaurants = Restaurants
+reports.dishes = Dishes
+reports.id = id
+reports.lastupdate= lastupdate
+reports.name = name
+reports.price = price
+reports.restaurant = restaurant
+reports.deleted_dishes = DELETED Dishes
+reports.email = email
+reports.username = username (Facebook ID)
+reports.createdate = createdate
+reports.users = Users
+reports.friends = Friends
+
