@@ -71,4 +71,6 @@ reports.username = username (Facebook ID)
 reports.createdate = createdate
 reports.users = Users
 reports.friends = Friends
-
+reports.user_id = user_id
+reports.friend_user_id = friend_user_id
+reports.reservations = Reservations

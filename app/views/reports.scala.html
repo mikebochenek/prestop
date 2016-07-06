@@ -93,8 +93,8 @@
       	  <tr>
       	    <td>#</td>
       	    <td>@Messages("reports.id")</td>
-      	    <td><b>user_id</b></td>
-      	    <td><b>friend_user_id</b></td>
+      	    <td><b>@Messages("reports.user_id")</b></td>
+      	    <td><b>@Messages("reports.friend_user_id")</b></td>
       	    <td>@Messages("reports.lastupdate")</td>
       	  </tr>
       	 </thead>
@@ -109,7 +109,7 @@
 		  }
 		</table>
 
-      	<h3>Reservations (@reservations.size)</h3>
+      	<h3>@Messages("reports.reservations") (@reservations.size)</h3>
       	<table class="table table-striped">
       	@for((reservation, index) <- reservations.zipWithIndex)  {	
 		  <tr>
