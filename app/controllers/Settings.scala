@@ -158,8 +158,22 @@ object Settings extends Controller with Secured {
   def uploadPhoto(id: Long) = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
       Logger.info("upload user photo " + id)
-      Image.saveAndResizeImages(picture, id, "user")
-      Redirect(routes.Settings.load)
+      
+      val newid = id != 0 match {
+        case true => id
+        case false => User.create(new UserFull(-1, null, null, false, "test", null, "emailString", "id", "1", null, "name", null, null, null, cleanPhoneString("phone"))).get
+      } //TODO is this User.create stuff correct?
+      
+      val userStatus = id != 0 match {
+        case true => "existing_user"
+        case false => "new"
+      }
+
+      Logger.info("upload user photo using id " + newid)
+
+      Image.saveAndResizeImages(picture, newid, "user")
+      
+      Ok(Json.prettyPrint(Json.toJson(new RegisterResponse("OK", newid, userStatus))))
     }.getOrElse {
       Redirect(routes.Restaurants.about).flashing(
         "error" -> "Missing file")

@@ -27,7 +27,7 @@ GET      /api/intros/:lang           controllers.Settings.introTexts(lang: Strin
 GET      /api/tags                   controllers.Dishes.getTags(ttype: Int ?= 0)
 POST     /api/invite                 controllers.Friends.invite
 POST     /api/reservations/update    controllers.Reservations.update
-POST     /api/settings/uploadpic     controllers.Settings.uploadPhoto(id: Long)
+POST     /api/settings/uploadpic     controllers.Settings.uploadPhoto(id: Long ?= 0)
 GET      /api/cuisines               controllers.Settings.cuisines
 
 GET      /api/userprofile/:id        controllers.Friends.getUserProfile(id: Long)
