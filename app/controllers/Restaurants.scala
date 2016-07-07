@@ -112,11 +112,11 @@ object Restaurants extends Controller with Secured {
       "status" -> text,
       "ptags" -> text,
       "google_places_id" -> text,
-      "tags" -> text))
+      "ctags" -> text))
 
   def save = IsAuthenticated { username =>
     implicit request => { 
-      val (id, name, phone, email, address, city, postalcode, state, country, website, latitudelongitude, schedule, restype, status, ptags, google_places_id, tags) = restaurantForm.bindFromRequest.get
+      val (id, name, phone, email, address, city, postalcode, state, country, website, latitudelongitude, schedule, restype, status, ptags, google_places_id, ctags) = restaurantForm.bindFromRequest.get
       val ll = latitudelongitude.split(",")
       val latitude = (ll(0).size match {
         case 0 => "0"
@@ -129,7 +129,7 @@ object Restaurants extends Controller with Secured {
       Restaurant.update(id.toLong, name, city, address, longitude, latitude, schedule, restype.toInt, status.toInt, 
           phone, email, postalcode, state, country, website, google_places_id)
       Tag.updateTags(id.toLong, ptags, 12)
-      Tag.updateTags(id.toLong, tags, 21)
+      Tag.updateTags(id.toLong, ctags, 21)
       Logger.info("calling restaurant update for id:" + id)
       Redirect(routes.Restaurants.edit(id.toLong))
     }

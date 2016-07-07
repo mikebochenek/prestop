@@ -93,11 +93,32 @@
 
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Cuisines</span>
-            <input class="form-control span4" type="text" name="tags" id="tags" value="@cuisines">
+            <input class="form-control span4" type="text" name="ctags" id="ctags" value="@cuisines">
           </div>
-          
+
           <div>&emsp;<u>possible cuisines:</u> @Tag.findAll.filter(_.status == 21).map(_.name).mkString(", ")</div>
-          <script>var availableTags = @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 21).map(_.name)).toString) ;</script>
+
+          <script language="Javascript">
+attachtokenfield = function() {
+ $('#ctags').tokenfield({  autocomplete: { delay: 100,
+    source: @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 21).map(_.name)).toString)
+  }, showAutocompleteOnFocus: true
+ }) 
+}
+
+attachpaymenttags = function() {
+ $('#ptags').tokenfield({ autocomplete: { delay: 100,
+    source: @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 12).map(_.name)).toString) 
+  },
+  showAutocompleteOnFocus: true
+ }) 
+}
+
+window.onload = function() {
+  setTimeout(attachtokenfield , 900);
+  setTimeout(attachpaymenttags , 900);
+}
+          </script>
           
           </br>
                       
