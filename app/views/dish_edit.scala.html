@@ -69,11 +69,27 @@
 
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Ingredients</span>
-            <input class="form-control span4" type="text" name="tags" id="tags" value="@tags">
+            <input class="form-control span4" type="text" name="itags" id="itags" value="@tags">
           </div>
           
           <div>&emsp;<u>possible ingredients:</u> @Tag.findAll.filter(_.status == 11).map(_.name).take(10).mkString(", ")</div>
-          <script>var availableTags = @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 11).map(_.name)).toString) ;</script>
+
+          <script language="Javascript">
+attachTags = function(elemId, tagsArray) {
+ $(elemId).tokenfield({  autocomplete: { delay: 100,
+    source: tagsArray
+  }, showAutocompleteOnFocus: true
+ }) 
+}
+
+window.onload = function() {
+  setTimeout(attachTags('#itags', @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 11).map(_.name)).toString)) , 900);
+  setTimeout(attachTags('#greenscoretags', @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 31).map(_.name)).toString)) , 900);
+  setTimeout(attachTags('#diet', @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 34).map(_.name)).toString)) , 900);
+  setTimeout(attachTags('#dishtype', @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 35).map(_.name)).toString)) , 900);
+  setTimeout(attachTags('#meatorigin', @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 36).map(_.name)).toString)) , 900);
+}
+          </script>
 
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Serving size</span>
