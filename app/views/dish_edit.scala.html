@@ -31,8 +31,6 @@
             <input class="form-control span4" type="text" name="greenscoretags" id="greenscoretags"value="@greenscoretags">
           </div>
           
-          <div>&emsp;<u>possible greenscore tags:</u> @Tag.findAll.filter(_.status == 31).map(_.name).mkString(", ")</div>
-          
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Greenscore</span>
             <input class="form-control span4" type="text" name="greenscore" id="greenscore"  readonly  value="@dish.greenScore">
@@ -44,23 +42,16 @@
             <span class="input-group-addon" id="basic-addon1">Diet (food categories)</span>
             <input class="form-control span4" type="text" name="diet" id="diet" value="@diet">
           </div>
-
-          <div>&emsp;<u>possible diet tags:</u> @Tag.findAll.filter(_.status == 34).map(_.name).mkString(", ")</div>
           
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Dish type</span>
             <input class="form-control span4" type="text" name="dishtype" id="dishtype" value="@dishtype">
           </div>
-
-          <div>&emsp;<u>possible dish type:</u> @Tag.findAll.filter(_.status == 35).map(_.name).mkString(", ")</div>
           
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Meat origin</span>
             <input class="form-control span4" type="text" name="meatorigin" id="meatorigin" value="@meatorigin">
           </div>
-
-          <div>&emsp;<u>possible meat origin tags:</u> @Tag.findAll.filter(_.status == 36).map(_.name).mkString(", ")</div>
-          
 
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Status</span>
@@ -77,8 +68,6 @@
             <span class="input-group-addon" id="basic-addon1">Ingredients</span>
             <input class="form-control span4" type="text" name="itags" id="itags" value="@tags">
           </div>
-          
-          <div>&emsp;<u>possible ingredients:</u> @Tag.findAll.filter(_.status == 11).map(_.name).take(10).mkString(", ")</div>
 
           <script language="Javascript">
 attachTags = function(elemId, tagsArray) {

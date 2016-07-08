@@ -94,15 +94,11 @@
             <span class="input-group-addon" id="basic-addon1">Payment type</span>
             <input class="form-control span4" type="text" name="ptags" id="ptags" value="@tags">
           </div>
-          
-          <div>&emsp;<u>possible tags:</u> @Tag.findAll.filter(_.status == 12).map(_.name).mkString(", ")</div>
 
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Cuisines</span>
             <input class="form-control span4" type="text" name="ctags" id="ctags" value="@cuisines">
           </div>
-
-          <div>&emsp;<u>possible cuisines:</u> @Tag.findAll.filter(_.status == 21).map(_.name).mkString(", ")</div>
 
           <script language="Javascript">
 attachtokenfield = function() {
