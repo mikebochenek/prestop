@@ -372,7 +372,16 @@ object Settings extends Controller with Secured {
       Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
     }
   }
-  
+
+  def approvalsList() = Action {
+    implicit request => {
+      val dr = Restaurant.findAll.filter { r => r.status == 4 }
+      val dd = Dish.findAll().filter { d => d.status == 4 }
+      Logger.info("approvalsList  restaurants: " + dr.size + "  dishes: " + dd.size)
+      Ok(views.html.approvals_list_edit(dr, dd))
+    }
+  }
+
   def userList() = Action {
     implicit request => {
       Logger.info("userList")

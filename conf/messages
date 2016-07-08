@@ -7,6 +7,7 @@ application.name = presto admin
 menu.home = Home
 menu.restaurants = Restaurant Editor
 menu.tags = Tag Editor
+menu.approvals = Approvals
 menu.users = Users
 menu.about = About
 menu.test = Test!

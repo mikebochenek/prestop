@@ -46,6 +46,7 @@
             <li><a href="/restaurant">@Messages("menu.restaurants")</a></li>
             @if(session.get("usertype").getOrElse("").toString.equals("7")) {
               <li><a href="/tageditor">@Messages("menu.tags")</a></li>
+              <li><a href="/approvals">@Messages("menu.approvals")</a></li>
             }
 }          
           </ul>

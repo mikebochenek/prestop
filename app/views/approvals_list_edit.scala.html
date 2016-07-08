@@ -1,0 +1,34 @@
+@(restaurants: Seq[Restaurant], dishes: Seq[Dish])(implicit session: Session, lang: Lang)
+@main(title = "approvals") {
+    @if(session.get("usertype").get.toString.equals("7")) {
+    <div class="container">
+
+      <div class="starter-template">
+      
+      	<h1>Restaurants awaiting approval: @restaurants.size</h1>
+      	
+      	<table class="table table-striped">
+		@for((restaurant, index) <- restaurants.zipWithIndex)  {	
+		  <tr>
+		  <td><a href="restaurantedit/@restaurant.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @restaurant.id</td>
+		  <td>@restaurant.name</td><td>@restaurant.url</td>
+		  </tr>
+		}
+		</table>
+
+      	<h1>Dishes awaiting approval: @dishes.size</h1>
+      	
+      	<table class="table table-striped">
+		@for((dish, index) <- dishes.zipWithIndex)  {	
+		  <tr>
+		  <td><a href="dishedit/@dish.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @dish.id</td>
+		  <td>@dish.name</td><td>@dish.price</td>
+		  </tr>
+		}
+		</table>
+		
+      </div>
+
+    </div><!-- /.container -->
+}
+}

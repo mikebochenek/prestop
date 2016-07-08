@@ -69,6 +69,7 @@ GET     /about                              controllers.Restaurants.about
 POST	/restaurant							controllers.Restaurants.upload(id: Long)
 POST	/restaurant2						controllers.Restaurants.uploadLogo(id: Long)
 GET     /contact                            controllers.Restaurants.contact
+GET     /approvals                          controllers.Settings.approvalsList
 GET     /users                              controllers.Settings.userList
 GET     /useredit/:id                       controllers.Settings.userEdit(id: Long)
 POST    /usereditor                         controllers.Settings.saveUser
