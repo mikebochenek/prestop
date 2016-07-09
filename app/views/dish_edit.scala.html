@@ -125,7 +125,7 @@ window.onload = function() {
                 }        
         
         
-                @helper.form(action = routes.Dishes.upload(dish.id), 'enctype -> "multipart/form-data") {
+                @helper.form(action = routes.Dishes.upload(dish.id), 'enctype -> "multipart/form-data", 'acceptcharset -> "UTF-8") {
 		            <span class="btn"><input type="file" name="picture"></span>
                     <button class="btn btn-primary" type="submit" id="generalsavebutton">upload</button>
         		}
