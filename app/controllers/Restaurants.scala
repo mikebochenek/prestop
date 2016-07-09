@@ -126,11 +126,18 @@ object Restaurants extends Controller with Secured {
         case 2 => ll(1) 
         case default => "0"
       }).toDouble
-      Restaurant.update(id.toLong, name, city, address, longitude, latitude, schedule, restype.toInt, status.toInt, 
+      
+      val fullUser = User.getFullUser(username)
+      val newStatus = ("7".equals(fullUser.ttype) || status.toInt == -1) match {
+        case true => status.toInt
+        case false => 4
+      }
+      
+      Restaurant.update(id.toLong, name, city, address, longitude, latitude, schedule, restype.toInt, newStatus, 
           phone, email, postalcode, state, country, website, google_places_id)
       Tag.updateTags(id.toLong, ptags, 12)
       Tag.updateTags(id.toLong, ctags, 21)
-      Logger.info("calling restaurant update for id:" + id)
+      Logger.info("calling restaurant update for id:" + id + " newStatus:" + newStatus) 
       Redirect(routes.Restaurants.edit(id.toLong))
     }
   }
