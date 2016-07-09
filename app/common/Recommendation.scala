@@ -109,6 +109,7 @@ object Recommendation {
       .filter { x => (maxPrice >= x.price && minPrice <= x.price) } // filter by price
       .filter { x => !openNow || RecommendationUtils.checkOpenTime(restaurants, x.restaurant_id)} // filter out restaurants currently closed
       .filter { x => !dishesAlreadyRecommended.contains(x.id) } // filter out dishes already recommended (list would be empty if lastDishID is 0 or null)
+      .filter { x => x.status != 4 } // filter out dishes in draft mode
 
     val allDietTags = Tag.findByRefList((dishes.map { x => x.id }).toList, Tag.TYPE_DIET)
     val allIngredientTags = Tag.findByRefList((dishes.map { x => x.id }).toList, 11)
