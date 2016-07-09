@@ -111,13 +111,20 @@ object Dishes extends Controller with Secured {
   def save = IsAuthenticated { username =>
     implicit request =>  
       val (id, price, name, serving, description, greenscore, restaurant_id, status, itags, greenscoretags, diet, dishtype, meatorigin, source) = dishForm.bindFromRequest.get
-      Dish.update(id.toLong, price.toDouble, name, greenscore.toDouble, status.toInt, serving, description, source)
+      
+      val fullUser = User.getFullUser(username)
+      val newStatus = ("7".equals(fullUser.ttype) || status.toInt == -1) match {
+        case true => status.toInt
+        case false => 4
+      }
+      
+      Dish.update(id.toLong, price.toDouble, name, greenscore.toDouble, newStatus, serving, description, source)
       Tag.updateTags(id.toLong, itags, 11)
       Tag.updateTags(id.toLong, greenscoretags, 31)
       Tag.updateTags(id.toLong, diet, 34)
       Tag.updateTags(id.toLong, dishtype, 35)
       Tag.updateTags(id.toLong, meatorigin, 36)
-      Logger.info("calling restaurant update for id:" + id + " price:" + price + " name:" + name + " tags:" + itags + " greenscoretags: " + greenscoretags)
+      Logger.info("calling restaurant update for id:" + id + " price:" + price + " newStatus:" + newStatus + " name:" + name + " tags:" + itags + " greenscoretags: " + greenscoretags)
       Redirect(routes.Dishes.getById(id.toLong))
   }
 
