@@ -82,7 +82,7 @@ object User {
   
   def getFullUser(email: String): UserFull = {
     DB.withConnection { implicit connection =>
-      SQL("select " + columns + " from user where email = {email}").on(
+      SQL("select " + columns + " from user where email = {email} order by id desc limit 1").on(
         'email -> email).as(User.all.single)
     }
   }
@@ -96,7 +96,7 @@ object User {
 
   def getFullUserByUsername(username: String): Option[UserFull] = {
     DB.withConnection { implicit connection =>
-      SQL("select " + columns + " from user where username = {username}").on(
+      SQL("select " + columns + " from user where username = {username} order by id desc limit 1").on(
         'username -> username).as(User.all.singleOpt)
     }
   }
