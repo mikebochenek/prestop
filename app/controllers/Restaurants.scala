@@ -163,6 +163,7 @@ object Restaurants extends Controller with Secured {
   def create() = IsAuthenticated { username =>
     implicit request => {
       val txt = (request.body.asJson.get \ "donetext")
+      //TODO should we check user type OR always create restaurant owner?
       val id = Restaurant.create(txt.as[String], "", "", 0.0, 0.0, "", 0, None);
       Logger.info("restaurant created with " + txt.as[String] + " with id:" + id)
       Ok("ok")
