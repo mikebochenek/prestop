@@ -112,7 +112,7 @@ object Dishes extends Controller with Secured {
     implicit request =>  
       val (id, price, name, serving, description, greenscore, restaurant_id, status, itags, greenscoretags, diet, dishtype, meatorigin, source) = dishForm.bindFromRequest.get
       
-      val fullUser = User.getFullUser(username)
+      val fullUser = User.getFullUser(username).get
       val newStatus = ("7".equals(fullUser.ttype) || status.toInt == -1) match {
         case true => status.toInt
         case false => 4

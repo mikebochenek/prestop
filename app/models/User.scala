@@ -80,10 +80,10 @@ object User {
   
   val columns = " id, createdate, lastlogindate, deleted, password, settings, email, username, type, openidtoken, fullname, city, state, country, phone "
   
-  def getFullUser(email: String): UserFull = {
+  def getFullUser(email: String): Option[UserFull] = {
     DB.withConnection { implicit connection =>
       SQL("select " + columns + " from user where email = {email} order by id desc limit 1").on(
-        'email -> email).as(User.all.single)
+        'email -> email).as(User.all.singleOpt)
     }
   }
   

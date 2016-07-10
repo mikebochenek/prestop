@@ -127,7 +127,7 @@ object Restaurants extends Controller with Secured {
         case default => "0"
       }).toDouble
       
-      val fullUser = User.getFullUser(username)
+      val fullUser = User.getFullUser(username).get
       val newStatus = ("7".equals(fullUser.ttype) || status.toInt == -1) match {
         case true => status.toInt
         case false => 4
@@ -149,7 +149,7 @@ object Restaurants extends Controller with Secured {
 
   def getAll() = IsAuthenticated { username =>
     implicit request => {
-      val user = User.getFullUser(username)
+      val user = User.getFullUser(username).get
       val all = getRestaurantsForUser(user)
       for (restaurant <- all) {
         restaurant.paymentoptions =  Tag.findByRef(restaurant.id, 12).map(_.name)

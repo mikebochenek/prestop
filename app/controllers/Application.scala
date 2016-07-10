@@ -66,12 +66,12 @@ object Application extends Controller {
   def authenticate = Action { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(html.login(formWithErrors)),
-      user => Redirect(routes.Restaurants.index).withSession("email" -> user._1, "usertype" -> User.getFullUser(user._1).ttype))
+      user => Redirect(routes.Restaurants.index).withSession("email" -> user._1, "usertype" -> User.getFullUser(user._1).get.ttype))
   }
 
   def authenticateTest(email: String) = Action { implicit request =>
     val user = User.authenticate(email, "test")
-    Redirect(routes.Recommend.test).withSession("email" -> user.get.email, "usertype" -> User.getFullUser(user.get.email).ttype)
+    Redirect(routes.Recommend.test).withSession("email" -> user.get.email, "usertype" -> User.getFullUser(user.get.email).get.ttype)
   }
 
   def createuser = Action { implicit request =>

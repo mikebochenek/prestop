@@ -35,7 +35,7 @@ object Settings extends Controller with Secured {
     implicit request => {
       val me = User.findByEmail(username)
       
-      val fullUser = User.getFullUser(username)
+      val fullUser = User.getFullUser(username).get
       
       val subdomainLanguage = request.headers.get(HeaderNames.ACCEPT_LANGUAGE).get/*.substring(0,2)*/
       Logger.debug(" language from request:" + subdomainLanguage)
@@ -63,7 +63,7 @@ object Settings extends Controller with Secured {
 
       Logger.debug("email:" + email + " language:" + language)
 
-      val fullUser = User.getFullUser(username)
+      val fullUser = User.getFullUser(username).get
       
       if (fullUser.settings == null || !additionalsettings.equals(fullUser.settings)) {
         Logger.debug("additionalsettings different from what we have in the DB: " + additionalsettings)
@@ -119,7 +119,7 @@ object Settings extends Controller with Secured {
 
   def generateXML = IsAuthenticated { username =>
     implicit request => {
-      val fullUser = User.getFullUser(username) //TODO instead of generating XML we send email as a test only!
+      val fullUser = User.getFullUser(username).get //TODO instead of generating XML we send email as a test only!
       common.EmailReport.sendemail(fullUser)
       Ok(Json.toJson(models.CommonJSONResponse.OK))
     }
@@ -299,19 +299,27 @@ object Settings extends Controller with Secured {
       val deviceSWidth = (request.body.asJson.get \ "device_screen_width")
       val deviceLang = (request.body.asJson.get \ "device_language") 
       
-      val userByUsername = User.getFullUserByUsername(id)
-      val userByPhone = User.getFullUserByPhone(cleanPhoneString(phone.as[String]))
-      Logger.debug("userByUsername: " + userByUsername)
-      Logger.debug("userByPhone: " + userByPhone)
-      
-      val existingUser = ((id.size > 0 && userByUsername.isDefined) || (userByPhone.size > 0 && cleanPhoneString(phone.as[String]).size > 0))
-      
       val emailString = email.isInstanceOf[JsUndefined] match { 
         case true => ""
         case false => email.as[String]
       }
+
+      val userByUsername = User.getFullUserByUsername(id)
+      val userByPhone = User.getFullUserByPhone(cleanPhoneString(phone.as[String]))
+      val userByEmail = User.getFullUser(emailString)
+      Logger.debug("userByUsername: " + userByUsername)
+      Logger.debug("userByPhone: " + userByPhone)
+      Logger.debug("userByEmail: " + userByEmail)
+      
+      val existingUser = ((id.size > 0 && userByUsername.isDefined) 
+          || (userByPhone.size > 0 && cleanPhoneString(phone.as[String]).size > 0)
+          || (emailString.size > 0 && userByEmail.isDefined))
+      
       val newid = existingUser match {
-        case true => { if (userByUsername.isDefined) userByUsername.get.id else userByPhone(0).id } 
+        case true => { if (userByUsername.isDefined) userByUsername.get.id 
+                       else if (userByPhone.size > 0) userByPhone(0).id 
+                       else if (userByEmail.isDefined) userByEmail.get.id
+                       else -1 } 
         case false => User.create(new UserFull(-1, null, null, false, "test", null, emailString, id, "1", null, name.as[String], null, null, null, cleanPhoneString(phone.as[String]))).get
       }
       

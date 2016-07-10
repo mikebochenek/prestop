@@ -22,7 +22,7 @@ import views._
 object Recommend extends Controller with Secured  {
   def test() = IsAuthenticated { username =>
     implicit request => {
-      Ok(views.html.test(testForm, null, null, null, User.getFullUser(username).id.toString, 
+      Ok(views.html.test(testForm, null, null, null, User.getFullUser(username).get.id.toString, 
           "47.385740", "8.518084", "false", "10", "0.0", "100.0", "100", "-1"))
     }
   }
