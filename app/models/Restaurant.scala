@@ -87,6 +87,21 @@ object Restaurant {
     }
   }
 
+  def createOwner(restaurant_id: Long, user_id: Long, settings: String): Option[Long] = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          insert into restaurant_owner (restaurant_id, user_id, lastupdate, status, settings) values (
+          {restaurant_id}, {user_id}, {lastupdate}, {status}, {settings}
+          )
+        """).on(
+          'restaurant_id -> restaurant_id,
+          'user_id -> user_id,
+          'settings-> settings,
+          'lastupdate -> new Date(),
+          'status -> 0).executeInsert()
+    }
+  }
 
   def update(id: Long, name: String, city: String, address: String, longitude: Double, latitude: Double, 
       scheduleCron: String, restype: Int, status: Int, phone: String, email: String, postalcode: String, state: String, 
