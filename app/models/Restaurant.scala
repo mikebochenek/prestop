@@ -66,7 +66,7 @@ object Restaurant {
   }
 
   def create(name: String, city: String, address: String, longitude: Double, latitude: Double, 
-      scheduleCron: String, restype: Int, parent_id: Option[Long]): Option[Long] = {
+      scheduleCron: String, restype: Int, parent_id: Option[Long], status: Long): Option[Long] = {
     DB.withConnection { implicit connection =>
       SQL(
         """
@@ -83,7 +83,7 @@ object Restaurant {
           'schedulecron-> scheduleCron,
           'restype -> restype,
           'lastupdate -> new Date(),
-          'status -> 0).executeInsert()
+          'status -> status).executeInsert()
     }
   }
 

@@ -40,7 +40,7 @@ object Restaurants extends Controller with Secured {
       street: String, postalcode: String, phone: String, website: String, schedule: String, place_id: String) = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling restaurant edit AND populate - load data for id:" + id)
-      val newid = Restaurant.create(name, "", "", 0.0, 0.0, "", 0, None);
+      val newid = _create(name, username);
       Logger.info("restaurant created with " + name + " with id:" + newid)
       
       val misc = new RestaurantMiscInfo(Option(postalcode), Option(""), Option(website), Option("Switzerland"), Option(0), Option(place_id), null)
@@ -160,12 +160,30 @@ object Restaurants extends Controller with Secured {
     }
   } 
 
+  def _create(txt: String, username: String) = {
+    val user = User.getFullUser(username).get
+    val newStatus = "7".equals(user.ttype) match {
+      case true => 0
+      case false => 4
+    } 
+      
+    val id = Restaurant.create(txt, "", "", 0.0, 0.0, "", 0, None, newStatus);
+      
+    if (newStatus == 4 && id.isDefined) {
+      val ownerId = Restaurant.createOwner(id.get, user.id, "")
+      Logger.info("restaurant owner created for id: " + ownerId + " restaurant_id: " + id + " user: " + user.id)
+    }
+      
+    Logger.info("restaurant created with " + txt + " with id:" + id)
+    id
+  }
+  
   def create() = IsAuthenticated { username =>
     implicit request => {
       val txt = (request.body.asJson.get \ "donetext")
-      //TODO should we check user type OR always create restaurant owner?
-      val id = Restaurant.create(txt.as[String], "", "", 0.0, 0.0, "", 0, None);
-      Logger.info("restaurant created with " + txt.as[String] + " with id:" + id)
+      
+      _create(txt.as[String], username)
+      
       Ok("ok")
     }
   }
@@ -227,7 +245,7 @@ object Restaurants extends Controller with Secured {
     implicit request => {
       Logger.info("calling add new location - for id:" + id)
       val r = Restaurant.findById(username, id)(0)
-      val newid = Restaurant.create(r.name, r.city, r.address, r.longitude, r.latitude, r.schedule, r.restype, Option(r.id));
+      val newid = Restaurant.create(r.name, r.city, r.address, r.longitude, r.latitude, r.schedule, r.restype, Option(r.id), r.status);
       Redirect(routes.Restaurants.edit(id))
     }
   }
