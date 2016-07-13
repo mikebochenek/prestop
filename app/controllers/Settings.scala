@@ -144,17 +144,6 @@ object Settings extends Controller with Secured {
     }
   }
   
-  def updateUser() = Action {
-    implicit request => {
-      val email = (request.body.asJson.get \ "email").as[String]
-      val username = (request.body.asJson.get \ "username")
-      val id = 13; 
-      //User.update(null, email, null) // TODO
-      Logger.info("TODO:  nothing has been created yet - " + email + " with id:" + id)
-      Ok("ok")
-    }
-  }
-
   def uploadPhoto(id: Long) = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
       Logger.info("upload user photo " + id)
