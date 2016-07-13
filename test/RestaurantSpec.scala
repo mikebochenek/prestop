@@ -12,12 +12,12 @@ class RestaurantSpec extends Specification {
   "Application" should {
 
     "create restaurant entries" in new WithApplication {
-      val id = Restaurant.create("name", "city", "street", 101.0, -83.3, "schedule x", 12, Option(0));
+      val id = Restaurant.create("name", "city", "street", 101.0, -83.3, "schedule x", 12, Option(0), 4);
       println ("creating new restaurant with id:" + id)
     }
 
     "update restaurant entry" in new WithApplication {
-      val id = Restaurant.update(2, "burgers", "zurich", "kapstr 4", 32.4, -13.42, "xes", 13, 1, "123", "tat", null, null, null);
+      val id = Restaurant.update(2, "burgers", "zurich", "kapstr 4", 32.4, -13.42, "xes", 13, 1, "123", "tat", null, null, null, null, null);
       println ("updating existing restaurant with id:" + id)
     }
 
