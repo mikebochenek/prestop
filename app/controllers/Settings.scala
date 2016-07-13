@@ -358,6 +358,50 @@ object Settings extends Controller with Secured {
     }
   }
   
+  def checkExistingUser() = Action {
+    implicit request => {
+      Logger.info("check existing user - body:" + request.body.asJson)
+      
+      val email = (request.body.asJson.get \ "user_data" \ "email")
+      val phone = (request.body.asJson.get \ "user_data" \ "phone_numer")
+      val idJSON = (request.body.asJson.get \ "user_data" \ "id")
+      val id = (idJSON.isInstanceOf[JsUndefined]) match {
+        case true => ""
+        case false => idJSON.as[String]
+      }
+      val emailString = email.isInstanceOf[JsUndefined] match { 
+        case true => ""
+        case false => email.as[String]
+      }
+
+      val userByUsername = User.getFullUserByUsername(id)
+      val userByPhone = User.getFullUserByPhone(cleanPhoneString(phone.as[String]))
+      val userByEmail = User.getFullUser(emailString)
+      Logger.debug("userByUsername: " + userByUsername)
+      Logger.debug("userByPhone: " + userByPhone)
+      Logger.debug("userByEmail: " + userByEmail)
+      
+      val existingUser = ((id.size > 0 && userByUsername.isDefined) 
+          || (userByPhone.size > 0 && cleanPhoneString(phone.as[String]).size > 0)
+          || (emailString.size > 0 && userByEmail.isDefined))
+      
+      val newid = existingUser match {
+        case true => { if (userByUsername.isDefined) userByUsername.get.id 
+                       else if (userByPhone.size > 0) userByPhone(0).id 
+                       else if (userByEmail.isDefined) userByEmail.get.id
+                       else -1 } 
+        case false => -1
+      }
+      
+      val userStatus = existingUser match {
+        case true => "existing_user"
+        case false => "new"
+      }
+      
+      Ok(Json.prettyPrint(Json.toJson(new RegisterResponse("OK", newid, userStatus))))
+    }
+  }
+
   def introTexts(lang: String) = Action {
     implicit request => {
       val tags = Tag.findAll().filter { x => x.status == Tag.TYPE_INTRO_TEXTS }
