@@ -19,6 +19,7 @@ POST     /api/reservations/new       controllers.Reservations.create
 GET      /api/settings/:id           controllers.Settings.getByUser(id: Long)
 POST     /api/settings/update        controllers.Settings.updateUser
 POST     /api/register               controllers.Settings.register
+POST     /api/checkExistingUser      controllers.Settings.checkExistingUser
 GET      /api/deleteuser/:id         controllers.Settings.deleteUser(id: Long)
 POST     /api/personalize            controllers.Settings.personalize
 POST     /api/personalizetaste       controllers.Settings.personalizeTasteProfile

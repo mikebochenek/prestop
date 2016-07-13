@@ -362,9 +362,9 @@ object Settings extends Controller with Secured {
     implicit request => {
       Logger.info("check existing user - body:" + request.body.asJson)
       
-      val email = (request.body.asJson.get \ "user_data" \ "email")
-      val phone = (request.body.asJson.get \ "user_data" \ "phone_numer")
-      val idJSON = (request.body.asJson.get \ "user_data" \ "id")
+      val email = (request.body.asJson.get \ "email")
+      val phone = (request.body.asJson.get \ "phone_numer")
+      val idJSON = (request.body.asJson.get \ "id")
       val id = (idJSON.isInstanceOf[JsUndefined]) match {
         case true => ""
         case false => idJSON.as[String]
@@ -395,7 +395,7 @@ object Settings extends Controller with Secured {
       
       val userStatus = existingUser match {
         case true => "existing_user"
-        case false => "new"
+        case false => "user_not_found"
       }
       
       Ok(Json.prettyPrint(Json.toJson(new RegisterResponse("OK", newid, userStatus))))
