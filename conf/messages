@@ -75,3 +75,8 @@ reports.friends = Friends
 reports.user_id = user_id
 reports.friend_user_id = friend_user_id
 reports.reservations = Reservations
+
+
+# approvals
+approvals.title = Approvals
+approvals.restaurants_count = Restaurants awaiting approval:
