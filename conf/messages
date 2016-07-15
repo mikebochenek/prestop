@@ -80,3 +80,6 @@ reports.reservations = Reservations
 # approvals
 approvals.title = Approvals
 approvals.restaurants_count = Restaurants awaiting approval:
+approvals.all_restaurants_approved = All restaurants approved, great job! :-)
+approvals.dishes_count = Dishes awaiting approval:
+approvals.all_dishes_approved = All dishes approved, great job! :-) 

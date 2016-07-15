@@ -5,10 +5,10 @@
 
       <div class="starter-template">
       
-      	<h1>Restaurants awaiting approval: @restaurants.size</h1>
+      	<h1>@Messages("approvals.restaurants_count") @restaurants.size</h1>
 
         @if(restaurants.size == 0) {
-        <div>All restaurants approved, great job! :-)</div>	
+        <div>@Messages("approvals.all_restaurants_approved")</div>	
         }      	
       	<table class="table table-striped">
 		@for((restaurant, index) <- restaurants.zipWithIndex)  {	
@@ -19,9 +19,9 @@
 		}
 		</table>
 
-      	<h1>Dishes awaiting approval: @dishes.size</h1>
+      	<h1>@Messages("approvals.dishes_count") @dishes.size</h1>
         @if(dishes.size == 0) {
-        <div>All dishes approved, great job! :-)</div>	
+        <div>@Messages("approvals.all_dishes_approved")</div>	
         }      	
       	
       	<table class="table table-striped">
