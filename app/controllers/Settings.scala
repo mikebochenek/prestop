@@ -412,7 +412,7 @@ object Settings extends Controller with Secured {
       val friendFDel = Friend.deleteByFriendUserId(id)
       val userDel = User.delete(id)
       Logger.info("deleted " + activityDel + " activities, " + friendDel + " friends, " + friendFDel + " ffriends, " + userDel + " users")
-      Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
+      Redirect(routes.Settings.userList)
     }
   }
 
