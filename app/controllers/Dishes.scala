@@ -227,6 +227,8 @@ object Dishes extends Controller with Secured {
   }
 
   def upload(id: Long) = Action(parse.multipartFormData) { request =>
+    Logger.info("request.Content-Type   : " + request.headers.get("Content-Type"))
+    Logger.info("request.Accept-Charset : " + request.headers.get("Accept-Charset"))
     request.body.file("picture").map { picture =>
       Image.saveAndResizeImages(picture, id, "dish")
       Redirect(routes.Dishes.cropImage(id, "dish"))

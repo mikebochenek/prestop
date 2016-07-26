@@ -64,6 +64,8 @@ object Application extends Controller {
   }
 
   def authenticate = Action { implicit request =>
+    Logger.info("request.Content-Type   : " + request.headers.get("Content-Type"))
+    Logger.info("request.Accept-Charset : " + request.headers.get("Accept-Charset"))
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(html.login(formWithErrors)),
       user => Redirect(routes.Restaurants.index).withSession("email" -> user._1, "usertype" -> User.getFullUser(user._1).get.ttype))
