@@ -60,7 +60,7 @@ object Activities extends Controller with Secured {
             null,
             allIngredientTags.filter{x => x.refid == dish.id}.map(_.name),
             r.id,
-            r.name, r.city + ", " + r.misc.country.getOrElse(""), Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
+            r.name, r.city + ", " + r.misc.country.getOrElse(""), Image.findByRestaurant(r.id).filter{x => x.width.get == 72 && x.status == 1}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
             friendLikedDishURLs,
             allDietTags.filter{x => x.refid == dish.id}.map(_.name),
             Tag.findByRef(dish.id, 35).map(_.name))
