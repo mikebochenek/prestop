@@ -27,11 +27,10 @@ password = password
 newpassword = new password
 newpassword2 = re-enter new password
 exportdata = Export Data
-downloadcsv = download data export as a CSV file
-downloadxml = download data export as an XML file
-downloadjson = download data export as a JSON file
-team = Team
-newteamemail = new team member email
+downloadcsv = Download data export as a CSV file
+downloadxml = Download data export as an XML file
+downloadjson = Download data export as a JSON file
+sendreportnow = Send me the nightly stats report NOW!
 addnew = Add New
 
 # login
