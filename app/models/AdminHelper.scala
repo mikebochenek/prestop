@@ -7,6 +7,11 @@ object AdminHelper {
 
   val mybr = "<hr style=\"width: 100%; color: black; height: 1px; background-color:black;\" />"
   
+  def deletedImages(): String = {
+    val di = Image.findAll().filter { x => x.status == -1 }
+    "deleted: " + di.size
+  }
+  
   def generateStats(): String = {
 
     (system_date + system_uptime + mybr

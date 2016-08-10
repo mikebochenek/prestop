@@ -1,6 +1,6 @@
 @(restaurants: Seq[Restaurant], dishes: Seq[Dish], deletedDishes: Seq[Dish], users: Seq[UserFull], 
 	friends: Seq[Friend], reservations: Seq[Reservation], activities: Seq[ActivityLog], recent10: Seq[ActivityLog], 
-	imagesCount: Long, adminStats: String)(implicit session: Session, lang: Lang)
+	imagesCount: Long, adminStats: String, deletedImages: String)(implicit session: Session, lang: Lang)
 @main(title = "reports") {
     @if(session.get("usertype").get.toString.equals("7")) {
     <div class="container">
@@ -185,6 +185,10 @@
 		
 		<h3>System Info</h3>
 		<pre>@Html(adminStats)</pre>
+		
+		<h3>Deleted Images</h3>
+		<pre>@Html(deletedImages)</pre>
+		
       </div>
 
     </div><!-- /.container -->
