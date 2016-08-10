@@ -9,7 +9,7 @@ object AdminHelper {
   
   def deletedImages(): String = {
     val di = Image.findAll().filter { x => x.status == -1 }
-    "deleted: " + di.size
+    di.map{_.filename}.mkString("<br>") + "<br><br>deleted: " + di.size
   }
   
   def generateStats(): String = {
