@@ -81,6 +81,8 @@ GET     /permalink/:id                      controllers.Application.permalink(id
 # Authentication
 GET     /login                              controllers.Application.login
 GET     /createuser                         controllers.Application.createuser
+GET     /forgotpassword                     controllers.Application.forgotpassword
+POST    /submitforgotpassword               controllers.Application.submitforgotpassword
 GET     /submitcreateuser                   controllers.Application.submitcreateuser
 POST    /login                              controllers.Application.authenticate
 # GET     /testlogin/:id                      controllers.Application.authenticateTest(id: String)

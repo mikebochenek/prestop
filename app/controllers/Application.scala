@@ -86,6 +86,23 @@ object Application extends Controller {
       user => Redirect(routes.Restaurants.index).withSession("email" -> user._1))
   }
 
+  val forgotPasswordForm = Form[(String, String, String)](
+    tuple(
+      "email" -> nonEmptyText,
+      "recaptcha_challenge_field" -> nonEmptyText,
+      "recaptcha_response_field" -> nonEmptyText))
+  
+  def forgotpassword = Action { implicit request =>
+    Ok(html.forgotpassword(forgotPasswordForm))
+  }
+  
+  def submitforgotpassword = Action { implicit request =>
+    forgotPasswordForm.bindFromRequest.fold(
+      formWithErrors => BadRequest(html.forgotpassword(formWithErrors)),
+      user => Redirect(routes.Application.login).withNewSession.flashing("success" -> "You can try to login once you get the email")
+    )
+  }
+      
   def logout = Action {
     Redirect(routes.Application.login).withNewSession.flashing(
       "success" -> "You've been logged out")
