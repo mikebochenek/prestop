@@ -8,6 +8,14 @@
 
   <div class="starter-template">
     <h1>@Messages("settings")</h1>
+
+    @form.globalError.map { error =>
+      <div class="row ">
+      <div class="bg-danger col-sm-8 col-md-offset-2">
+        @Messages(error.message)
+      </div>
+    </div>
+    }
       	
     <h3>@Messages("general")</h3>
 

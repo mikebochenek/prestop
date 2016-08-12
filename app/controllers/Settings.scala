@@ -84,16 +84,26 @@ object Settings extends Controller with Secured {
       
       //Logger.debug("password:" + password + " passwordnew1:" + passwordnew1 + " passwordnew2:" + passwordnew2)
 
+      val errors = MutableList.empty[String]
       if (password != null && password.trim.length > 0 
           && passwordnew1 != null && passwordnew1.trim.length > 0 && passwordnew1.equals(passwordnew2)) {
         Logger.info("changing password for email:" + username)
-        if (username.equals(User.authenticate(username, password).get.email)) {
+        if (User.authenticate(username, password).isDefined && username.equals(User.authenticate(username, password).get.email)) {
           User.updatepassword(username, passwordnew1)
+        } else {
+          errors += "settings.invalidexistingpassword"
         }
-      } //TODO only handles happy path for now
+      } else {
+        errors += "settings.passwordsnotmatching"
+      }
 
-
-      Redirect(routes.Settings.load)
+      if (settingsForm.hasGlobalErrors || settingsForm.hasErrors || errors.size > 0) {
+        Logger.debug("MyValidationError - sending BadRequest: " + errors.head)
+        val url = Image.findByUser(fullUser.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+        BadRequest(views.html.settings(settingsForm.withGlobalError(errors.head), User.findByEmail(username), getPreviousSettingsSafely(fullUser), url))
+      } else {
+        Redirect(routes.Settings.load)
+      }
     }
   }
 

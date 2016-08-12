@@ -32,6 +32,8 @@ downloadxml = Download data export as an XML file
 downloadjson = Download data export as a JSON file
 sendreportnow = Send me the nightly stats report NOW!
 addnew = Add New
+settings.passwordsnotmatching = Passwords do not match
+settings.invalidexistingpassword = Invalid existing (old) password
 
 # login
 invalidlogin = Invalid email or password
