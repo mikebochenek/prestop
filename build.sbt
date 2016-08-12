@@ -10,4 +10,6 @@ libraryDependencies ++= Seq(
 
 libraryDependencies += "org.imgscalr" % "imgscalr-lib" % "4.2"
 
+libraryDependencies += "net.tanesha.recaptcha4j" % "recaptcha4j" % "0.0.7"
+
 play.Project.playScalaSettings

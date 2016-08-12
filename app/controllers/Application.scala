@@ -1,6 +1,7 @@
 package controllers
 
 import java.io.File
+import net.tanesha.recaptcha._
 import play.Play
 import play.api.mvc.Action
 import play.api.mvc.Session
@@ -98,11 +99,35 @@ object Application extends Controller {
   
   def submitforgotpassword = Action { implicit request =>
     forgotPasswordForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(html.forgotpassword(formWithErrors)),
-      user => Redirect(routes.Application.login).withNewSession.flashing("success" -> "You can try to login once you get the email")
+      failure => ( BadRequest("Captcha Param Error")),
+      { case (email, q, a) => {
+          if (checkCaptcha("addr", q, a)) { //TODO "addr" was a variable in their sample
+            Redirect(routes.Application.login).withNewSession.flashing("success" -> "You can try to login once you get the email")
+          } else {
+            BadRequest("Captcha Validation Error")
+          }
+        }
+      }
     )
   }
-      
+  
+  def publicKey(): String = {
+    "6Lcpy9YSAAAAAKPK5T8tdO5WbiRPkKENziunk0c2" //current.configuration.getString("recaptcha.publickey").get
+  }
+  def privateKey(): String = {
+    "6Lcpy9YSAAAAANlSJ-iw9GDSKFYX5HktGbs-oG7D" //current.configuration.getString("recaptcha.privatekey").get
+  }
+  def renderCaptcha(): String = {
+    ReCaptchaFactory.newReCaptcha(publicKey(), privateKey(), false).createRecaptchaHtml(null, new java.util.Properties)
+  }
+  
+  def checkCaptcha(addr: String, challenge: String, response: String): Boolean = {
+    val reCaptcha = new ReCaptchaImpl()
+    reCaptcha.setPrivateKey(privateKey())
+    val reCaptchaResponse = reCaptcha.checkAnswer(addr, challenge, response)
+    reCaptchaResponse.isValid()
+  }
+  
   def logout = Action {
     Redirect(routes.Application.login).withNewSession.flashing(
       "success" -> "You've been logged out")
