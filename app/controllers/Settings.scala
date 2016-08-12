@@ -60,7 +60,8 @@ object Settings extends Controller with Secured {
   def save = IsAuthenticated { username =>
     implicit request => { 
       val (email, language, password, passwordnew1, passwordnew2, additionalsettings) = settingsForm.bindFromRequest.get
-
+      val errors = MutableList.empty[String]
+      
       Logger.debug("email:" + email + " language:" + language)
 
       val fullUser = User.getFullUser(username).get
@@ -84,17 +85,17 @@ object Settings extends Controller with Secured {
       
       //Logger.debug("password:" + password + " passwordnew1:" + passwordnew1 + " passwordnew2:" + passwordnew2)
 
-      val errors = MutableList.empty[String]
-      if (password != null && password.trim.length > 0 
-          && passwordnew1 != null && passwordnew1.trim.length > 0 && passwordnew1.equals(passwordnew2)) {
+      if (passwordnew1 != null && passwordnew1.trim.length > 0) {
         Logger.info("changing password for email:" + username)
-        if (User.authenticate(username, password).isDefined && username.equals(User.authenticate(username, password).get.email)) {
-          User.updatepassword(username, passwordnew1)
+        if (password != null && password.trim.length > 0 && passwordnew1.equals(passwordnew2)) {
+          if (User.authenticate(username, password).isDefined && username.equals(User.authenticate(username, password).get.email)) {
+            User.updatepassword(username, passwordnew1)
+          } else {
+            errors += "settings.invalidexistingpassword"
+          }
         } else {
-          errors += "settings.invalidexistingpassword"
+          errors += "settings.passwordsnotmatching"
         }
-      } else {
-        errors += "settings.passwordsnotmatching"
       }
 
       if (settingsForm.hasGlobalErrors || settingsForm.hasErrors || errors.size > 0) {
