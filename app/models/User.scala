@@ -205,7 +205,8 @@ object User {
   def create(email: String, password: String, password2: String) = {
     Logger.info ("creating user with email:" + email)
     
-    DB.withConnection { implicit connection =>
+    if (password != null && password.equals(password2) && getFullUser(email).isEmpty) {
+      DB.withConnection { implicit connection =>
       SQL(
         """
           insert into user (email, username, password, createdate) values (
@@ -216,7 +217,10 @@ object User {
           'username -> email,
           'password -> hash(password),
           'createdate -> new Date()).executeInsert()
-
+      }
+    } else {
+      Logger.info("do *not* create new user " + email)
+      None
     }
   }
 

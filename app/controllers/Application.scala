@@ -51,8 +51,6 @@ object Application extends Controller {
         case (email, password) => User.authenticate(email, password).isDefined
       }))
 
-  //TODO obviously this will have to include 2nd password and a call to create
-  // and error handling (email already in use...)
   val createUserForm = Form(
     tuple(
       "email" -> text,
