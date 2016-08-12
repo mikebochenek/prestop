@@ -13,6 +13,7 @@ import play.api.data.Forms._
 import models._
 import views._
 import common.RecommendationUtils
+import common.EmailReport
 
 object Application extends Controller {
   /** serve the index page app/views/index.scala.html */
@@ -101,10 +102,11 @@ object Application extends Controller {
     forgotPasswordForm.bindFromRequest.fold(
       failure => ( BadRequest("Captcha Param Error")),
       { case (email, q, a) => {
-          if (checkCaptcha("addr", q, a)) { //TODO "addr" was a variable in their sample
+          if (checkCaptcha("addr", q, a)) { // hmmm... "addr" was a variable in their sample
+            EmailReport.sendnewpassword(email)
             Redirect(routes.Application.login).withNewSession.flashing("success" -> "You can try to login once you get the email")
           } else {
-            BadRequest("Captcha Validation Error")
+            Redirect(routes.Application.forgotpassword).flashing("error" -> "Captcha is not correct.  Please try again.")
           }
         }
       }

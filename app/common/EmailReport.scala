@@ -7,6 +7,7 @@ import com.typesafe.plugin._
 import play.api.Play.current
 import models.MailLog
 import play.api.Logger
+import scala.util.Random
 
 object EmailReport {
 
@@ -54,6 +55,37 @@ object EmailReport {
         //MailLog.create(new MailLog(1, user.id, html, subject, null, -1))
       }
     }
+  }
+  
+  def sendnewpassword(email: String) = {
+    val user = User.getFullUser(email)
+    Logger.info (user.isDefined + " - generate new password for : " + email)
+    if (user.isDefined) {
+      val pwd = newpassword()
+      
+      val subject = "Presto Admin Password for: " + email
+
+      var html = "<html><body><h1>" + subject + "</h1>"
+      html += "Hello " + user.get.fullname
+      html += "<br>Your new password is: " + pwd
+      html += "<br>You can change it after logging in."
+      html += "</body></html>"
+  
+      val mail = use[MailerPlugin].email
+      mail.setSubject(subject)
+      mail.setRecipient(user.get.email)
+      mail.setFrom("info@idone.ch")
+  
+      if (isValid(user.get.email)) {
+        mail.sendHtml(html)
+        
+        User.updatepassword(user.get.username, pwd)
+      }
+    }
+  }
+  
+  def newpassword() = {
+    Random.alphanumeric take 10 mkString("")
   }
 
   /* http://stackoverflow.com/questions/13912597/validate-email-one-liner-in-scala
