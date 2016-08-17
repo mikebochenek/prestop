@@ -6,7 +6,7 @@ GET      /views/*any            controllers.Application.loadPublicHTML(any)
 
 # public APIs (for mobile development etc.)
 GET      /api/recommend/:id,:longitude,:latitude,:filter    controllers.Recommend.get(id: Long, longitude: String, latitude: String, filter: String)
-GET      /api/recommend              controllers.Recommend.getWithFilters(id: Long ?= 0, longitude: String ?= "", latitude: String ?= "", maxDistance: Double ?= 10, minPrice: Double ?= 0.0, maxPrice: Double ?= 1000.0, openNow: Boolean ?= false, lastDishID: Long ?= 0, maxDishes: Long ?= 100)
+GET      /api/recommend              controllers.Recommend.getWithFilters(id: Long ?= 0, longitude: String ?= "", latitude: String ?= "", maxDistance: Double ?= 10, minPrice: Double ?= 0.0, maxPrice: Double ?= 1000.0, openNow: Boolean ?= false, lastDishID: Long ?= 0, maxDishes: Long ?= 100, avoid: String ?= "")
 GET      /api/restaurant/:id         controllers.Restaurants.getById(id: Long)
 GET      /api/restaurant_populate    controllers.Restaurants.createAndPopulate(id: Long ?= 0, longitude: String ?= "", latitude: String ?= "", name: String ?= "", street: String ?= "", postalcode: String ?= "", phone: String ?= "", website: String ?= "", schedule: String ?= "", place_id: String ?= "")
 GET      /api/friends/:id            controllers.Friends.getByUser(id: Long)

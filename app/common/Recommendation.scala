@@ -38,9 +38,11 @@ object Recommendation {
   }
   
   
-  def recommend(user: UserFull, latitude: Double, longitude: Double, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean, lastDishID: Long, maxDishes: Long) = {
+  def recommend(user: UserFull, latitude: Double, longitude: Double, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean, lastDishID: Long, maxDishes: Long, avoid: String) = {
     val random = new java.util.Random
     val dishesAlreadyRecommendedActivities = ActivityLog.findRecentByUserType(user.id, 7).reverse
+    
+    Logger.info("avoid: " + avoid)
     
     def getDishesAlreadyRecommended() :SortedSet[Long] = {
       val dar = SortedSet[Long]()
@@ -152,7 +154,7 @@ object Recommendation {
         Logger.debug ("dish: " + dish.id + "," + dish.name.take(15) + " was liked by " + thisDishLikersCount + " friends")
         score +=  thisDishLikersCount * friendLikesScoreWeight       
       }
-     
+      
       val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, dish.source, dish.description.getOrElse(""), like, 0.0, 
         null, null, null,
         RecommendationUtils.makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
@@ -160,7 +162,12 @@ object Recommendation {
 
       ri.score += scoreDistance(ri.distance)
       
-      result.dishes += ri
+      var avoidDish = false
+      dishDietTags.foreach { t => if (avoid.contains(t)) avoidDish = true }
+     
+      if (!avoidDish) {
+        result.dishes += ri
+      }
     }
     
     val sortedResult = result.dishes.sortBy(_.score).reverse
