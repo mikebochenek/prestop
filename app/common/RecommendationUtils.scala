@@ -143,6 +143,6 @@ object RecommendationUtils {
   val priceFormat = new DecimalFormat("#.00")
   def makePriceString(p: Double) = {
     if (p == 0.0) "" 
-    else priceFormat.format(p)// + " CHF"
+    else "CHF " + priceFormat.format(p)
   }
 }
