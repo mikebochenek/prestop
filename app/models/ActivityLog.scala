@@ -95,6 +95,14 @@ object ActivityLog {
     }
   }  
 
+  def findAllByType(interval: Long, atype: Long): Seq[ActivityLog] = {
+    DB.withConnection { implicit connection =>
+      SQL(selectSQL + " where activity_type = {atype}"
+          + " and createdate >= DATE(NOW()) - INTERVAL " + interval + " DAY "
+          + " order by id asc").on('atype -> atype).as(ActivityLog.simple *)
+    }
+  }  
+
   def findRecentByUserType(user_id: Long, atype: Long): Seq[ActivityLog] = {
     DB.withConnection { implicit connection =>
       SQL(selectSQL + " where user_id = {user_id} and activity_type = {atype}"

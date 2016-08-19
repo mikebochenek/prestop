@@ -254,4 +254,52 @@ object Restaurants extends Controller with Secured {
       Redirect(routes.Restaurants.edit(id))
     }
   }
+  
+  def getPieChartData(id: Long): String = {
+    val startTS = System.currentTimeMillis()
+    val dishes = Dish.findAll(id)
+    val activities = ActivityLog.findAllByType(365, 7)
+
+    var str = ""
+    for (dish <- dishes) {
+      if (str.length() > 0) { str += ","}
+      
+      str += "['" + dish.name.replace(''',' ') + "', "  //TODO need to escape '... oi
+      var total = 0
+      for (activity <- activities) {
+        if (activity.activity_details.contains("" + dish.id)) { total += 1 }//TODO not completely correct
+      }
+      str += total + "]"
+    }
+    Logger.info("getPieChartData elapsed: " + (System.currentTimeMillis() - startTS))
+    str
+  }
+  
+  def getBarChartData(id: Long): String = {
+    val startTS = System.currentTimeMillis()
+    val dishes = Dish.findAll(id)
+    val activities = ActivityLog.findAllByType(190, 7)
+    var totals:Array[Int] = new Array[Int](13)
+
+    for (dish <- dishes) {
+      var total = 0
+      for (activity <- activities) {
+        if (activity.activity_details.contains("" + dish.id)) { 
+          val month = activity.createdate.getMonth
+          totals(month) += 1
+        }//TODO not completely correct
+      }
+    }
+    
+    Logger.info("getBarChartData elapsed: " + (System.currentTimeMillis() - startTS))
+    
+    ("['February', " + totals(1) + "]," 
+        + "['March', " + totals(2) + "],"
+        + "['April', " + totals(3) + "],"
+        + "['May', " + totals(4) + "],"
+        + "['June', " + totals(5) + "],"
+        + "['July', " + totals(6) + "],"
+        + "['August', " + totals(7) + "]")
+  }
+  
 }
