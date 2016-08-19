@@ -276,6 +276,8 @@ object Restaurants extends Controller with Secured {
     Logger.info("getPieChartData elapsed: " + (System.currentTimeMillis() - startTS))
     str
   }
+
+  val months = Array("January","February","March","April","May","June","July","August","September","October","November","December")
   
   def getBarChartData(id: Long): String = {
     val startTS = System.currentTimeMillis()
@@ -295,13 +297,15 @@ object Restaurants extends Controller with Secured {
     
     Logger.info("getBarChartData elapsed: " + (System.currentTimeMillis() - startTS))
     
-    ("['February', " + totals(1) + "]," 
-        + "['March', " + totals(2) + "],"
-        + "['April', " + totals(3) + "],"
-        + "['May', " + totals(4) + "],"
-        + "['June', " + totals(5) + "],"
-        + "['July', " + totals(6) + "],"
-        + "['August', " + totals(7) + "]")
+    val currentMonth = new java.util.Date().getMonth
+    
+    var output = ""
+    for (i <- (currentMonth + 6) to (currentMonth+12)) {
+      if (output.length != 0) { output += "," }
+      output += "['" + months(i%12) + "', " + totals(i%12) + "]"
+    }
+    
+    output
   }
   
 }
