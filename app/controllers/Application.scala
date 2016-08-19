@@ -3,6 +3,7 @@ package controllers
 import java.io.File
 import net.tanesha.recaptcha._
 import play.Play
+import play.api.Play.current
 import play.api.mvc.Action
 import play.api.mvc.Session
 import play.api.mvc.Controller
@@ -93,7 +94,7 @@ object Application extends Controller {
       "recaptcha_response_field" -> nonEmptyText))
   
   def forgotpassword = Action { implicit request =>
-    Ok(html.forgotpassword(forgotPasswordForm, request.toString.contains("https://")))
+    Ok(html.forgotpassword(forgotPasswordForm, !current.configuration.getString("image.server.baseurl").getOrElse("").contains("localhost")))
   }
   
   def submitforgotpassword = Action { implicit request =>
