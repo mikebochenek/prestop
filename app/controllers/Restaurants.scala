@@ -1,7 +1,6 @@
 package controllers
 
-import models.Restaurant
-import models.Image
+import models._
 import play.api.libs.json.Json
 import play.api.mvc.Action
 import play.api.mvc.Controller
@@ -70,6 +69,12 @@ object Restaurants extends Controller with Secured {
         
         val friends = List(new RestaurantFriends(1, "Mike Bochenek", Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url))
         restaurant.friendsWhoBooked = friends;
+        
+        try {
+          ActivityLog.create(1, 9, id, "") //TODO we don't have userID
+        } catch {
+          case _: Throwable => Logger.error("Could not create activity log for api/restuarant, but thats OK")
+        }
       }
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
     }
