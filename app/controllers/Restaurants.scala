@@ -264,10 +264,12 @@ object Restaurants extends Controller with Secured {
     for (dish <- dishes) {
       if (str.length() > 0) { str += ","}
       
-      str += "['" + dish.name.replace(''',' ') + "', "  //TODO need to escape '... oi
+      str += "['" + dish.name.replace(''',' ') + "', "
       var total = 0
       for (activity <- activities) {
-        if (activity.activity_details.contains("" + dish.id)) { total += 1 }//TODO not completely correct
+        if (activity.activity_details.contains(dish.id + ",") || activity.activity_details.contains(dish.id + "]")) { 
+          total += 1 
+        }
       }
       str += total + "]"
     }
@@ -284,10 +286,10 @@ object Restaurants extends Controller with Secured {
     for (dish <- dishes) {
       var total = 0
       for (activity <- activities) {
-        if (activity.activity_details.contains("" + dish.id)) { 
+        if (activity.activity_details.contains(dish.id + ",") || activity.activity_details.contains(dish.id + "]")) { 
           val month = activity.createdate.getMonth
           totals(month) += 1
-        }//TODO not completely correct
+        }
       }
     }
     
