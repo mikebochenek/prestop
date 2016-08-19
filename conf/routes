@@ -1,5 +1,5 @@
 # Home page
-GET      /                      controllers.Application.index(any = "none")
+GET      /                      controllers.Application.login
 
 # Play routes serving HTML to AngularJS start with /views
 GET      /views/*any            controllers.Application.loadPublicHTML(any)
