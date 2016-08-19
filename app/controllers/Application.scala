@@ -93,7 +93,7 @@ object Application extends Controller {
       "recaptcha_response_field" -> nonEmptyText))
   
   def forgotpassword = Action { implicit request =>
-    Ok(html.forgotpassword(forgotPasswordForm))
+    Ok(html.forgotpassword(forgotPasswordForm, request.toString.contains("https://")))
   }
   
   def submitforgotpassword = Action { implicit request =>
@@ -117,8 +117,12 @@ object Application extends Controller {
   def privateKey(): String = {
     "6Lcpy9YSAAAAANlSJ-iw9GDSKFYX5HktGbs-oG7D" //current.configuration.getString("recaptcha.privatekey").get
   }
-  def renderCaptcha(): String = {
-    ReCaptchaFactory.newReCaptcha(publicKey(), privateKey(), false).createRecaptchaHtml(null, new java.util.Properties)
+  def renderCaptcha(secure: Boolean): String = { 
+    if (secure) {
+      ReCaptchaFactory.newSecureReCaptcha(publicKey(), privateKey(), false).createRecaptchaHtml(null, new java.util.Properties)
+    } else {
+      ReCaptchaFactory.newReCaptcha(publicKey(), privateKey(), false).createRecaptchaHtml(null, new java.util.Properties)
+    }
   }
   
   def checkCaptcha(addr: String, challenge: String, response: String): Boolean = {
