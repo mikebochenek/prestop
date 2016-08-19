@@ -61,7 +61,7 @@ object EmailReport {
     if (user.isDefined) {
       val pwd = newpassword()
       
-      val subject = "Presto Admin Password for: " + email
+      val subject = "New Presto Admin Password for: " + email
 
       var html = "<html><body><h1>" + subject + "</h1>"
       html += "Hello " + user.get.fullname
@@ -77,7 +77,7 @@ object EmailReport {
       if (isValid(user.get.email)) {
         mail.sendHtml(html)
         
-        User.updatepassword(user.get.username, pwd)
+        User.updatepassword(user.get.email, pwd)
       }
     }
   }
