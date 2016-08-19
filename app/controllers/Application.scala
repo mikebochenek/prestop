@@ -113,10 +113,10 @@ object Application extends Controller {
   }
   
   def publicKey(): String = {
-    "6Lcpy9YSAAAAAKPK5T8tdO5WbiRPkKENziunk0c2" //current.configuration.getString("recaptcha.publickey").get
+    current.configuration.getString("recaptcha.publickey").getOrElse("6Lcpy9YSAAAAAKPK5T8tdO5WbiRPkKENziunk0c2")
   }
   def privateKey(): String = {
-    "6Lcpy9YSAAAAANlSJ-iw9GDSKFYX5HktGbs-oG7D" //current.configuration.getString("recaptcha.privatekey").get
+    current.configuration.getString("recaptcha.privatekey").getOrElse("6Lcpy9YSAAAAANlSJ-iw9GDSKFYX5HktGbs-oG7D")
   }
   def renderCaptcha(secure: Boolean): String = { 
     if (secure) {
