@@ -99,22 +99,46 @@ restedit.name.tooltip = Restaurant name (i.e. Pizzaria Presto). \
   This value will be shown in the app on various screens.
 restedit.address = Address
 restedit.address.tooltip = Restaurant address (i.e. Bahnhofstrasse 4). \
-  This value will be shown in the app in the restaurant details screen
+  This value will be shown in the app in the restaurant details screen.
 restedit.zipcode = Postal Code
 restedit.zipcode.tooltip = Restaurant location postal code (i.e. 8004). \
   This value will NOT be shown in the app anywhere.
 restedit.city = City
 restedit.city.tooltip = Restaurant location city (i.e. Zürich). \
-  This value will be shown in the app in the restaurant details screen
+  This value will be shown in the app in the restaurant details screen.
 restedit.state = State
 restedit.state.tooltip = Restaurant location state (i.e. Zürich). \
-  This value will be shown in the app in the restaurant details screen
+  This value will be shown in the app in the restaurant details screen.
 restedit.country = Country
 restedit.country.tooltip = Restaurant location country (i.e. Switzerland). \
-  This value will be shown in the app in the restaurant details screen
+  This value will be shown in the app in the restaurant details screen.
 restedit.latlong = Latitude, Longitude
 restedit.latlong.tooltip = GPS coordinates of the restaurant, namely the latitude, longitude (i.e. 47.376363, 8.522228). \
   These values together with the app users' current GPS coordinates will be used to recommend restaurants nearby.
+restedit.google = Google Places ID
+restedit.google.tooltip = Best don't change this value.  If you create a restaurant using Google Places, this will field will be populated for you.
+restedit.phone = Phone
+restedit.phone.tooltip = Phone number of the restaurant.\
+  App users will be able to make calls to this number easily from the restaurant details screen.
+restedit.email = Email
+restedit.email.tooltip = Email address of the restaurant.\
+  This value will be shown in the app in the restaurant details screen.
+restedit.website = Website
+restedit.website.tooltip = Website address of the restaurant.\
+  This value will be shown in the app in the restaurant details screen.
+restedit.schedule = Schedule
+restedit.schedule.tooltip = Opening hours of the restaurant.\
+  This value will be shown in the app in the restaurant details screen.\
+  App users can also filter dishes according to restaurants which are currently open (so it is important to provide an accurate value)
+restedit.type = Type
+restedit.type.tooltip = not used at the moment
+restedit.status = Status
+restedit.status.tooltip = Important: Only dishes from active restaurants will be shown in the app!
+restedit.payment = Payment type
+restedit.payment.tooltip = What type of payments are allowed at this restaurant (i.e. VISA, Cash).
+restedit.cuisines = Cuisines
+restedit.cuisines.tooltip = Cuisines served at this restaurant (i.e. Swiss, French, Italian).  Multiple values are allowed.
+
 
 restedit.stats.loading = loading stats, please wait ...
 restedit.piechart.header = Dish Popularity

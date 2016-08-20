@@ -66,38 +66,38 @@
           </div>
 
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Google Places ID</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.google") <span class="badge" title="@Messages("restedit.google.tooltip")">?</span></span>
             <input class="form-control span4" type="text" name="google_places_id" id="google_places_id" value="@restaurant.misc.place_id">
           </div>
           
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Phone</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.phone") <span class="badge" title="@Messages("restedit.phone.tooltip")">?</span></span>
             <input class="form-control span4" type="phone" name="phone" id="city" value="@restaurant.phone">
           </div>
                       
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Email</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.email") <span class="badge" title="@Messages("restedit.email.tooltip")">?</span></span>
             <input class="form-control span4" type="email" name="email" id="email" value="@restaurant.email">
           </div>
                       
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Website</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.website") <span class="badge" title="@Messages("restedit.website.tooltip")">?</span></span>
             <input class="form-control span4" type="text" name="website" id="website" value="@restaurant.website">
           </div>
           
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Schedule</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.schedule") <span class="badge" title="@Messages("restedit.schedule.tooltip")">?</span></span>
             <textarea class="form-control span4" type="text" name="schedule" id="schedule" cols=80 rows=7>@restaurant.schedule</textarea> 
           </div>
           <div>&emsp;according to the schedule above, <b>openNow=@common.RecommendationUtils.checkSchedule(restaurant.schedule)</b></div>
           
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Type</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.type") <span class="badge" title="@Messages("restedit.type.tooltip")">?</span></span>
             <input class="form-control span4" type="text" name="restype" id="restype" value="@restaurant.restype">
           </div>
           
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Status</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.status") <span class="badge" title="@Messages("restedit.status.tooltip")">?</span></span>
             <select class="form-control span4" type="text" name="status" id="status" value="@restaurant.status">
               <option value="4" @if(restaurant.status == 4) { selected }   >Draft (4)</option>
               <option value="-1" @if(restaurant.status == -1) { selected } >Deleted (-1)</option>
@@ -108,12 +108,12 @@
           </div>
 
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Payment type</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.payment") <span class="badge" title="@Messages("restedit.payment.tooltip")">?</span></span>
             <input class="form-control span4" type="text" name="ptags" id="ptags" value="@tags">
           </div>
 
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Cuisines</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.cuisines") <span class="badge" title="@Messages("restedit.cuisines.tooltip")">?</span></span>
             <input class="form-control span4" type="text" name="ctags" id="ctags" value="@cuisines">
           </div>
 
