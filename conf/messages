@@ -139,6 +139,11 @@ restedit.payment.tooltip = What type of payments are allowed at this restaurant 
 restedit.cuisines = Cuisines
 restedit.cuisines.tooltip = Cuisines served at this restaurant (i.e. Swiss, French, Italian).  Multiple values are allowed.
 
+restedit.statistics = Statistics
+restedit.info = Restaurant Info
+restedit.photo = Photo
+restedit.profilepic = Profile Picture
+restedit.menu = Menu (dishes)
 
 restedit.stats.loading = loading stats, please wait ...
 restedit.piechart.header = Dish Popularity
