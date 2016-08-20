@@ -447,7 +447,8 @@ object Settings extends Controller with Secured {
     implicit request => {
       Logger.info("userEdit: " + id)
       val user = User.getFullUser(id)
-      Ok(views.html.user_edit(userForm, user, getPreviousSettingsSafely(user), 
+      val url = Image.findByUser(user.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+      Ok(views.html.user_edit(userForm, user, getPreviousSettingsSafely(user), url,
           ActivityLog.findRecentByUserType(id, 7), ActivityLog.findRecentByUserType(id, 11)))
     }
   }

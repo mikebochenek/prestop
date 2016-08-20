@@ -1,4 +1,4 @@
-@(form: Form[(String,String,String,String,String,String,String)], user: UserFull, settings: UserSettings, 
+@(form: Form[(String,String,String,String,String,String,String)], user: UserFull, settings: UserSettings, url: String,
 	userRecommendations: Seq[ActivityLog], userLikes: Seq[ActivityLog])(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
@@ -14,6 +14,12 @@
       <div class="row ">
         <div class="col-sm-8 col-md-offset-2">
           <input class="hidden form-control span4" type="text" name="id" id="id" value="@user.id">
+
+          <div class="span4">
+          @if(url != null) {
+            <img src="@url" alt="dish photo" height="200"></img>
+          }
+          </div>
           
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Email</span>
