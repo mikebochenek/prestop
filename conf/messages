@@ -45,6 +45,10 @@ donthaveaccount = don''t have an account yet? click here to
 createfreeaccount = create a free account
 login.forgotpassword = forgot your password? click here to
 login.forgotpasswordlink = generate a new password
+forgotpassword.header = Forgot Password
+forgotpassword.stepone = 1. Complete Captcha challange
+forgotpassword.steptwo = 2. Provide your email address
+forgotpassword.requestbutton = Request New Password
 
 # create login
 createnewaccount = Create new account
@@ -89,15 +93,28 @@ approvals.all_dishes_approved = All dishes approved, great job! :-)
 
 
 # restaurant edit screen
+
+restedit.name = Name
+restedit.name.tooltip = Restaurant name (i.e. Pizzaria Presto). \
+  This value will be shown in the app on various screens.
+restedit.address = Address
+restedit.address.tooltip = Restaurant address (i.e. Bahnhofstrasse 4). \
+  This value will be shown in the app in the restaurant details screen
+restedit.zipcode = Postal Code
+restedit.zipcode.tooltip = Restaurant location postal code (i.e. 8004). \
+  This value will NOT be shown in the app anywhere.
 restedit.city = City
-restedit.city.tooltip = Restaurant location city (i.e. Zürich).  \
+restedit.city.tooltip = Restaurant location city (i.e. Zürich). \
   This value will be shown in the app in the restaurant details screen
 restedit.state = State
-restedit.state.tooltip = Restaurant location state (i.e. Zürich).  \
+restedit.state.tooltip = Restaurant location state (i.e. Zürich). \
   This value will be shown in the app in the restaurant details screen
 restedit.country = Country
-restedit.country.tooltip = Restaurant location country (i.e. Switzerland).  \
+restedit.country.tooltip = Restaurant location country (i.e. Switzerland). \
   This value will be shown in the app in the restaurant details screen
+restedit.latlong = Latitude, Longitude
+restedit.latlong.tooltip = GPS coordinates of the restaurant, namely the latitude, longitude (i.e. 47.376363, 8.522228). \
+  These values together with the app users' current GPS coordinates will be used to recommend restaurants nearby.
 
 restedit.stats.loading = loading stats, please wait ...
 restedit.piechart.header = Dish Popularity

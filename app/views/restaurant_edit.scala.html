@@ -31,23 +31,23 @@
           <input class="hidden form-control span4" type="text" name="id" id="id" value="@restaurant.id">
           
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Name</span>
+             <span class="input-group-addon" id="basic-addon1">@Messages("restedit.name") <span class="badge" title="@Messages("restedit.name.tooltip")">?</span></span>
             <input class="form-control span4" type="text" name="name" id="name" value="@restaurant.name">
           </div>
                       
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Address</span>
+             <span class="input-group-addon" id="basic-addon1">@Messages("restedit.address") <span class="badge" title="@Messages("restedit.address.tooltip")">?</span></span>
             <input class="form-control span4" type="text" name="address" id="address" value="@restaurant.address">
           </div>
           
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Postal Code</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.zipcode") <span class="badge" title="@Messages("restedit.zipcode.tooltip")">?</span></span>
             <input class="form-control span4" type="text" name="postalcode" id="postalcode" value="@restaurant.misc.postalcode">
           </div>
                       
           <div class="input-group">
              <span class="input-group-addon" id="basic-addon1">@Messages("restedit.city") <span class="badge" title="@Messages("restedit.city.tooltip")">?</span></span>
-           <input class="form-control span4" type="text" name="city" id="city" value="@restaurant.city">
+             <input class="form-control span4" type="text" name="city" id="city" value="@restaurant.city">
           </div>
                       
           <div class="input-group">
@@ -61,7 +61,7 @@
           </div>
                       
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Latitude, Longitude</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.latlong") <span class="badge" title="@Messages("restedit.latlong.tooltip")">?</span></span>
             <input class="form-control span4" type="text" name="latitudelongitude" id="latitudelongitude" value="@restaurant.latitude, @restaurant.longitude">
           </div>
 
