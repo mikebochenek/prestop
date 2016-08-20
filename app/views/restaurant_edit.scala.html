@@ -10,8 +10,17 @@
    <h3>Statistics</h3>
       <div class="row ">
         <div class="col-sm-8 col-md-offset-2">
-           <div id="pie_chart_div">loading stats, please wait ...</div>
-           <div id="bar_chart_div"></div>
+        
+          <div class="panel panel-default">
+             <div class="panel-heading">@Messages("restedit.piechart.header")</div>
+             <div id="pie_chart_div">@Messages("restedit.stats.loading")</div>
+             <div class="panel-body">@Messages("restedit.piechart.info")</div>
+           </div>        
+          <div class="panel panel-default">
+             <div class="panel-heading">@Messages("restedit.barchart.header")</div>
+             <div id="bar_chart_div">@Messages("restedit.stats.loading")</div>
+             <div class="panel-body">@Messages("restedit.barchart.info")</div>
+          </div>
         </div>
       </div>  
       
@@ -37,17 +46,17 @@
           </div>
                       
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">City</span>
-            <input class="form-control span4" type="text" name="city" id="city" value="@restaurant.city">
+             <span class="input-group-addon" id="basic-addon1">@Messages("restedit.city") <span class="badge" title="@Messages("restedit.city.tooltip")">?</span></span>
+           <input class="form-control span4" type="text" name="city" id="city" value="@restaurant.city">
           </div>
                       
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">State</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.state") <span class="badge" title="@Messages("restedit.state.tooltip")">?</span></span>
             <input class="form-control span4" type="text" name="state" id="state" value="@restaurant.state">
           </div>
                       
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Country</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.country") <span class="badge" title="@Messages("restedit.country.tooltip")">?</span></span>
             <input class="form-control span4" type="text" name="country" id="country" value="@restaurant.misc.country">
           </div>
                       
@@ -205,7 +214,8 @@ window.onload = function() {
 
 		<hr/>
 		
-     	<h3>Other locations (@children.size)</h3>
+     	<h3>Other Locations (@children.size)</h3>
+     	@if(children.size > 0) {
       	<table class="table table-hover">
       	  <thead>
       	    <tr>
@@ -230,6 +240,7 @@ window.onload = function() {
 		  }
       	  </tbody>
 		</table>
+		}
 
         @helper.form(action = routes.Restaurants.addLocations(restaurant.id)) {
             <button class="span4 btn btn-primary" type="submit" id="createlocation" >Add new location</button>
@@ -287,7 +298,7 @@ window.onload = function() {
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.PieChart(document.getElementById('pie_chart_div'));
-        chart.draw(data, {'title':'Dishes by popularity', 'width':600, 'height':300});
+        chart.draw(data, {'title':'@Messages("restedit.piechart.title")', 'width':600, 'height':300});
 
         
         var mdata = new google.visualization.DataTable();
@@ -298,7 +309,7 @@ window.onload = function() {
         ]);
         
         var chart = new google.visualization.BarChart(document.getElementById('bar_chart_div'));
-        chart.draw(mdata, {'title':'All dish views in the last 6 months', 'width':600, 'height':300});
+        chart.draw(mdata, {'title':'@Messages("restedit.barchart.title")', 'width':600, 'height':300});
         
       }
     </script>      
