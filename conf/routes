@@ -79,7 +79,6 @@ POST    /tageditor                          controllers.TagEditor.save
 GET     /permalink/:id                      controllers.Application.permalink(id: String)
 
 # Authentication
-GET     /login                              controllers.Application.login
 GET     /createuser                         controllers.Application.createuser
 GET     /forgotpassword                     controllers.Application.forgotpassword
 POST    /submitforgotpassword               controllers.Application.submitforgotpassword
