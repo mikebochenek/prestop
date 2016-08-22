@@ -3,6 +3,7 @@ package common
 import models._
 import play.api.Logger
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.util.{ Calendar, GregorianCalendar, TimeZone }
 import Calendar.{ DAY_OF_WEEK, HOUR_OF_DAY, MINUTE, SUNDAY, SATURDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY }
 
@@ -138,6 +139,12 @@ object RecommendationUtils {
       val distance50s = (d * 20).toLong
       ((distance50s / 20.0) * 1000).toLong + " m"
     }
+  }
+  
+  val timeformat = new SimpleDateFormat("HH:mm:ss")
+  def currentTime() = {
+    val now = Calendar.getInstance().getTime()
+    timeformat.format(now)
   }
   
   val priceFormat = new DecimalFormat("#.00")

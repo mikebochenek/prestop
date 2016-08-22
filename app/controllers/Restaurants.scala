@@ -19,6 +19,7 @@ import models.User
 import models.RestaurantOwner
 import models.UserFull
 import models.RestaurantMiscInfo
+import common.RecommendationUtils
 
 object Restaurants extends Controller with Secured {
 
@@ -149,7 +150,7 @@ object Restaurants extends Controller with Secured {
         Tag.updateTags(id.toLong, ptags, 12)
         Tag.updateTags(id.toLong, ctags, 21)
         Logger.info("calling restaurant update for id:" + id + " newStatus:" + newStatus) 
-        Redirect(routes.Restaurants.edit(id.toLong)).flashing("success" -> "Changes saved successfully!")
+        Redirect(routes.Restaurants.edit(id.toLong)).flashing("success" -> ("Changes saved successfully at " + RecommendationUtils.currentTime()))
       } else {
         Logger.error("failed calling restaurant update for id:" + id + " validationErrors:" + validationErrors) 
         Redirect(routes.Restaurants.edit(id.toLong)).flashing("error" -> validationErrors)

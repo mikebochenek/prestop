@@ -18,6 +18,7 @@ import org.imgscalr.Scalr
 import play.api.libs.Files
 import scala.collection.mutable.MutableList
 import common.RecommendationUtils
+import scala.util.control.Exception.allCatch
 
 object Dishes extends Controller with Secured {
 
@@ -111,21 +112,30 @@ object Dishes extends Controller with Secured {
   def save = IsAuthenticated { username =>
     implicit request =>  
       val (id, price, name, serving, description, greenscore, restaurant_id, status, itags, greenscoretags, diet, dishtype, meatorigin, source) = dishForm.bindFromRequest.get
-      
+      var validationErrors = ""      
       val fullUser = User.getFullUser(username).get
       val newStatus = ("7".equals(fullUser.ttype) || status.toInt == -1) match {
         case true => status.toInt
         case false => 4
       }
       
-      Dish.update(id.toLong, price.toDouble, name, greenscore.toDouble, newStatus, serving, description, source)
-      Tag.updateTags(id.toLong, itags, 11)
-      Tag.updateTags(id.toLong, greenscoretags, 31)
-      Tag.updateTags(id.toLong, diet, 34)
-      Tag.updateTags(id.toLong, dishtype, 35)
-      Tag.updateTags(id.toLong, meatorigin, 36)
-      Logger.info("calling restaurant update for id:" + id + " price:" + price + " newStatus:" + newStatus + " name:" + name + " tags:" + itags + " greenscoretags: " + greenscoretags)
-      Redirect(routes.Dishes.getById(id.toLong)).flashing("success" -> "Changes saved successfully!")
+      if (!(allCatch opt price.toDouble).isDefined) {
+        validationErrors += "Price should be a valid number (i.e. 15.90)"
+      }
+      
+      if (validationErrors.length() == 0) {
+        Dish.update(id.toLong, price.toDouble, name, greenscore.toDouble, newStatus, serving, description, source)
+        Tag.updateTags(id.toLong, itags, 11)
+        Tag.updateTags(id.toLong, greenscoretags, 31)
+        Tag.updateTags(id.toLong, diet, 34)
+        Tag.updateTags(id.toLong, dishtype, 35)
+        Tag.updateTags(id.toLong, meatorigin, 36)
+        Logger.info("calling restaurant update for id:" + id + " price:" + price + " newStatus:" + newStatus + " name:" + name + " tags:" + itags + " greenscoretags: " + greenscoretags)
+        Redirect(routes.Dishes.getById(id.toLong)).flashing("success" -> ("Changes saved successfully at " + RecommendationUtils.currentTime()))
+      } else {
+        Logger.info("failed calling restaurant update for id:" + id + " price:" + price + " newStatus:" + newStatus + " name:" + name + " tags:" + itags + " greenscoretags: " + greenscoretags + " validationErrors: " + validationErrors)
+        Redirect(routes.Dishes.getById(id.toLong)).flashing("error" -> validationErrors)
+      }
   }
 
   def getAllForUser(restId: Long, userId: Long) = Action {
