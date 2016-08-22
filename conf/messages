@@ -176,4 +176,12 @@ dishedit.stats.loading = loading stats, please wait ...
 dishedit.barchart.header = Monthly Views for
 dishedit.barchart.title = All dish views in the last 6 months
 dishedit.barchart.info = This graph shows how many times this dish was seen by app users each month.
+
+dishedit.name = Name
+dishedit.name.tooltip = Dish name (i.e. Pasta Presto). \
+  This value will be shown in the app on various screens.
+dishedit.price = Price
+dishedit.price.tooltip = Dish price (i.e. 30 or 15.90). \
+  This value will be shown in the app on various screens. \
+  Users can optionally filter according to the dish price.
  
