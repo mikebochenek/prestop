@@ -214,17 +214,17 @@ window.onload = function() {
 
 		<hr/>
 		
-     	<h3>Other Locations (@children.size)</h3>
+     	<h3>@Messages("restedit.locations") (@children.size)</h3>
      	@if(children.size > 0) {
       	<table class="table table-hover">
       	  <thead>
       	    <tr>
-      	       <td>ID & name</td>
-      	       <td>address</td>
-      	       <td>phone</td>
-      	       <td>latitude</td>
-      	       <td>longitude</td>
-      	       <td>status</td>
+      	       <td>@Messages("restedit.locations.id")</td>
+      	       <td>@Messages("restedit.locations.address")</td>
+      	       <td>@Messages("restedit.locations.phone")</td>
+      	       <td>@Messages("restedit.locations.latitude")</td>
+      	       <td>@Messages("restedit.locations.longitude")</td>
+      	       <td>@Messages("restedit.locations.status")</td>
       	    </tr>
       	  </thead>
       	  <tbody>
@@ -243,20 +243,20 @@ window.onload = function() {
 		}
 
         @helper.form(action = routes.Restaurants.addLocations(restaurant.id)) {
-            <button class="span4 btn btn-primary" type="submit" id="createlocation" >Add new location</button>
+            <button class="span4 btn btn-primary" type="submit" id="createlocation" >@Messages("restedit.locations.addbutton")</button>
         }
 
 		<hr/>
 
-      	<h3>Reservations (@reservations.size)</h3>
+      	<h3>@Messages("restedit.reservations") (@reservations.size)</h3>
       	<table class="table table-hover">
       	  <thead>
       	    <tr>
-      	       <td>user ID</td>
-      	       <td>date and time</td>
-      	       <td>guests</td>
-      	       <td>special requests</td>
-      	       <td>status</td>
+      	       <td>@Messages("restedit.reservations.userid")</td>
+      	       <td>@Messages("restedit.reservations.datetime")</td>
+      	       <td>@Messages("restedit.reservations.guests")</td>
+      	       <td>@Messages("restedit.reservations.special")</td>
+      	       <td>@Messages("restedit.reservations.status")</td>
       	    </tr>
       	  </thead>
       	  <tbody>

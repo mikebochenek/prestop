@@ -144,6 +144,22 @@ restedit.info = Restaurant Info
 restedit.photo = Photo
 restedit.profilepic = Profile Picture
 restedit.menu = Menu (dishes)
+restedit.locations = Other Locations
+
+restedit.locations.id = ID & name
+restedit.locations.address = address
+restedit.locations.phone = phone
+restedit.locations.latitude = latitude
+restedit.locations.longitude = longitude
+restedit.locations.status = status
+restedit.locations.addbutton = Add new location
+
+restedit.reservations = Reservations
+restedit.reservations.userid = user ID
+restedit.reservations.datetime = date and time
+restedit.reservations.guests = guests
+restedit.reservations.special = special requests
+restedit.reservations.status = status
 
 restedit.stats.loading = loading stats, please wait ...
 restedit.piechart.header = Dish Popularity
