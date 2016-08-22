@@ -125,7 +125,7 @@ object Dishes extends Controller with Secured {
       Tag.updateTags(id.toLong, dishtype, 35)
       Tag.updateTags(id.toLong, meatorigin, 36)
       Logger.info("calling restaurant update for id:" + id + " price:" + price + " newStatus:" + newStatus + " name:" + name + " tags:" + itags + " greenscoretags: " + greenscoretags)
-      Redirect(routes.Dishes.getById(id.toLong))
+      Redirect(routes.Dishes.getById(id.toLong)).flashing("success" -> "Changes saved successfully!")
   }
 
   def getAllForUser(restId: Long, userId: Long) = Action {

@@ -8,8 +8,28 @@
     @helper.form(routes.Dishes.save) {
 
   <div class="starter-template">
+    <h3>@Messages("dishedit.statistics")</h3>
+      <div class="row ">
+        <div class="col-sm-8 col-md-offset-2">
+        
+          <div class="panel panel-default">
+             <div class="panel-heading">@Messages("dishedit.barchart.header"): "@dish.name"</div>
+             <!--  div id="bar_chart_div">@Messages("dishedit.stats.loading")</div -->
+             <div class="panel-body">@Messages("dishedit.barchart.info")</div>
+          </div>
+        </div>
+      </div>  
+  
+  
     <h3>Dish Info</h3>
 
+      @form.globalError.map { error =>
+        <div class="alert alert-danger col-sm-8 col-md-offset-2" role="alert">@Messages(error.message)</div>
+      }
+            
+      @flash.get("success").map { message =>
+        <div class="alert alert-info col-sm-8 col-md-offset-2" role="alert">@message</div>            	
+      }
 
       <div class="row">
       

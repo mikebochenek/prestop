@@ -169,4 +169,11 @@ restedit.barchart.header = Monthly Overall Views
 restedit.barchart.title = All dish views in the last 6 months
 restedit.barchart.info = This graph shows how many times your dishes were seen by app users each month.
 
+
+# Dish edit screen
+dishedit.statistics = Statistics
+dishedit.stats.loading = loading stats, please wait ...
+dishedit.barchart.header = Monthly Views for
+dishedit.barchart.title = All dish views in the last 6 months
+dishedit.barchart.info = This graph shows how many times this dish was seen by app users each month.
  
