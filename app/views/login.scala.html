@@ -8,7 +8,7 @@
       
         @helper.form(routes.Application.authenticate) {
             
-            <h1>Sign in</h1>
+            <h1>@Messages("signin")</h1>
             
             @form.globalError.map { error =>
             	<div class="alert alert-danger col-sm-4 col-md-offset-4" role="alert">@Messages(error.message)</div>
@@ -38,11 +38,6 @@
               </div>
             </div>
         }
-        
-
-        
       </div>
-
     </div><!-- /.container -->
-
 }
