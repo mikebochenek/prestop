@@ -121,7 +121,12 @@ object Restaurants extends Controller with Secured {
 
   def save = IsAuthenticated { username =>
     implicit request => { 
+      var validationErrors = ""
       val (id, name, phone, email, address, city, postalcode, state, country, website, latitudelongitude, schedule, restype, status, ptags, google_places_id, ctags) = restaurantForm.bindFromRequest.get
+      
+      if (!latitudelongitude.contains(",")) {
+        validationErrors += "Should contain double,double"
+      } 
       val ll = latitudelongitude.split(",")
       val latitude = (ll(0).size match {
         case 0 => "0"
@@ -138,12 +143,17 @@ object Restaurants extends Controller with Secured {
         case false => 4
       }
       
-      Restaurant.update(id.toLong, name, city, address, longitude, latitude, schedule, restype.toInt, newStatus, 
+      if (validationErrors.length() == 0) {
+        Restaurant.update(id.toLong, name, city, address, longitude, latitude, schedule, restype.toInt, newStatus, 
           phone, email, postalcode, state, country, website, google_places_id)
-      Tag.updateTags(id.toLong, ptags, 12)
-      Tag.updateTags(id.toLong, ctags, 21)
-      Logger.info("calling restaurant update for id:" + id + " newStatus:" + newStatus) 
-      Redirect(routes.Restaurants.edit(id.toLong))
+        Tag.updateTags(id.toLong, ptags, 12)
+        Tag.updateTags(id.toLong, ctags, 21)
+        Logger.info("calling restaurant update for id:" + id + " newStatus:" + newStatus) 
+        Redirect(routes.Restaurants.edit(id.toLong)).flashing("success" -> "Changes saved successfully!")
+      } else {
+        Logger.error("failed calling restaurant update for id:" + id + " validationErrors:" + validationErrors) 
+        Redirect(routes.Restaurants.edit(id.toLong)).flashing("error" -> validationErrors)
+      }
     }
   }
   

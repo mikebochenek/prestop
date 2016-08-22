@@ -23,8 +23,8 @@
   
     <h3>Dish Info</h3>
 
-      @form.globalError.map { error =>
-        <div class="alert alert-danger col-sm-8 col-md-offset-2" role="alert">@Messages(error.message)</div>
+      @flash.get("error").map { message =>
+        <div class="alert alert-danger col-sm-8 col-md-offset-2" role="alert">@message</div>
       }
             
       @flash.get("success").map { message =>

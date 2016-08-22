@@ -26,6 +26,14 @@
       
     <h3>@Messages("restedit.info")</h3>
 
+      @flash.get("error").map { message =>
+        <div class="alert alert-danger col-sm-8 col-md-offset-2" role="alert">@message</div>
+      }
+            
+      @flash.get("success").map { message =>
+        <div class="alert alert-info col-sm-8 col-md-offset-2" role="alert">@message</div>            	
+      }
+
       <div class="row ">
         <div class="col-sm-8 col-md-offset-2">
           <input class="hidden form-control span4" type="text" name="id" id="id" value="@restaurant.id">
