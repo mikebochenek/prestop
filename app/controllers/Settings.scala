@@ -103,7 +103,7 @@ object Settings extends Controller with Secured {
         val url = Image.findByUser(fullUser.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
         BadRequest(views.html.settings(settingsForm.withGlobalError(errors.head), User.findByEmail(username), getPreviousSettingsSafely(fullUser), url))
       } else {
-        Redirect(routes.Settings.load)
+        Redirect(routes.Settings.load).flashing("success" -> ("Changes saved successfully at " + RecommendationUtils.currentTime()))
       }
     }
   }
