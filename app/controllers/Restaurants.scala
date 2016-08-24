@@ -291,8 +291,12 @@ object Restaurants extends Controller with Secured {
   val months = Array("January","February","March","April","May","June","July","August","September","October","November","December")
   
   def getBarChartData(id: Long): String = {
+    getBarChartData(id, Dish.findAll(id))
+  }
+  
+  def getBarChartData(id: Long, dishes: Seq[Dish]): String = {
+    
     val startTS = System.currentTimeMillis()
-    val dishes = Dish.findAll(id)
     val activities = ActivityLog.findAllByType(190, 7)
     var totals:Array[Int] = new Array[Int](13)
 
