@@ -439,7 +439,7 @@ object Settings extends Controller with Secured {
   def userList() = Action {
     implicit request => {
       Logger.info("userList")
-      Ok(views.html.userlist_edit(User.findAll))
+      Ok(views.html.userlist_edit(User.getUsersStats))
     }
   }
   

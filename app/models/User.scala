@@ -41,6 +41,9 @@ case class UserFull(id: Long, createdate: Date, lastlogindate: Option[Date], del
 case class UserProfile(id: Long, email: String, username: String, 
     var following: Int, var followers: Int, var likes: Int, var reservations: Int, var profileImageURL: String)
 
+case class UserStat(id: Long, createdate: Date, email: String, username: String, fullname: String,
+    phone: String, allTime: Long, threeMonths: Long, month: Long, week: Long)
+    
 object User {
 
   /**
@@ -52,6 +55,22 @@ object User {
       get[String]("user.username") ~
       get[String]("user.password") map {
         case id ~ email ~ username ~ password => User(id, email, username, password)
+      }
+  }
+
+  val stat = {
+    get[Long]("user.id") ~
+      get[Date]("user.createdate") ~
+      get[String]("user.email") ~
+      get[String]("user.username") ~
+      get[Option[String]]("user.fullname") ~
+      get[Option[String]]("user.phone") ~
+      get[Long]("allTime") ~
+      get[Long]("threeMonths") ~
+      get[Long]("month") ~
+      get[Long]("week") map {
+        case id ~ createdate ~ email ~ username ~ fullname ~ phone ~ allTime ~ threeMonths ~ month ~ week => 
+          UserStat(id, createdate, email, username, fullname.getOrElse(null), phone.getOrElse(null), allTime, threeMonths, month, week)
       }
   }
   
@@ -118,6 +137,18 @@ object User {
   def findAll: Seq[UserFull] = {
     DB.withConnection { implicit connection =>
       SQL("select " + columns + " from user").as(User.all. *)
+    }
+  }
+  
+  def getUsersStats: Seq[UserStat] = {
+    DB.withConnection { implicit connection =>
+      SQL("""
+           select id, createdate, email, username, fullname, phone, 
+             (select count(*) from activity_log al where activity_type = 7 and al.user_id = u.id) as allTime, 
+             (select count(*) from activity_log al where activity_type = 7 and al.user_id = u.id and createdate >= DATE(NOW()) - INTERVAL 90 DAY) as threeMonths, 
+             (select count(*) from activity_log al where activity_type = 7 and al.user_id = u.id and createdate >= DATE(NOW()) - INTERVAL 30 DAY) as month, 
+             (select count(*) from activity_log al where activity_type = 7 and al.user_id = u.id and createdate >= DATE(NOW()) - INTERVAL 7 DAY) as week
+           from user u """).as(User.stat. *)
     }
   }
 
@@ -246,3 +277,8 @@ object UserFull {
   implicit val userReads = Json.reads[UserFull]
   implicit val userWrites = Json.writes[UserFull]
 }
+
+object UserStats {
+  implicit val userStatsReads = Json.reads[UserStat]
+  implicit val userStatsWrites = Json.writes[UserStat]
+  }
