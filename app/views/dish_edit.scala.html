@@ -14,7 +14,7 @@
         
           <div class="panel panel-default">
              <div class="panel-heading">@Messages("dishedit.barchart.header"): "@dish.name"</div>
-             <!--  div id="bar_chart_div">@Messages("dishedit.stats.loading")</div -->
+             <div id="bar_chart_div">@Messages("dishedit.stats.loading")</div>
              <div class="panel-body">@Messages("dishedit.barchart.info")</div>
           </div>
         </div>
@@ -150,8 +150,28 @@ window.onload = function() {
                     <button class="btn btn-primary" type="submit" id="generalsavebutton">upload</button>
         		}
 
+    <!--Load the AJAX API - example from https://developers.google.com/chart/interactive/docs/quick_start -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
 
-<script language="Javascript">
+  google.charts.load('current', {'packages':['corechart']});
+
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+
+    var mdata = new google.visualization.DataTable();
+    mdata.addColumn('string', 'Month');
+    mdata.addColumn('number', 'views');
+    mdata.addRows([
+      @Html(controllers.Dishes.getBarChartData(dish.id))
+    ]);
+  
+    var chart = new google.visualization.BarChart(document.getElementById('bar_chart_div'));
+    chart.draw(mdata, {'title':'@Messages("restedit.barchart.title")', 'width':600, 'height':300, 'colors': ['green']});
+  }
+
+
 var file = document.getElementsByName('picture')[0];
 
 file.onchange = function(e){

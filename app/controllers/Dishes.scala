@@ -260,4 +260,8 @@ object Dishes extends Controller with Secured {
     }
   }  
   
+  def getBarChartData(id: Long): String = {
+    val dishes = Dish.findById("", id)
+    Restaurants.getBarChartData(dishes)
+  }
 }
