@@ -5,18 +5,37 @@
 
       <div class="starter-template">
       	<h1>All @users.size users</h1>
-      	
-      	<table class="table table-striped">
-		@for((user, index) <- users.zipWithIndex)  {	
+
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+  
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+
+      	<table class="table table-striped" id="table_id">
+      	  <thead>
+      	    <tr>
+      	    <th>id</th>
+      	    <th>email</th>
+      	    <th>username</th>
+      	    <th>name</th>
+      	    <th>phone</th>
+      	    <th>create date</th>
+      	    </tr>
+      	  </thead>
+		  <tbody>		
+		@for((user, index) <- users.zipWithIndex)  {
 		  <tr>
 		  <td><a href="useredit/@user.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @user.id</td>
 		  <td>@user.email</td><td>@user.username</td><td>@user.fullname</td><td>@user.phone</td><td>@user.createdate</td>
 		  </tr>
 		}
+		  </tbody>
 		</table>
-		
       </div>
-
+      <script language="Javascript">
+        $(document).ready( function () {
+    	    $('#table_id').DataTable();
+    	} );
+      </script>
     </div><!-- /.container -->
 }
 }
