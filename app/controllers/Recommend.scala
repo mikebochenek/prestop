@@ -19,6 +19,9 @@ import common.Recommendation
 import models._
 import views._
 
+import scala.util.control.Exception.allCatch
+
+
 object Recommend extends Controller with Secured  {
   def test() = IsAuthenticated { username =>
     implicit request => {
@@ -62,7 +65,7 @@ object Recommend extends Controller with Secured  {
           + " minPrice:" + minPrice + " maxPrice:" + maxPrice + " openNow:" + openNow + " lastDishID:" + lastDishID + " maxDishes:" + maxDishes)
       val user = User.getFullUser(id)
       
-      val recommendations = Recommendation.recommend(user, longitude.toDouble, latitude.toDouble, maxDistance, minPrice, maxPrice, openNow, lastDishID, maxDishes, avoid)
+      val recommendations = Recommendation.recommend(user, parseLongitude(longitude), parseLatitude(latitude), maxDistance, minPrice, maxPrice, openNow, lastDishID, maxDishes, avoid)
       val json = Json.prettyPrint(Json.toJson(recommendations.dishes.map(a => Json.toJson(a))))
       ActivityLog.create(user.id, 7, lastDishID, Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
       Ok(json)
@@ -73,10 +76,25 @@ object Recommend extends Controller with Secured  {
       Logger.info("calling Recommend.get with id:" + id + " longitude:" + longitude + " latitude:" + latitude + " filter:" + filter)
       val user = User.getFullUser(id)
       
-      val recommendations = Recommendation.recommend(user, longitude.toDouble, latitude.toDouble, 10, 0, 4000.0, false, 0, 100, "")
+      val recommendations = Recommendation.recommend(user, parseLongitude(longitude), parseLatitude(latitude), 10, 0, 4000.0, false, 0, 100, "")
       val json = Json.prettyPrint(Json.toJson(recommendations.dishes.map(a => Json.toJson(a))))
       ActivityLog.create(user.id, 7, 1, Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
       Ok(json)
     }
   }
+  def parseLongitude(longitude: String) = {
+    if (!(allCatch opt longitude.toDouble).isDefined) {
+      47.392 // default longitude
+    } else {
+      longitude.toDouble
+    }
+  }
+  def parseLatitude(latitude: String) = {
+    if (!(allCatch opt latitude.toDouble).isDefined) {
+      8.5129 // default latitude
+    } else {
+      latitude.toDouble
+    }
+  }
+  
 }
