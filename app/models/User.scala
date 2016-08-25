@@ -148,7 +148,7 @@ object User {
              (select count(*) from activity_log al where activity_type = 7 and al.user_id = u.id and createdate >= DATE(NOW()) - INTERVAL 90 DAY) as threeMonths, 
              (select count(*) from activity_log al where activity_type = 7 and al.user_id = u.id and createdate >= DATE(NOW()) - INTERVAL 30 DAY) as month, 
              (select count(*) from activity_log al where activity_type = 7 and al.user_id = u.id and createdate >= DATE(NOW()) - INTERVAL 7 DAY) as week
-           from user u """).as(User.stat. *)
+           from user u order by createdate desc""").as(User.stat. *)
     }
   }
 
