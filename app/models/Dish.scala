@@ -48,7 +48,7 @@ object Dish {
           'name -> name,
           'greenscore -> greenscore,
           'lastupdate -> new Date(),
-          'status -> 0).executeInsert()
+          'status -> status).executeInsert()
     }
   }
 
