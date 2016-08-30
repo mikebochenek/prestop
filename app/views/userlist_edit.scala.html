@@ -15,6 +15,7 @@
       	    <tr>
       	    <th>id</th>
       	    <th>email</th>
+      	    <th>FB</th>
       	    <th>name</th>
       	    <th>phone</th>
       	    <th>created</th>
@@ -28,7 +29,13 @@
 		@for((user, index) <- users.zipWithIndex)  {
 		  <tr>
 		  <td><a href="useredit/@user.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a></td>
-		  <td>@user.email</td><td>@user.fullname</td><td>@user.phone</td><td>@user.createdate.format("dd.MMM.YY")</td>
+		  <td>@user.email</td>
+		  <td>
+  		    @if(user.username != null && user.username.length > 0) {
+  		      <a target="_blank" href="https://www.facebook.com/@user.username"><img src="@routes.Assets.at("img/facebook.jpg")" width="24px" /></a>
+		    }  
+		  </td>
+		  <td>@user.fullname</td><td>@user.phone</td><td>@user.createdate.format("dd.MMM.YY")</td>
 		  <td>@user.allTime</td><td>@user.threeMonths</td><td>@user.month</td><td>@user.week</td>
 		  </tr>
 		}
