@@ -184,4 +184,6 @@ dishedit.price = Price
 dishedit.price.tooltip = Dish price (i.e. 30 or 15.90). \
   This value will be shown in the app on various screens. \
   Users can optionally filter according to the dish price.
+dishedit.greenscoretags = Name
+dishedit.greenscoretags.tooltip = Dish name (i.e. Pasta Presto). 
  
