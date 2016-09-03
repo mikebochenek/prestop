@@ -1,6 +1,8 @@
 
 save = save
 add = add
+reset = reset
+test = test
 
 # main
 application.name = presto admin
@@ -186,4 +188,17 @@ dishedit.price.tooltip = Dish price (i.e. 30 or 15.90). \
   Users can optionally filter according to the dish price.
 dishedit.greenscoretags = Name
 dishedit.greenscoretags.tooltip = Dish name (i.e. Pasta Presto). 
- 
+
+
+# Test screen
+test.header = Recommend test 
+test.userid = User ID
+test.latitude = Latitude
+test.longitude = Longitude
+test.opennow = Open Now Only
+test.maxdist = Max distance (km)
+test.minprice = Minimum price
+test.maxprice = Maximum price
+test.maxdishes = Maximum dishes to return
+test.avoid = Avoid
+test.lastdish = Last dish ID

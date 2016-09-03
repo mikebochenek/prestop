@@ -8,56 +8,56 @@
     @helper.form(routes.Recommend.testsubmit) {
 
   <div class="starter-template">
-    <h3>Recommend test</h3>
+    <h3>@Messages("test.header")</h3>
 
       <div class="row ">
         <div class="col-sm-8 col-md-offset-2">
           
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">User ID</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("test.userid")</span>
             <input class="form-control span4" type="text" name="id" id="id" value="@id">
           </div>
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Latitude</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("test.latitude")</span>
             <input class="form-control span4" type="text" name="latitude" id="latitude" value="@latitude">
           </div>
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Longitude</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("test.longitude")</span>
             <input class="form-control span4" type="text" name="longitude" id="longitude" value="@longitude">
           </div>
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Open Now Only</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("test.opennow")</span>
             <input class="form-control span4" type="text" name="openNow" id="openNow" value="@openNow">
           </div>
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Max distance (km)</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("test.maxdist")</span>
             <input class="form-control span4" type="text" name="maxdistance" id="maxdistance" value="@maxdistance">
           </div>
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Minimum price</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("test.minprice")</span>
             <input class="form-control span4" type="text" name="minPrice" id="minPrice" value="@minPrice">
           </div>
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Maximum price</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("test.maxprice")</span>
             <input class="form-control span4" type="text" name="maxPrice" id="maxPrice" value="@maxPrice">
           </div>
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Maximum dishes to return</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("test.maxdishes")</span>
             <input class="form-control span4" type="text" name="maxDishes" id="maxDishes" value="@maxDishes">
           </div>
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Avoid</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("test.avoid")</span>
             <input class="form-control span4" type="text" name="avoid" id="avoid" value="@avoid">
           </div>
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Last dish ID</span>
+            <span class="input-group-addon" id="basic-addon1">@Messages("test.lastdish")</span>
             <input class="form-control span4" type="text" name="lastDishID" id="lastDishID" value="@lastDishID">
           </div>
           
           </br>
                       
-          <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">test</button>
-          <button class="span4 btn btn-primary" type="reset" id="generalsavebutton">reset</button>
+          <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">@Messages("test")</button>
+          <button class="span4 btn btn-primary" type="reset" id="generalsavebutton">@Messages("reset")</button>
         </div>
       </div>
 	}      
