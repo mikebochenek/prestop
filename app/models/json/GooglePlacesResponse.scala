@@ -33,6 +33,9 @@ object GooglePlacesResponseResult {
 case class GooglePlacesResponse (result: GooglePlacesResponseResult)
 
 object GooglePlacesResponse {
+  implicit val googlePlacesResponseReads = Json.reads[GooglePlacesResponse]
+  implicit val googlePlacesResponseWrites = Json.writes[GooglePlacesResponse]
+  
   def getInstance(s: String) = {
     s match {
       case _ => {
@@ -47,7 +50,4 @@ object GooglePlacesResponse {
       }
     }
   }
-  
-  implicit val googlePlacesResponseReads = Json.reads[GooglePlacesResponse]
-  implicit val googlePlacesResponseWrites = Json.writes[GooglePlacesResponse]
 }
