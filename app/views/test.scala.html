@@ -1,6 +1,6 @@
-@(form: Form[(String,String,String,String,String,String,String,String,String)], re: Recommendations, resp: String, 
+@(form: Form[(String,String,String,String,String,String,String,String,String,String)], re: Recommendations, resp: String, 
 	userFavs: String, id: String, longitude: String, latitude: String, openNow: String, maxdistance: String, 
-	minPrice: String, maxPrice: String, maxDishes: String, lastDishID: String)(implicit flash: Flash, session: Session, lang: Lang)
+	minPrice: String, maxPrice: String, maxDishes: String, avoid: String, lastDishID: String)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 <div class="container">
@@ -44,6 +44,10 @@
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Maximum dishes to return</span>
             <input class="form-control span4" type="text" name="maxDishes" id="maxDishes" value="@maxDishes">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Avoid</span>
+            <input class="form-control span4" type="text" name="avoid" id="avoid" value="@avoid">
           </div>
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Last dish ID</span>

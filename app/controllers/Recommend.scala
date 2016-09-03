@@ -26,14 +26,14 @@ object Recommend extends Controller with Secured  {
   def test() = IsAuthenticated { username =>
     implicit request => {
       Ok(views.html.test(testForm, null, null, null, User.getFullUser(username).get.id.toString, 
-          "47.385740", "8.518084", "false", "10", "0.0", "100.0", "100", "-1"))
+          "47.385740", "8.518084", "false", "10", "0.0", "100.0", "100", "", "-1"))
     }
   }
 
   def testsubmit() = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling recommend test submit")
-      val (id, longitude, latitude, openNow, maxdistance, minPrice, maxPrice, maxDishes, lastDishID) = testForm.bindFromRequest.get
+      val (id, longitude, latitude, openNow, maxdistance, minPrice, maxPrice, maxDishes, avoid, lastDishID) = testForm.bindFromRequest.get
       val fullUser = User.getFullUser(id.toLong)
       var favs = ""
       if (fullUser.settings != null) {
@@ -41,9 +41,9 @@ object Recommend extends Controller with Secured  {
         favs = Json.prettyPrint(Json.toJson(settings.favCuisines))
       }
       val response = Recommendation.recommend(User.getFullUser(id.toLong), longitude.toDouble, latitude.toDouble, maxdistance.toDouble, 
-          minPrice.toDouble, maxPrice.toDouble, openNow.toBoolean, lastDishID.toLong, maxDishes.toLong, "")
+          minPrice.toDouble, maxPrice.toDouble, openNow.toBoolean, lastDishID.toLong, maxDishes.toLong, avoid)
       Ok(views.html.test(testForm, response, Json.prettyPrint(Json.toJson(response)), favs, id, longitude, latitude, openNow, maxdistance, 
-          minPrice, maxPrice, maxDishes, lastDishID))
+          minPrice, maxPrice, maxDishes, avoid, lastDishID))
     }
   }
   
@@ -57,6 +57,7 @@ object Recommend extends Controller with Secured  {
       "minPrice" -> text,
       "maxPrice" -> text,
       "maxDishes" -> text,
+      "avoid" -> text,
       "lastDishID" -> text))  
   
   def getWithFilters(id: Long, longitude: String, latitude: String, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean, lastDishID: Long, maxDishes: Long, avoid: String) = Action {
