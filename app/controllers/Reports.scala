@@ -27,7 +27,7 @@ object Reports extends Controller with Secured {
       Ok(views.html.dailyreports(Restaurant.findAll, Dish.findAllInactive, Dish.findAllWithoutImages, User.findAll, 
           Friend.findAll, Reservation.findAll,
           ActivityLog.findRecentStats(7, 100),
-          ActivityLog.findAll))
+          ActivityLog.findAll, Restaurant.findAll.filter { r => r.status == 4 }, Dish.findAll().filter { d => d.status == 4 }))
     }
   }
   

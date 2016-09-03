@@ -34,7 +34,9 @@ object EmailReport {
           Friend.findAll.filter { x => inLastDay(x.lastupdate) }, 
           Reservation.findAll,
           ActivityLog.findRecentStats(7, 1),
-          ActivityLog.findAll.filter { x => inLastDay(x.createdate) }).body
+          ActivityLog.findAll.filter { x => inLastDay(x.createdate) },
+          Restaurant.findAll.filter { r => r.status == 4 }, 
+          Dish.findAll().filter { d => d.status == 4 }).body
       
       html += body
       
