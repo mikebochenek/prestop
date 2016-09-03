@@ -21,7 +21,7 @@ object RestaurantFriends {
   implicit val recommendationFriendsWrites = Json.writes[RestaurantFriends]
 }
 
-case class RestaurantMiscInfo(postalcode: Option[String], var state: Option[String], website: Option[String], 
+case class RestaurantMiscInfo(postalcode: Option[String], var state: Option[String], var website: Option[String], 
     var country: Option[String], parentRestaurantId: Option[Long], place_id: Option[String], lastupdate: Date)
 
 object RestaurantMiscInfo {
@@ -29,9 +29,9 @@ object RestaurantMiscInfo {
   implicit val restaurantMiscInfoWrites = Json.writes[RestaurantMiscInfo]
 }
 
-case class Restaurant(id: Long, name: String, var city: String, address: String, var longitude: Double, var latitude: Double, 
+case class Restaurant(id: Long, var name: String, var city: String, var address: String, var longitude: Double, var latitude: Double, 
     schedule: String, var open_now: Boolean, restype: Int, status: Int, 
-    var phone: Option[String], email: Option[String], postalcode: Option[String], var state: Option[String], website: Option[String],
+    var phone: Option[String], email: Option[String], postalcode: Option[String], var state: Option[String], var website: Option[String],
     var url: String, var smallurl: String, var paymentoptions: Seq[String], var cuisines: Seq[String],
     var friendsWhoBooked: Seq[RestaurantFriends], misc: RestaurantMiscInfo)
 

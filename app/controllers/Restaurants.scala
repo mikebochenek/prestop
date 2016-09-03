@@ -20,6 +20,8 @@ import models.RestaurantOwner
 import models.UserFull
 import models.RestaurantMiscInfo
 import common.RecommendationUtils
+import models.json.GooglePlacesResponseResult
+import models.json.GooglePlacesResponse
 
 object Restaurants extends Controller with Secured {
 
@@ -85,6 +87,23 @@ object Restaurants extends Controller with Secured {
     implicit request => {
       Logger.info("calling restaurant edit - load data for id:" + id)
       val all = Restaurant.findById(username, id)
+      
+      if (all(0).name.equals(all(0).misc.place_id.getOrElse("")) && all(0).name.length == 27) { // NB: because Dishes.uploadDish makes them equal
+        Logger.info(".. looks like need to populate restaurant info from Google Places: " + all(0).misc.place_id)
+        val url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + all(0).misc.place_id.get + 
+                  "&key=AIzaSyCmRHTsV4bmezqHapCyv3kHSIW6qxwVTCM" //TODO move key to properties
+        val resp = io.Source.fromURL(url).mkString
+        val googlePlaces = GooglePlacesResponse.getInstance(resp)
+        if (googlePlaces.result.name.length > 1) {
+          all(0).name = googlePlaces.result.name
+          all(0).website = Option(googlePlaces.result.website)
+          all(0).misc.website = Option(googlePlaces.result.website)
+          all(0).latitude = googlePlaces.result.geometry.get.location.lat
+          all(0).longitude = googlePlaces.result.geometry.get.location.lng
+          all(0).phone = Option(googlePlaces.result.international_phone_number)
+        }
+      }
+      
       val tags = Tag.findByRef(id, 12).map(_.name).mkString(", ")
       val cuisines = Tag.findByRef(id, 21).map(_.name).mkString(", ")
       val url = Image.findByRestaurant(id).filter { x => x.status == 0 }.sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
