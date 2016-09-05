@@ -22,7 +22,57 @@
       <div class="alert alert-info col-sm-8 col-md-offset-2" role="alert">@message</div>            	
       </div>
     }
-      	
+
+
+    <h3>Billing</h3>
+
+      <div class="row ">
+        <div class="col-sm-8 col-md-offset-2">
+          We have partnered with <a href="https://stripe.com/">Stripe&trade;</a> to provide a secure way to accept payments.
+        </div>
+
+      <div class="col-sm-2 col-md-offset-8">
+       <form action="/acceptpayment" method="POST">
+       <script
+         src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+         data-key="pk_test_3sGi769vVGymo9PSif5A17al"
+         data-amount="2990"
+         data-name="Presto"
+         data-description="Monthly Subscription Fee"
+         data-image="../img/icon_presto.png"
+         data-locale="auto"
+         data-currency="chf">
+        </script>
+       </form>
+      </div>
+     </div>
+
+
+    <h3>Payment History</h3>
+      <div class="row ">
+        <div class="col-sm-8 col-md-offset-2">
+         <table class="table table-hover">
+      	  <thead>
+      	    <tr>
+      	       <td>amount</td>
+      	       <td>date</td>
+      	       <td>billing period</td>
+      	       <td>status</td>
+      	    </tr>
+      	  </thead>
+      	  <tbody>
+ 		    <tr>
+		       <td>29.90</td>
+		       <td>21 Jun 2016 09:24</td>
+		       <td>May 2016</td>
+		       <td>PROCESSED</td>
+		    </tr>
+      	  </tbody>
+		</table>
+      </div>
+     </div>    
+
+          	
     <h3>@Messages("general")</h3>
 
       <div class="row ">

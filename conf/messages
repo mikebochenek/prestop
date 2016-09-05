@@ -14,7 +14,7 @@ menu.users = Users
 menu.about = About
 menu.test = Test!
 menu.reports = Reports
-menu.settings = Settings
+menu.settings = Billing & Settings
 menu.logout = Logout
 menu.login = Login
 
