@@ -29,6 +29,7 @@ import play.api.libs.iteratee._
 import play.api.libs.Files.TemporaryFile
 import play.api.mvc.{Codec, MultipartFormData }
 import java.io.{FileInputStream, ByteArrayOutputStream}
+import com.stripe.model._
 
 object Settings extends Controller with Secured {
   def load() = IsAuthenticated { username =>
@@ -47,6 +48,37 @@ object Settings extends Controller with Secured {
       Ok(views.html.settings(settingsForm, me, userSettings, url))
     }
   }
+
+  val paymentsForm = Form(
+    tuple(
+      "stripeToken" -> text,
+      "stripeEmail" -> text))
+  
+  def acceptpayment = IsAuthenticated { username =>
+    implicit request => { 
+      val errors = MutableList.empty[String] //TODO error handling!
+      val fullUser = User.getFullUser(username).get
+      val (stripeToken, stripeEmail) = paymentsForm.bindFromRequest.get
+      
+      Logger.debug("email:" + email + " stripeToken:" + stripeToken + " stripeEmail:" + stripeEmail)
+
+      com.stripe.Stripe.apiKey = "sk_test_nwF8xCp9GNWg7du3C0VYwH3n" //TODO Test Secret Key should come from properties..
+      
+      val params = new java.util.HashMap[String,Object]{ 
+        put("amount", new java.lang.Long(2990)); 
+        put("currency","chf"); 
+        put("source",stripeToken); 
+        put("description", ("sample charge from " + email));
+      }
+      
+      val charge = Charge.create(params) //TODO also need to  catch (CardException e) 
+      
+      Logger.debug(" charge created : " + charge.getId) //TODO also persist to the DB
+      
+      Redirect(routes.Settings.load).flashing("success" -> ("Payment entered successfully at " + RecommendationUtils.currentTime()))
+    }
+  }
+  
 
   val settingsForm = Form(
     tuple(

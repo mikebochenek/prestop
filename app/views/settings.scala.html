@@ -4,8 +4,6 @@
 
 <div class="container">
 
-    @helper.form(routes.Settings.save) {
-
   <div class="starter-template">
     <h1>@Messages("settings")</h1>
             
@@ -22,7 +20,6 @@
       <div class="alert alert-info col-sm-8 col-md-offset-2" role="alert">@message</div>            	
       </div>
     }
-
 
     <h3>Billing</h3>
 
@@ -72,6 +69,7 @@
       </div>
      </div>    
 
+    @helper.form(routes.Settings.save) {
           	
     <h3>@Messages("general")</h3>
 
