@@ -30,6 +30,7 @@ import play.api.libs.Files.TemporaryFile
 import play.api.mvc.{Codec, MultipartFormData }
 import java.io.{FileInputStream, ByteArrayOutputStream}
 import com.stripe.model._
+import models.json.PaymentHistory
 
 object Settings extends Controller with Secured {
   def load() = IsAuthenticated { username =>
@@ -63,15 +64,20 @@ object Settings extends Controller with Secured {
       Logger.debug("email:" + email + " stripeToken:" + stripeToken + " stripeEmail:" + stripeEmail)
 
       com.stripe.Stripe.apiKey = "sk_test_nwF8xCp9GNWg7du3C0VYwH3n" //TODO Test Secret Key should come from properties..
+      val amount = 2990
       
       val params = new java.util.HashMap[String,Object]{ 
-        put("amount", new java.lang.Long(2990)); 
+        put("amount", new java.lang.Long(amount)); 
         put("currency","chf"); 
         put("source",stripeToken); 
-        put("description", ("sample charge from " + email));
+        put("description", ("charge from user: " + fullUser.id + " " + fullUser.email)); 
       }
       
       val charge = Charge.create(params) //TODO also need to  catch (CardException e) 
+      
+      val history = PaymentHistory(amount, "November 2016", "SUCCESSFUL", charge.getId, "")
+      val id = ActivityLog.create(fullUser.id, 5, amount, Json.toJson(history).toString)
+      Logger.info("ActivityLog type=5 created - id: "+ id.get +  " user: " + fullUser.id)
       
       Logger.debug(" charge created : " + charge.getId) //TODO also persist to the DB
       
