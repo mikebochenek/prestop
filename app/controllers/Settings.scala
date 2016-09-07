@@ -134,8 +134,6 @@ object Settings extends Controller with Secured {
           
         }
       }
-      
-      //Logger.debug("password:" + password + " passwordnew1:" + passwordnew1 + " passwordnew2:" + passwordnew2)
 
       if (passwordnew1 != null && passwordnew1.trim.length > 0) {
         Logger.info("changing password for email:" + username)
@@ -171,10 +169,8 @@ object Settings extends Controller with Secured {
     implicit request => {
       val all = Restaurant.findAll()
       val csvstr = all.mkString("\n")
-      val header = "id,owner,donetext,donedate,createdate,deleted,category,doneDay\n"
-
-      Ok(header + csvstr.replaceAll("Done[(]", "").replaceAll("[)]", "")) 
-      
+      val header = "id,name, city, address, longitude, latitude, schedule, open_now, restype, status, phone, email, postalcode, state, website, url, smallurl, paymentoptions, cuisines, friendsWhoBooked, misc\n"
+      Ok(header + csvstr.replaceAll("Restaurant[(]", "").replaceAll("[)]", "")) 
       // kinda wrong because commas in the done text, breaks everything, simplified, but I want only starting 
       // or better use a real library - i.e. http://code.google.com/p/opencsv/
     }

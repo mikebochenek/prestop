@@ -147,7 +147,8 @@ object Restaurants extends Controller with Secured {
   def save = IsAuthenticated { username =>
     implicit request => { 
       var validationErrors = ""
-      val (id, name, phone, email, address, city, postalcode, state, country, website, latitudelongitude, schedule, restype, status, ptags, google_places_id, ctags) = restaurantForm.bindFromRequest.get
+      val (id, name, phone, email, address, city, postalcode, state, country, website, latitudelongitude, 
+          schedule, restype, status, ptags, google_places_id, ctags) = restaurantForm.bindFromRequest.get
       
       if (!latitudelongitude.contains(",")) {
         validationErrors += "Should contain double,double"
