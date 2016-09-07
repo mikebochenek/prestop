@@ -83,17 +83,22 @@ object Restaurants extends Controller with Secured {
     }
   }
 
+  def callGooglePlacesAPI(id: String) = {
+    Logger.info(".. looks like need to populate restaurant info from Google Places: " + id)
+    val url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + id + 
+              "&key=AIzaSyCmRHTsV4bmezqHapCyv3kHSIW6qxwVTCM" //TODO move key to properties
+    val resp = io.Source.fromURL(url).mkString
+    val googlePlaces = GooglePlacesResponse.getInstance(resp)
+    googlePlaces
+  }
+  
   def edit(id: Long) = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling restaurant edit - load data for id:" + id)
       val all = Restaurant.findById(username, id)
       
       if (all(0).name.equals(all(0).misc.place_id.getOrElse("")) && all(0).name.length == 27) { // NB: because Dishes.uploadDish makes them equal
-        Logger.info(".. looks like need to populate restaurant info from Google Places: " + all(0).misc.place_id)
-        val url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + all(0).misc.place_id.get + 
-                  "&key=AIzaSyCmRHTsV4bmezqHapCyv3kHSIW6qxwVTCM" //TODO move key to properties
-        val resp = io.Source.fromURL(url).mkString
-        val googlePlaces = GooglePlacesResponse.getInstance(resp)
+        val googlePlaces = callGooglePlacesAPI(all(0).misc.place_id.get)
         if (googlePlaces.result.name.length > 1) {
           all(0).name = googlePlaces.result.name
           all(0).website = Option(googlePlaces.result.website)
