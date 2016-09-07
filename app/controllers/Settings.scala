@@ -31,6 +31,8 @@ import play.api.mvc.{Codec, MultipartFormData }
 import java.io.{FileInputStream, ByteArrayOutputStream}
 import com.stripe.model._
 import models.json.PaymentHistory
+import javax.smartcardio.CardException
+import java.util.Date
 
 object Settings extends Controller with Secured {
   def load() = IsAuthenticated { username =>
@@ -57,7 +59,7 @@ object Settings extends Controller with Secured {
   
   def acceptpayment = IsAuthenticated { username =>
     implicit request => { 
-      val errors = MutableList.empty[String] //TODO error handling!
+      val errors = MutableList.empty[String] 
       val fullUser = User.getFullUser(username).get
       val (stripeToken, stripeEmail) = paymentsForm.bindFromRequest.get
       
@@ -73,16 +75,28 @@ object Settings extends Controller with Secured {
         put("description", ("charge from user: " + fullUser.id + " " + fullUser.email)); 
       }
       
-      val charge = Charge.create(params) //TODO also need to  catch (CardException e) 
+      try {
+        val charge = Charge.create(params)
+        val history = PaymentHistory(new Date(), amount, "November 2016", "SUCCESSFUL", charge.getId, "")
+        val id = ActivityLog.create(fullUser.id, 5, amount, Json.toJson(history).toString)
+        Logger.info("ActivityLog type=5 created - id: "+ id.get +  " user: " + fullUser.id)
+      } catch {
+        case ex: CardException => {
+          errors += ex.getMessage
+        }
+      }
       
-      val history = PaymentHistory(amount, "November 2016", "SUCCESSFUL", charge.getId, "")
-      val id = ActivityLog.create(fullUser.id, 5, amount, Json.toJson(history).toString)
-      Logger.info("ActivityLog type=5 created - id: "+ id.get +  " user: " + fullUser.id)
-      
-      Logger.debug(" charge created : " + charge.getId) //TODO also persist to the DB
-      
-      Redirect(routes.Settings.load).flashing("success" -> ("Payment entered successfully at " + RecommendationUtils.currentTime()))
+      if (errors.length > 0) {
+        val url = Image.findByUser(fullUser.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+        BadRequest(views.html.settings(settingsForm.withGlobalError(errors.head), User.findByEmail(username), getPreviousSettingsSafely(fullUser), url))
+      } else {
+        Redirect(routes.Settings.load).flashing("success" -> ("Payment entered successfully at " + RecommendationUtils.currentTime()))
+      }
     }
+  }
+  
+  def showPaymentHistory(id: Long): Seq[PaymentHistory] = {
+    ActivityLog.findAllByUserType(id, 5).map { x => Json.parse(x.activity_details).validate[PaymentHistory].get }
   }
   
 

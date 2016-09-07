@@ -7,8 +7,9 @@ import play.api.libs.json.JsObject
 import play.api.libs.json.JsString
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import java.util.Date
 
-case class PaymentHistory (amount: Long, paymentPeriod: String, status: String, 
+case class PaymentHistory (date: Date, amount: Long, paymentPeriod: String, status: String, 
     stripeChargeID: String, other: String)
 
 object PaymentHistory {

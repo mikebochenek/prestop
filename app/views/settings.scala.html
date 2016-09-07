@@ -58,12 +58,14 @@
       	    </tr>
       	  </thead>
       	  <tbody>
+            @for((payment, index) <- Settings.showPaymentHistory(me.id).zipWithIndex)  {	
  		    <tr>
-		       <td>29.90</td>
-		       <td>21 Jun 2016 09:24</td>
-		       <td>May 2016</td>
-		       <td>PROCESSED</td>
+		       <td>@(payment.amount / 100)</td>
+		       <td>@payment.date.format("dd.MM.YYYY HH:mm")</td>
+		       <td>@payment.paymentPeriod</td>
+		       <td>@payment.status</td>
 		    </tr>
+		    }
       	  </tbody>
 		</table>
       </div>
