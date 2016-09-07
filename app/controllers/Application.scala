@@ -99,7 +99,7 @@ object Application extends Controller {
   
   def submitforgotpassword = Action { implicit request =>
     forgotPasswordForm.bindFromRequest.fold(
-      failure => ( BadRequest("Captcha Param Error")),
+      failure => ( Redirect(routes.Application.forgotpassword).flashing("error" -> "Missing email address or captcha.") ),
       { case (email, q, a) => {
           if (checkCaptcha("addr", q, a)) { // hmmm... "addr" was a variable in their sample
             EmailReport.sendnewpassword(email)
