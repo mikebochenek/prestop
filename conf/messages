@@ -24,6 +24,12 @@ doneheader = Today I''ve completed the following tasks
 # settings
 settings = Settings
 general = General
+settings.billing = Billing
+settings.paymenthistory = Payment History
+settings.amount = amount
+settings.date = date
+settings.billingperiod = billing period
+settings.status = status
 changepassword = Change Password
 password = password
 newpassword = new password
