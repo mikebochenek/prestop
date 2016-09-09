@@ -7,19 +7,35 @@
     @helper.form(routes.Restaurants.save) {
 
   <div class="starter-template">
+    <h3>@Messages("restedit.statistics")</h3>
+      <div class="row ">
+        <div class="col-sm-8 col-md-offset-2">
+        
+          <div class="panel panel-default">
+             <div class="panel-heading">@Messages("restedit.piechart.header")</div>
+             <div id="pie_chart_div">@Messages("restedit.stats.loading")</div>
+             <div class="panel-body">@Messages("restedit.piechart.info")</div>
+           </div>        
+          <div class="panel panel-default">
+             <div class="panel-heading">@Messages("restedit.barchart.header")</div>
+             <div id="bar_chart_div">@Messages("restedit.stats.loading")</div>
+             <div class="panel-body">@Messages("restedit.barchart.info")</div>
+          </div>
+        </div>
+      </div>  
       
-    <h3 class="top50">@Messages("restedit.info")</h3>
+    <h3>@Messages("restedit.info")</h3>
 
       @flash.get("error").map { message =>
-        <div class="alert alert-danger col-sm-8" role="alert">@message</div>
+        <div class="alert alert-danger col-sm-8 col-md-offset-2" role="alert">@message</div>
       }
             
       @flash.get("success").map { message =>
-        <div class="alert alert-info col-sm-8" role="alert">@message</div>            	
+        <div class="alert alert-info col-sm-8 col-md-offset-2" role="alert">@message</div>            	
       }
 
       <div class="row ">
-        <div class="col-sm-8">
+        <div class="col-sm-8 col-md-offset-2">
           <input class="hidden form-control span4" type="text" name="id" id="id" value="@restaurant.id">
           
           <div class="input-group">
@@ -139,12 +155,13 @@ window.onload = function() {
       </div>
 	}      
       
-    <h3 class="top50">@Messages("restedit.photo")</h3>
+    <h3>@Messages("restedit.photo")</h3>
       
       <div class="row ">
-        <div class="col-sm-8">
+        <div class="col-sm-8 col-md-offset-2">
                 @if(url != null) {
                      <img src="@url" alt="restaurant photo" height="100" width="100"></img>
+                     @for(w <- Image.resolutions) { <a href="@Image.reverseURLGen(url, w)">@w px wide</a> &nbsp&nbsp }
                   @helper.form(action = routes.Dishes.cropImage(restaurant.id, "restaurant")) {
                        <button class="span4 btn btn-primary" type="submit" id="cropbutton" >crop</button>
                   }
@@ -157,10 +174,10 @@ window.onload = function() {
         </div>
       </div>
 
-    <h3 class="top50">@Messages("restedit.profilepic")</h3>
+    <h3>@Messages("restedit.profilepic")</h3>
       
       <div class="row ">
-        <div class="col-sm-8">
+        <div class="col-sm-8 col-md-offset-2">
                 @if(logourl != null) {
                      <img src="@logourl" alt="restaurant photo" height="100" width="100"></img>
                      @for(w <- Image.resolutions) { <a href="@Image.reverseURLGen(logourl, w)">@w px wide</a> &nbsp&nbsp }
@@ -177,10 +194,10 @@ window.onload = function() {
       </div>
 
       
-    <h3 class="top50">@Messages("restedit.menu")</h3>
+    <h3>@Messages("restedit.menu")</h3>
 
         <div data-ng-app="app" data-ng-controller="ListDishCtrl" lang="en" class="row mycenter" >
-         <div class="col-sm-8">         
+         <div class="col-sm-8 col-md-offset-2">         
 
           <ul class="list-group" style="text-align: left;">
             <li ng-repeat="dish in dishes | orderBy:['id']" 
@@ -205,7 +222,7 @@ window.onload = function() {
 
 		<hr/>
 		
-     	<h3 class="top50">@Messages("restedit.locations") (@children.size)</h3>
+     	<h3>@Messages("restedit.locations") (@children.size)</h3>
      	@if(children.size > 0) {
       	<table class="table table-hover">
       	  <thead>
@@ -239,7 +256,7 @@ window.onload = function() {
 
 		<hr/>
 
-      	<h3 class="top50">@Messages("restedit.reservations") (@reservations.size)</h3>
+      	<h3>@Messages("restedit.reservations") (@reservations.size)</h3>
       	<table class="table table-hover">
       	  <thead>
       	    <tr>
@@ -263,25 +280,6 @@ window.onload = function() {
       	  </tbody>
 		</table>
  
-    <h3 class="top50">@Messages("restedit.statistics")</h3>
-      <div class="row ">
-        <div class="col-sm-8">
-          <div class="panel-body">@Messages("restedit.piechart.info")</div>
-        </div>  
-        <div class="row ">
-          <div class="panel panel-default">
-             <div id="pie_chart_div">@Messages("restedit.stats.loading")</div>
-          </div>        
-        </div>  
-        <div class="row ">
-          <div class="panel-body">@Messages("restedit.barchart.info")</div>
-        </div>  
-        <div class="row ">
-          <div class="panel panel-default">
-             <div id="bar_chart_div">@Messages("restedit.stats.loading")</div>
-          </div>
-        </div>
-      </div>  
  
  
     <!--Load the AJAX API - example from https://developers.google.com/chart/interactive/docs/quick_start -->
@@ -319,9 +317,12 @@ window.onload = function() {
         ]);
         
         var chart = new google.visualization.BarChart(document.getElementById('bar_chart_div'));
-        chart.draw(mdata, {'title':'@Messages("restedit.barchart.title")', 'width':600, 'height':300, 'colors': ['#FF4D5E']});
+        chart.draw(mdata, {'title':'@Messages("restedit.barchart.title")', 'width':600, 'height':300});
+        
       }
     </script>      
   </div>
-</div><!-- /.container -->
+
+
+    </div><!-- /.container -->
 }

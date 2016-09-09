@@ -9,7 +9,7 @@
 
   <div class="starter-template">
 
-      <div>Restaurants > Pizza Hut > @dish.name</div>
+      <div><a href="/restaurant">Restaurants</a> > <a href="../restaurantedit/@dish.restaurant_id">Pizza Hut</a> > @dish.name</div>
 
       @flash.get("error").map { message =>
         <div class="alert alert-danger col-sm-8 col-md-offset-2" role="alert">@message</div>
@@ -125,7 +125,6 @@ window.onload = function() {
           </br>
                       
           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">@Messages("save")</button>
-          <a class="span4 btn btn-primary" type="submit" id="backbutton" href="../restaurantedit/@dish.restaurant_id" role="button">back to restaurant</a>
         </div>
       </div>
 	}      
@@ -140,7 +139,7 @@ window.onload = function() {
             <a href="@url"><img src="@url" alt="d" width="44" title="original"></img></a>
           }        
 		    <span class="btn"><input type="file" name="picture"></span>
-            <button class="btn btn-primary" type="submit" id="generalsavebutton">upload</button>  or  
+            <button class="btn btn-primary" type="submit" id="generalsavebutton">upload</button>&nbsp&nbsp&nbsp&nbspor&nbsp&nbsp&nbsp&nbsp
             <a class="span4 btn btn-primary" type="submit" id="crop" href="/crop/@dish.id,dish" role="button">crop</a>
           </form>        
         		
