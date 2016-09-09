@@ -12,11 +12,15 @@
       <div><a href="/restaurant">Restaurants</a> > <a href="../restaurantedit/@dish.restaurant_id">@restaurantName</a> > @dish.name</div>
 
       @flash.get("error").map { message =>
-        <div class="alert alert-danger col-sm-8 col-md-offset-2" role="alert">@message</div>
+      <div class="row">
+        <div class="alert alert-danger col-sm-4 col-md-offset-4" role="alert">@message</div>
+      </div>
       }
             
       @flash.get("success").map { message =>
-        <div class="alert alert-info col-sm-8 col-md-offset-2" role="alert">@message</div>            	
+      <div class="row">
+        <div class="alert alert-info col-sm-4 col-md-offset-4" role="alert">@message</div>            	
+      </div>
       }
       
 
@@ -32,15 +36,15 @@
           <div class="input-group top5">
             <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("dishedit.name")</span>
             <input class="form-control span4" type="text" name="name" id="name" value="@dish.name">
-            <span class="input-group-addon" id="basic-addon1">
-              <span class="badge" title="@Messages("dishedit.name.tooltip")">?</span>
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("dishedit.name.tooltip")">?</span>
             </span>
           </div>
           
           <div class="input-group top5">
             <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("dishedit.price")</span>
             <input class="form-control span4" type="text" name="price" id="price" value="@dish.price">
-            <span class="input-group-addon" id="basic-addon1">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
                <span class="badge" title="@Messages("dishedit.price.tooltip")">?</span>
             </span>
           </div>

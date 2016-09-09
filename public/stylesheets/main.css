@@ -126,10 +126,15 @@ h1 {
 
 .input-group-addon {
   background-color: #FFFFFF; 
+  color: #8C8C8C;
  }
 
 .input-group-addon-label {
   min-width:90px;
+}
+
+.input-group-addon-tooltip {
+  border: none;
 }
 
 
