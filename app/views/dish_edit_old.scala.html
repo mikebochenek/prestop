@@ -8,6 +8,20 @@
     @helper.form(routes.Dishes.save) {
 
   <div class="starter-template">
+    <h3>@Messages("dishedit.statistics")</h3>
+      <div class="row ">
+        <div class="col-sm-8 col-md-offset-2">
+        
+          <div class="panel panel-default">
+             <div class="panel-heading">@Messages("dishedit.barchart.header"): "@dish.name"</div>
+             <div id="bar_chart_div">@Messages("dishedit.stats.loading")</div>
+             <div class="panel-body">@Messages("dishedit.barchart.info")</div>
+          </div>
+        </div>
+      </div>  
+  
+  
+    <h3>Dish Info</h3>
 
       @flash.get("error").map { message =>
         <div class="alert alert-danger col-sm-8 col-md-offset-2" role="alert">@message</div>
@@ -17,13 +31,9 @@
         <div class="alert alert-info col-sm-8 col-md-offset-2" role="alert">@message</div>            	
       }
 
-    <h2>@dish.name</h2>
-
-    <h3>Information</h3>
-
       <div class="row">
       
-        <div class="col-sm-8">
+        <div class="col-sm-8 col-md-offset-2">
           <input class="hidden form-control span4" type="text" name="id" id="id" value="@dish.id">
           
           <div class="input-group">
@@ -36,7 +46,6 @@
             <input class="form-control span4" type="text" name="price" id="price" value="@dish.price">
           </div>
 
-<div style="display: none">
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Greenscore tags</span>
             <input class="form-control span4" type="text" name="greenscoretags" id="greenscoretags"value="@greenscoretags">
@@ -111,7 +120,6 @@ window.onload = function() {
             <span class="input-group-addon" id="basic-addon1">Description</span>
             <textarea NAME="description" cols=70 rows=9>@dish.description</textarea>
           </div>
-</div>
           
           </br>
                       
@@ -141,22 +149,6 @@ window.onload = function() {
 		            <span class="btn"><input type="file" name="picture"></span>
                     <button class="btn btn-primary" type="submit" id="generalsavebutton">upload</button>
         		}
-        </div>
-      </div>
-
-
-    <h3>@Messages("dishedit.statistics")</h3>
-      <div class="row ">
-        <div class="col-sm-8">@Messages("dishedit.barchart.info")</div>
-      </div>  
-      <div class="row ">
-        <div class="col-sm-8">
-             <div id="bar_chart_div">@Messages("dishedit.stats.loading")</div>
-        </div>
-      </div>  
-      
-  </div>
-
 
     <!--Load the AJAX API - example from https://developers.google.com/chart/interactive/docs/quick_start -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -176,7 +168,7 @@ window.onload = function() {
     ]);
   
     var chart = new google.visualization.BarChart(document.getElementById('bar_chart_div'));
-    chart.draw(mdata, {'title':'@Messages("restedit.barchart.title")', 'width':600, 'height':300, 'colors': ['#FF4053']});
+    chart.draw(mdata, {'title':'@Messages("restedit.barchart.title")', 'width':600, 'height':300, 'colors': ['green']});
   }
 
 
@@ -207,6 +199,12 @@ file.onchange = function(e){
     }
 };
 		</script>
+		  
+        </div>
+      </div>
+      
+  </div>
 
-</div><!-- /.container -->
+
+    </div><!-- /.container -->
 }
