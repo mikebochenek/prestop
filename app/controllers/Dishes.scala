@@ -79,10 +79,11 @@ object Dishes extends Controller with Secured {
       val dishtype = Tag.findByRef(id, 35).map(_.name).mkString(", ")
       val meatorigin = Tag.findByRef(id, 36).map(_.name).mkString(", ")
       val url = Image.findByDish(id).sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+      val restaurantName = Restaurant.findById("", dish(0).restaurant_id)(0).name
 
       dish.foreach { x => x.greenScore = calculateGreenScore(greenscoretags.size) }
       
-      Ok(views.html.dish_edit(dishForm, dish(0), url, tags, greenscoretags.mkString(", "), diet, dishtype, meatorigin))
+      Ok(views.html.dish_edit(dishForm, dish(0), url, tags, greenscoretags.mkString(", "), diet, dishtype, meatorigin, restaurantName))
     }
   }
   
