@@ -9,6 +9,8 @@
 
   <div class="starter-template">
 
+      <div>Restaurants > Pizza Hut > @dish.name</div>
+
       @flash.get("error").map { message =>
         <div class="alert alert-danger col-sm-8 col-md-offset-2" role="alert">@message</div>
       }
@@ -16,24 +18,31 @@
       @flash.get("success").map { message =>
         <div class="alert alert-info col-sm-8 col-md-offset-2" role="alert">@message</div>            	
       }
+      
 
-    <h2>@dish.name</h2>
+    <h2 class="top50">@dish.name</h2>
 
-    <h3>Information</h3>
+    <h3 class="top50">Information</h3>
 
       <div class="row">
       
         <div class="col-sm-8">
           <input class="hidden form-control span4" type="text" name="id" id="id" value="@dish.id">
           
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@Messages("dishedit.name") <span class="badge" title="@Messages("dishedit.name.tooltip")">?</span></span>
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("dishedit.name")</span>
             <input class="form-control span4" type="text" name="name" id="name" value="@dish.name">
+            <span class="input-group-addon" id="basic-addon1">
+              <span class="badge" title="@Messages("dishedit.name.tooltip")">?</span>
+            </span>
           </div>
           
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@Messages("dishedit.price") <span class="badge" title="@Messages("dishedit.price.tooltip")">?</span></span>
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("dishedit.price")</span>
             <input class="form-control span4" type="text" name="price" id="price" value="@dish.price">
+            <span class="input-group-addon" id="basic-addon1">
+               <span class="badge" title="@Messages("dishedit.price.tooltip")">?</span>
+            </span>
           </div>
 
 <div style="display: none">
@@ -116,36 +125,30 @@ window.onload = function() {
           </br>
                       
           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">@Messages("save")</button>
-          <button class="span4 btn btn-primary" type="reset" id="generalresetbutton">reset</button>
           <a class="span4 btn btn-primary" type="submit" id="backbutton" href="../restaurantedit/@dish.restaurant_id" role="button">back to restaurant</a>
         </div>
       </div>
 	}      
 
-      <h3>Photo</h3>
+      <h3 class="top50">Photo</h3>
 
       <div class="row ">
-        <div class="col-sm-8 col-md-offset-2">
-                @if(url != null) {
-                     <a href="@url"><img src="@url" alt="d" width="100" title="original"></img></a>
-                     @for(w <- Image.resolutions) { <a href="@Image.reverseURLGen(url, w)">@w px wide</a> &nbsp&nbsp }
-                     
-                  @helper.form(action = routes.Dishes.cropImage(dish.id, "dish")) {
-                       <button class="span4 btn btn-primary" type="submit" id="cropbutton" >crop</button>
-                  }
-                  <hr>
-                }        
+        <div class="col-sm-8">
 
-        
-                @helper.form(action = routes.Dishes.upload(dish.id), 'enctype -> "multipart/form-data", 'acceptcharset -> "UTF-8") {
-		            <span class="btn"><input type="file" name="picture"></span>
-                    <button class="btn btn-primary" type="submit" id="generalsavebutton">upload</button>
-        		}
+          <form action="/dish?id=@dish.id" method="POST" enctype="multipart/form-data" acceptcharset="UTF-8">
+          @if(url != null) {
+            <a href="@url"><img src="@url" alt="d" width="44" title="original"></img></a>
+          }        
+		    <span class="btn"><input type="file" name="picture"></span>
+            <button class="btn btn-primary" type="submit" id="generalsavebutton">upload</button>  or  
+            <a class="span4 btn btn-primary" type="submit" id="crop" href="/crop/@dish.id,dish" role="button">crop</a>
+          </form>        
+        		
         </div>
       </div>
 
 
-    <h3>@Messages("dishedit.statistics")</h3>
+    <h3 class="top50">@Messages("dishedit.statistics")</h3>
       <div class="row ">
         <div class="col-sm-8">@Messages("dishedit.barchart.info")</div>
       </div>  
@@ -176,7 +179,7 @@ window.onload = function() {
     ]);
   
     var chart = new google.visualization.BarChart(document.getElementById('bar_chart_div'));
-    chart.draw(mdata, {'title':'@Messages("restedit.barchart.title")', 'width':600, 'height':300, 'colors': ['#FF4053']});
+    chart.draw(mdata, {'title':'@Messages("restedit.barchart.title")', 'width':600, 'height':300, 'colors': ['#FF4D5E']});
   }
 
 
