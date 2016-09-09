@@ -7,7 +7,7 @@ test = test
 # main
 application.name = presto admin
 menu.home = Home
-menu.restaurants = Restaurant Editor
+menu.restaurants = Restaurants
 menu.tags = Tag Editor
 menu.approvals = Approvals
 menu.users = Users
