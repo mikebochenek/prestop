@@ -20,6 +20,7 @@ import models._
 import views._
 
 import scala.util.control.Exception.allCatch
+import anorm.SqlMappingError
 
 
 object Recommend extends Controller with Secured  {
@@ -64,12 +65,21 @@ object Recommend extends Controller with Secured  {
     implicit request => {
       Logger.info("calling Recommend.get with id:" + id + " longitude:" + longitude + " latitude:" + latitude + " maxDistance:" + maxDistance
           + " minPrice:" + minPrice + " maxPrice:" + maxPrice + " openNow:" + openNow + " lastDishID:" + lastDishID + " maxDishes:" + maxDishes)
-      val user = User.getFullUser(id)
-      
-      val recommendations = Recommendation.recommend(user, parseLongitude(longitude), parseLatitude(latitude), maxDistance, minPrice, maxPrice, openNow, lastDishID, maxDishes, avoid)
-      val json = Json.prettyPrint(Json.toJson(recommendations.dishes.map(a => Json.toJson(a))))
-      ActivityLog.create(user.id, 7, lastDishID, Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
-      Ok(json)
+      try {
+        val user = User.getFullUser(id)
+        val recommendations = Recommendation.recommend(user, parseLongitude(longitude), parseLatitude(latitude), maxDistance, minPrice, maxPrice, openNow, lastDishID, maxDishes, avoid)
+        val json = Json.prettyPrint(Json.toJson(recommendations.dishes.map(a => Json.toJson(a))))
+        ActivityLog.create(user.id, 7, lastDishID, Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
+        Ok(json)
+      } catch {
+        case sme: SqlMappingError => {
+          //Logger.
+          Ok(Json.toJson(new ErrorJSONResponse("user does not exist", id+"")))
+        }
+        case sme: Exception => {
+          Ok(Json.toJson(new ErrorJSONResponse("general error", "")))
+        }
+      }
     }
   }
   def get(id: Long, longitude: String, latitude: String, filter: String) = Action {
