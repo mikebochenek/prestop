@@ -72,12 +72,13 @@ object Recommend extends Controller with Secured  {
         ActivityLog.create(user.id, 7, lastDishID, Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
         Ok(json)
       } catch {
-        case sme: SqlMappingError => {
-          //Logger.
-          Ok(Json.toJson(new ErrorJSONResponse("user does not exist", id+"")))
-        }
-        case sme: Exception => {
-          Ok(Json.toJson(new ErrorJSONResponse("general error", "")))
+        case e: Exception => {
+          Logger.error("Recommend.getWithFilters(..)", e)
+          if ("SqlMappingError(No rows when expecting a single one)".equalsIgnoreCase(e.getMessage)) {
+            Ok(Json.toJson(new ErrorJSONResponse("user does not exist", id+"")))
+          } else {
+            Ok(Json.toJson(new ErrorJSONResponse("general error", "")))
+          }
         }
       }
     }
