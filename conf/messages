@@ -108,7 +108,7 @@ restedit.name.tooltip = Restaurant name (i.e. Pizzaria Presto). \
 restedit.address = Address
 restedit.address.tooltip = Restaurant address (i.e. Bahnhofstrasse 4). \
   This value will be shown in the app in the restaurant details screen.
-restedit.zipcode = Postal Code
+restedit.zipcode = Zipcode
 restedit.zipcode.tooltip = Restaurant location postal code (i.e. 8004). \
   This value will NOT be shown in the app anywhere.
 restedit.city = City
@@ -120,11 +120,11 @@ restedit.state.tooltip = Restaurant location state (i.e. Zürich). \
 restedit.country = Country
 restedit.country.tooltip = Restaurant location country (i.e. Switzerland). \
   This value will be shown in the app in the restaurant details screen.
-restedit.latlong = Latitude, Longitude
+restedit.latlong = GPS
 restedit.latlong.tooltip = GPS coordinates of the restaurant, namely the latitude, longitude (i.e. 47.376363, 8.522228). \
   These values together with the app users' current GPS coordinates will be used to recommend restaurants nearby.
-restedit.google = Google Places ID
-restedit.google.tooltip = Best don't change this value.  If you create a restaurant using Google Places, this will field will be populated for you.
+restedit.google = Place ID
+restedit.google.tooltip = Google Places ID.  Best don't change this value.  If you create a restaurant using Google Places, this will field will be populated for you.
 restedit.phone = Phone
 restedit.phone.tooltip = Phone number of the restaurant.\
   App users will be able to make calls to this number easily from the restaurant details screen.
@@ -142,7 +142,7 @@ restedit.type = Type
 restedit.type.tooltip = not used at the moment
 restedit.status = Status
 restedit.status.tooltip = Important: Only dishes from active restaurants will be shown in the app!
-restedit.payment = Payment type
+restedit.payment = Payments
 restedit.payment.tooltip = What type of payments are allowed at this restaurant (i.e. VISA, Cash).
 restedit.cuisines = Cuisines
 restedit.cuisines.tooltip = Cuisines served at this restaurant (i.e. Swiss, French, Italian).  Multiple values are allowed.

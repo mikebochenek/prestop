@@ -4,109 +4,164 @@
 
 <div class="container">
 
-    @helper.form(routes.Restaurants.save) {
+@helper.form(routes.Restaurants.save) {
 
   <div class="starter-template">
-      
-    <h3 class="top50">@Messages("restedit.info")</h3>
 
-      @flash.get("error").map { message =>
-        <div class="alert alert-danger col-sm-8" role="alert">@message</div>
-      }
+    <div><a href="/restaurant">Restaurants</a> > @restaurant.name</div>
+
+    @flash.get("error").map { message =>
+      <div class="row">
+        <div class="alert alert-danger col-sm-4 col-md-offset-4" role="alert">@message</div>
+      </div>
+    }
             
-      @flash.get("success").map { message =>
-        <div class="alert alert-info col-sm-8" role="alert">@message</div>            	
-      }
+    @flash.get("success").map { message =>
+      <div class="row">
+        <div class="alert alert-info col-sm-4 col-md-offset-4" role="alert">@message</div>            	
+      </div>
+    }
+      
+    <h2 class="top50">@restaurant.name</h2>
+
+    <h3 class="top50">Information</h3>
 
       <div class="row ">
         <div class="col-sm-8">
           <input class="hidden form-control span4" type="text" name="id" id="id" value="@restaurant.id">
-          
-          <div class="input-group">
-             <span class="input-group-addon" id="basic-addon1">@Messages("restedit.name") <span class="badge" title="@Messages("restedit.name.tooltip")">?</span></span>
+
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.name")</span>
             <input class="form-control span4" type="text" name="name" id="name" value="@restaurant.name">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("restedit.name.tooltip")">?</span>
+            </span>
           </div>
                       
-          <div class="input-group">
-             <span class="input-group-addon" id="basic-addon1">@Messages("restedit.address") <span class="badge" title="@Messages("restedit.address.tooltip")">?</span></span>
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.address")</span>
             <input class="form-control span4" type="text" name="address" id="address" value="@restaurant.address">
-          </div>
-          
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.zipcode") <span class="badge" title="@Messages("restedit.zipcode.tooltip")">?</span></span>
-            <input class="form-control span4" type="text" name="postalcode" id="postalcode" value="@restaurant.misc.postalcode">
-          </div>
-                      
-          <div class="input-group">
-             <span class="input-group-addon" id="basic-addon1">@Messages("restedit.city") <span class="badge" title="@Messages("restedit.city.tooltip")">?</span></span>
-             <input class="form-control span4" type="text" name="city" id="city" value="@restaurant.city">
-          </div>
-                      
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.state") <span class="badge" title="@Messages("restedit.state.tooltip")">?</span></span>
-            <input class="form-control span4" type="text" name="state" id="state" value="@restaurant.state">
-          </div>
-                      
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.country") <span class="badge" title="@Messages("restedit.country.tooltip")">?</span></span>
-            <input class="form-control span4" type="text" name="country" id="country" value="@restaurant.misc.country">
-          </div>
-                      
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.latlong") <span class="badge" title="@Messages("restedit.latlong.tooltip")">?</span></span>
-            <input class="form-control span4" type="text" name="latitudelongitude" id="latitudelongitude" value="@restaurant.latitude, @restaurant.longitude">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("restedit.address.tooltip")">?</span>
+            </span>
           </div>
 
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.google") <span class="badge" title="@Messages("restedit.google.tooltip")">?</span></span>
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.zipcode")</span>
+            <input class="form-control span4" type="text" name="postalcode" id="postalcode" value="@restaurant.misc.postalcode">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("restedit.zipcode.tooltip")">?</span>
+            </span>
+          </div>
+
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.city")</span>
+            <input class="form-control span4" type="text" name="city" id="city" value="@restaurant.city">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("restedit.city.tooltip")">?</span>
+            </span>
+          </div>
+
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.state")</span>
+            <input class="form-control span4" type="text" name="state" id="state" value="@restaurant.state">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("restedit.state.tooltip")">?</span>
+            </span>
+          </div>
+
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.country")</span>
+            <input class="form-control span4" type="text" name="country" id="country" value="@restaurant.misc.country">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("restedit.country.tooltip")">?</span>
+            </span>
+          </div>
+
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.latlong")</span>
+            <input class="form-control span4" type="text" name="latitudelongitude" id="latitudelongitude" value="@restaurant.latitude, @restaurant.longitude">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("restedit.latlong.tooltip")">?</span>
+            </span>
+          </div>
+
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.google")</span>
             <input class="form-control span4" type="text" name="google_places_id" id="google_places_id" value="@restaurant.misc.place_id">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("restedit.google.tooltip")">?</span>
+            </span>
           </div>
           
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.phone") <span class="badge" title="@Messages("restedit.phone.tooltip")">?</span></span>
-            <input class="form-control span4" type="phone" name="phone" id="city" value="@restaurant.phone">
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.phone")</span>
+            <input class="form-control span4" type="text" name="phone" id="phone" value="@restaurant.phone">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("restedit.phone.tooltip")">?</span>
+            </span>
           </div>
                       
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.email") <span class="badge" title="@Messages("restedit.email.tooltip")">?</span></span>
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.email")</span>
             <input class="form-control span4" type="email" name="email" id="email" value="@restaurant.email">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("restedit.email.tooltip")">?</span>
+            </span>
           </div>
                       
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.website") <span class="badge" title="@Messages("restedit.website.tooltip")">?</span></span>
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.website")</span>
             <input class="form-control span4" type="text" name="website" id="website" value="@restaurant.website">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("restedit.website.tooltip")">?</span>
+            </span>
           </div>
           
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.schedule") <span class="badge" title="@Messages("restedit.schedule.tooltip")">?</span></span>
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.schedule")</span>
             <textarea class="form-control span4" type="text" name="schedule" id="schedule" cols=80 rows=7>@restaurant.schedule</textarea> 
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="According to the schedule above openNow=@common.RecommendationUtils.checkSchedule(restaurant.schedule). @Messages("restedit.schedule.tooltip")">?</span>
+            </span>
           </div>
-          <div>&emsp;according to the schedule above, <b>openNow=@common.RecommendationUtils.checkSchedule(restaurant.schedule)</b></div>
           
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.type") <span class="badge" title="@Messages("restedit.type.tooltip")">?</span></span>
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.type")</span>
             <input class="form-control span4" type="text" name="restype" id="restype" value="@restaurant.restype">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("restedit.type.tooltip")">?</span>
+            </span>
           </div>
           
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.status") <span class="badge" title="@Messages("restedit.status.tooltip")">?</span></span>
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.status")</span>
             <select class="form-control span4" type="text" name="status" id="status" value="@restaurant.status">
               <option value="4" @if(restaurant.status == 4) { selected }   >Draft (4)</option>
               <option value="-1" @if(restaurant.status == -1) { selected } >Deleted (-1)</option>
-        @if(session.get("usertype").get.toString.equals("7")) {
+             @if(session.get("usertype").get.toString.equals("7")) {
               <option value="0" @if(restaurant.status == 0) { selected }  >Active (0)</option>
-        }
+             }
             </select>
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("restedit.status.tooltip")">?</span>
+            </span>
           </div>
 
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.payment") <span class="badge" title="@Messages("restedit.payment.tooltip")">?</span></span>
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.payment")</span>
             <input class="form-control span4" type="text" name="ptags" id="ptags" value="@tags">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("restedit.payment.tooltip")">?</span>
+            </span>
           </div>
 
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@Messages("restedit.cuisines") <span class="badge" title="@Messages("restedit.cuisines.tooltip")">?</span></span>
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("restedit.cuisines")</span>
             <input class="form-control span4" type="text" name="ctags" id="ctags" value="@cuisines">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="@Messages("restedit.cuisines.tooltip")">?</span>
+            </span>
           </div>
 
           <script language="Javascript">
@@ -134,7 +189,6 @@ window.onload = function() {
           </br>
                       
           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">@Messages("save")</button>
-          <button class="span4 btn btn-primary" type="reset" id="generalsavebutton">reset</button>
         </div>
       </div>
 	}      
