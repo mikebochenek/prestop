@@ -5,7 +5,6 @@
 <div class="container">
 
   <div class="starter-template">
-    <h1>@Messages("settings")</h1>
             
     @form.globalError.map { error =>
       <div class="row ">
@@ -21,14 +20,14 @@
       </div>
     }
 
-    <h3>@Messages("settings.billing")</h3>
+    <h3 class="top50">@Messages("settings.billing")</h3>
 
       <div class="row ">
-        <div class="col-sm-8 col-md-offset-2">
+        <div class="col-sm-8">
           We have partnered with <a href="https://stripe.com/">Stripe&trade;</a> to provide a secure way to accept payments.
         </div>
 
-      <div class="col-sm-2 col-md-offset-8">
+      <div class="col-sm-2 col-md-offset-6">
        <form action="/acceptpayment" method="POST">
        <script
          src="https://checkout.stripe.com/checkout.js" class="stripe-button"
@@ -44,10 +43,9 @@
       </div>
      </div>
 
-
-    <h3>@Messages("settings.paymenthistory")</h3>
+    <h3 class="top50">@Messages("settings.paymenthistory")</h3>
       <div class="row ">
-        <div class="col-sm-8 col-md-offset-2">
+        <div class="col-sm-8">
          <table class="table table-hover">
       	  <thead>
       	    <tr>
@@ -73,10 +71,10 @@
 
     @helper.form(routes.Settings.save) {
           	
-    <h3>@Messages("general")</h3>
+    <h3 class="top50">@Messages("general")</h3>
 
       <div class="row ">
-        <div class="col-sm-8 col-md-offset-2">
+        <div class="col-sm-8">
           <input class="form-control span4" type="email" name="email" id="email" value="@me.email">
           <input class="hidden form-control span4" type="text" name="language" id="language" value="@settings.language">
 
@@ -99,66 +97,56 @@
           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">@Messages("save")</button>
         </div>
       </div>
-  </div>
 
-  <div class="starter-template">
-    <h3>@Messages("changepassword")</h3>
+    <h3 class="top50">@Messages("changepassword")</h3>
 
       <div class="row ">
-        <div class="col-sm-8 col-md-offset-2">
+        <div class="col-sm-8">
           <input class="form-control span4" type="password" name="password" id="password" placeholder="@Messages("password")">
           <input class="form-control span4" type="password" name="passwordnew1" id="passwordnew1" placeholder="@Messages("newpassword")">
           <input class="form-control span4" type="password" name="passwordnew2" id="passwordnew2" placeholder="@Messages("newpassword2")">
           <button class="span4 btn btn-primary" type="submit" id="changepasswordbutton">@Messages("save")</button>
         </div>
       </div>
-  </div>
 }
 
-  <div class="starter-template">
-
-  <h3>Photo</h3>
+  <h3 class="top50">Photo</h3>
 
   <div class="row ">
-        <div class="col-sm-8 col-md-offset-2">
+        <div class="col-sm-8">
                 @if(url != null) {
                      <img src="@url" alt="dish photo" height="100" width="100"></img>
-                     @for(w <- Image.resolutions) { <a href="@Image.reverseURLGen(url, w)">@w px wide</a> &nbsp&nbsp }
                 }        
                 @helper.form(action = routes.Settings.uploadPhoto(me.id), 'enctype -> "multipart/form-data") {
 		   <input type="file" name="picture">
-		   </br>
            <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">upload</button>
 		  }
         </div>
   </div>
-  </div>
-
-  <div class="starter-template">
   
   @if(session.get("usertype").getOrElse("").toString.equals("7")) {
   
-    <h3>@Messages("exportdata")</h3>
+    <h3 class="top50">@Messages("exportdata") (super admin only)</h3>
 
       <div class="row ">
-        <div class="col-sm-8 col-md-offset-2">
+        <div class="col-sm-8">
           <a href="settings_csv_export">@Messages("downloadcsv")</a>
         </div>
       </div>
 
       <div class="row ">
-        <div class="col-sm-8 col-md-offset-2">
+        <div class="col-sm-8">
           <a href="settings_json_export">@Messages("downloadjson")</a>
         </div>
       </div>
       
       <div class="row ">
-        <div class="col-sm-8 col-md-offset-2">
+        <div class="col-sm-8">
           <a href="settings_xml_export">@Messages("sendreportnow")</a>
         </div>
       </div>
   }
-      
-   </div>
+ 
+   </div>     
   </div><!-- /.container -->
 }
