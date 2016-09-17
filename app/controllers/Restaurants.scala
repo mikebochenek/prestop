@@ -234,7 +234,7 @@ object Restaurants extends Controller with Secured {
       Image.saveAndResizeImages(picture, id, "restaurant")
       Redirect(routes.Dishes.cropImage(id, "restaurant"))
     }.getOrElse {
-      Redirect(routes.Restaurants.about).flashing(
+      Redirect(routes.Restaurants.edit(id)).flashing(
         "error" -> "Missing file")
     }
   }  
@@ -244,7 +244,7 @@ object Restaurants extends Controller with Secured {
       Image.saveAndResizeImages(picture, id, "restaurantlogo")
       Redirect(routes.Dishes.cropImage(id, "restaurantProfile"))
     }.getOrElse {
-      Redirect(routes.Restaurants.about).flashing(
+      Redirect(routes.Restaurants.edit(id)).flashing(
         "error" -> "Missing file")
     }
   }  

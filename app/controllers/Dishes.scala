@@ -250,7 +250,7 @@ object Dishes extends Controller with Secured {
       Image.saveAndResizeImages(picture, id, "dish")
       Redirect(routes.Dishes.cropImage(id, "dish"))
     }.getOrElse {
-      Redirect(routes.Restaurants.about).flashing(
+      Redirect(routes.Dishes.getById(id)).flashing(
         "error" -> "Missing file")
     }
   }  
