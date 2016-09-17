@@ -194,6 +194,8 @@ dishedit.price.tooltip = Dish price (i.e. 30 or 15.90). \
   Users can optionally filter according to the dish price.
 dishedit.greenscoretags = Name
 dishedit.greenscoretags.tooltip = Dish name (i.e. Pasta Presto). 
+dishedit.tags = Tags
+dishedit.tags.tooltip = Dish tags will be used to recommend dishes
 
 
 # Test screen

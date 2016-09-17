@@ -73,17 +73,20 @@ object Dishes extends Controller with Secured {
     implicit request => {
       Logger.info("calling dish edit - load data for id:" + id)
       val dish = Dish.findById(username, id)
-      val tags = Tag.findByRef(id, 11).map(_.name).mkString(", ")
+      val tags = Tag.findByRef(id, 11).map(_.name)
       val greenscoretags = Tag.findByRef(id, Tag.TYPE_GREENSCORE).map(_.name) //here we must return name (not the english/german text)
-      val diet = Tag.findByRef(id, 34).map(_.name).mkString(", ")
-      val dishtype = Tag.findByRef(id, 35).map(_.name).mkString(", ")
-      val meatorigin = Tag.findByRef(id, 36).map(_.name).mkString(", ")
+      val diet = Tag.findByRef(id, 34).map(_.name)
+      val dishtype = Tag.findByRef(id, 35).map(_.name)
+      val meatorigin = Tag.findByRef(id, 36).map(_.name)
       val url = Image.findByDish(id).sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       val restaurantName = Restaurant.findById("", dish(0).restaurant_id)(0).name
 
+      val allTags = tags ++ diet ++ dishtype ++ greenscoretags
+      
       dish.foreach { x => x.greenScore = calculateGreenScore(greenscoretags.size) }
       
-      Ok(views.html.dish_edit(dishForm, dish(0), url, tags, greenscoretags.mkString(", "), diet, dishtype, meatorigin, restaurantName))
+      Ok(views.html.dish_edit(dishForm, dish(0), url, tags.mkString(", "), greenscoretags.mkString(", "), 
+          diet.mkString(", "), dishtype.mkString(", "), meatorigin.mkString(", "), restaurantName, allTags.sorted.mkString(", ")))
     }
   }
   
@@ -96,6 +99,7 @@ object Dishes extends Controller with Secured {
   val dishForm = Form(
     tuple(
       "id" -> text,
+      "tags" -> text,
       "price" -> text,
       "name" -> text,
       "serving" -> text,
@@ -112,7 +116,7 @@ object Dishes extends Controller with Secured {
       
   def save = IsAuthenticated { username =>
     implicit request =>  
-      val (id, price, name, serving, description, greenscore, restaurant_id, status, itags, greenscoretags, diet, dishtype, meatorigin, source) = dishForm.bindFromRequest.get
+      val (id, tags, price, name, serving, description, greenscore, restaurant_id, status, itags, greenscoretags, diet, dishtype, meatorigin, source) = dishForm.bindFromRequest.get
       var validationErrors = ""      
       val fullUser = User.getFullUser(username).get
       val newStatus = ("7".equals(fullUser.ttype) || status.toInt == -1) match {
@@ -131,7 +135,9 @@ object Dishes extends Controller with Secured {
         Tag.updateTags(id.toLong, diet, 34)
         Tag.updateTags(id.toLong, dishtype, 35)
         Tag.updateTags(id.toLong, meatorigin, 36)
-        Logger.info("calling restaurant update for id:" + id + " price:" + price + " newStatus:" + newStatus + " name:" + name + " tags:" + itags + " greenscoretags: " + greenscoretags)
+        Tag.updateTags(id.toLong, tags, Seq(11, 31, 34, 35)) //NB: order is important, 11 should be first, because we will create with status=11
+        Logger.info("calling restaurant update for id:" + id + " price:" + price + " newStatus:" + newStatus + " name:" + name 
+            + " tags:" + itags + " greenscoretags: " + greenscoretags + " alltags: " + tags)
         Redirect(routes.Dishes.getById(id.toLong)).flashing("success" -> ("Changes saved successfully at " + RecommendationUtils.currentTime()))
       } else {
         Logger.info("failed calling restaurant update for id:" + id + " price:" + price + " newStatus:" + newStatus + " name:" + name + " tags:" + itags + " greenscoretags: " + greenscoretags + " validationErrors: " + validationErrors)

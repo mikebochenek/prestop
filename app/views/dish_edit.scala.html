@@ -1,5 +1,6 @@
-@(form: Form[(String,String,String,String,String,String,String,String,String,String,String,String,String,String)], 
-	dish: Dish, url: String, tags: String, greenscoretags: String, diet: String, dishtype: String, meatorigin: String, restaurantName: String)(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String,String,String,String,String,String,String,String,String,String)], 
+	dish: Dish, url: String, tags: String, greenscoretags: String, diet: String, dishtype: String, meatorigin: String, 
+	restaurantName: String, allTags: String)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -46,6 +47,14 @@
             <input class="form-control span4" type="text" name="price" id="price" value="@dish.price">
             <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
                <span class="badge" title="@Messages("dishedit.price.tooltip")">?</span>
+            </span>
+          </div>
+
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("dishedit.tags")</span>
+            <input class="form-control span4" type="text" name="tags" id="tags" value="@allTags">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+               <span class="badge" title="@Messages("dishedit.tags.tooltip")">?</span>
             </span>
           </div>
 
@@ -102,6 +111,7 @@ attachTags = function(elemId, tagsArray) {
 }
 
 window.onload = function() {
+  setTimeout(attachTags('#tags', @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter((t) => (t.status == 11 || t.status == 31 || t.status == 34 || t.status == 35)).map(_.name)).toString)) , 900);
   setTimeout(attachTags('#itags', @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 11).map(_.name)).toString)) , 900);
   setTimeout(attachTags('#greenscoretags', @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 31).map(_.name)).toString)) , 900);
   setTimeout(attachTags('#diet', @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 34).map(_.name)).toString)) , 900);
