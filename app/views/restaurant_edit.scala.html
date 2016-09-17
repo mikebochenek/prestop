@@ -192,44 +192,61 @@ window.onload = function() {
         </div>
       </div>
 	}      
-      
-    <h3 class="top50">@Messages("restedit.photo")</h3>
-      
+
+
+      <h3 class="top50">@Messages("restedit.photo")</h3>
+
       <div class="row ">
         <div class="col-sm-8">
-                @if(url != null) {
-                     <img src="@url" alt="restaurant photo" height="100" width="100"></img>
-                  @helper.form(action = routes.Dishes.cropImage(restaurant.id, "restaurant")) {
-                       <button class="span4 btn btn-primary" type="submit" id="cropbutton" >crop</button>
-                  }
-                  <hr>
-                }
-                @helper.form(action = routes.Restaurants.upload(restaurant.id), 'enctype -> "multipart/form-data") {
-		            <span class="btn"><input type="file" name="picture"></span>
-                    <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">upload</button>
-		        }
+
+          <form action="/restaurant?id=@restaurant.id" method="POST" enctype="multipart/form-data">
+          @if(url != null) {
+            <a href="@url"><img src="@url" alt="restaurant photo" width="44" title="original"></img></a>
+          }        
+		    <span class="btn"><input type="file" name="picture"></span>
+            <button class="btn btn-primary" type="submit" id="generalsavebutton">upload</button>&nbsp&nbsp&nbsp&nbspor&nbsp&nbsp&nbsp&nbsp
+            <a class="span4 btn btn-primary" type="submit" id="crop" href="/crop/@restaurant.id,restaurant" role="button">crop</a>
+          </form>        
+        		
         </div>
       </div>
 
-    <h3 class="top50">@Messages("restedit.profilepic")</h3>
-      
+
+      <h3 class="top50">@Messages("restedit.profilepic")</h3>
+
       <div class="row ">
         <div class="col-sm-8">
-                @if(logourl != null) {
-                     <img src="@logourl" alt="restaurant photo" height="100" width="100"></img>
-                     @for(w <- Image.resolutions) { <a href="@Image.reverseURLGen(logourl, w)">@w px wide</a> &nbsp&nbsp }
-                  @helper.form(action = routes.Dishes.cropImage(restaurant.id, "restaurantProfile")) {
-                       <button class="span4 btn btn-primary" type="submit" id="cropbutton" >crop</button>
-                  }
-                  <hr>
-                }
-                @helper.form(action = routes.Restaurants.uploadLogo(restaurant.id), 'enctype -> "multipart/form-data") {
-		            <span class="btn"><input type="file" name="logopicture"></span>
-                    <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">upload</button>
-                }
+
+          <form action="/restaurant2?id=@restaurant.id" method="POST" enctype="multipart/form-data">
+          @if(logourl != null) {
+            <a href="@logourl"><img src="@logourl" alt="restaurant profile photo" width="44" title="original"></img></a>
+          }        
+		    <span class="btn"><input type="file" name="logopicture"></span>
+            <button class="btn btn-primary" type="submit" id="generalsavebutton">upload</button>&nbsp&nbsp&nbsp&nbspor&nbsp&nbsp&nbsp&nbsp
+            <a class="span4 btn btn-primary" type="submit" id="crop" href="/crop/@restaurant.id,restaurantProfile" role="button">crop</a>
+          </form>        
+        		
         </div>
       </div>
 
+    <h3 class="top50">@Messages("restedit.statistics")</h3>
+      <div class="row ">
+        <div class="col-sm-8">@Messages("restedit.piechart.info")</div>
+      </div>  
+      <div class="row ">
+         <div class="col-sm-8">
+           <div id="pie_chart_div">@Messages("restedit.stats.loading")</div>
+        </div>        
+      </div>  
+      <div class="row ">
+        <div class="col-sm-8">@Messages("restedit.barchart.info")</div>
+      </div>  
+      <div class="row ">
+        <div class="col-sm-8">
+           <div id="bar_chart_div">@Messages("restedit.stats.loading")</div>
+        </div>
+      </div>
+ 
       
     <h3 class="top50">@Messages("restedit.menu")</h3>
 
@@ -257,8 +274,6 @@ window.onload = function() {
          </div><!-- /.col-sm-6 -->
         </div>
 
-		<hr/>
-		
      	<h3 class="top50">@Messages("restedit.locations") (@children.size)</h3>
      	@if(children.size > 0) {
       	<table class="table table-hover">
@@ -291,8 +306,6 @@ window.onload = function() {
             <button class="span4 btn btn-primary" type="submit" id="createlocation" >@Messages("restedit.locations.addbutton")</button>
         }
 
-		<hr/>
-
       	<h3 class="top50">@Messages("restedit.reservations") (@reservations.size)</h3>
       	<table class="table table-hover">
       	  <thead>
@@ -316,27 +329,7 @@ window.onload = function() {
 		  }
       	  </tbody>
 		</table>
- 
-    <h3 class="top50">@Messages("restedit.statistics")</h3>
-      <div class="row ">
-        <div class="col-sm-8">
-          <div class="panel-body">@Messages("restedit.piechart.info")</div>
-        </div>  
-        <div class="row ">
-          <div class="panel panel-default">
-             <div id="pie_chart_div">@Messages("restedit.stats.loading")</div>
-          </div>        
-        </div>  
-        <div class="row ">
-          <div class="panel-body">@Messages("restedit.barchart.info")</div>
-        </div>  
-        <div class="row ">
-          <div class="panel panel-default">
-             <div id="bar_chart_div">@Messages("restedit.stats.loading")</div>
-          </div>
-        </div>
-      </div>  
- 
+
  
     <!--Load the AJAX API - example from https://developers.google.com/chart/interactive/docs/quick_start -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
