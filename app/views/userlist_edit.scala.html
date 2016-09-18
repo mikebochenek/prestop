@@ -1,7 +1,10 @@
 @(users: Seq[UserStat])(implicit session: Session, lang: Lang)
 @main(title = "users") {
-    @if(session.get("usertype").get.toString.equals("7")) {
+
+@session.get("email").map { user =>
     <div class="container">
+	
+    @if(session.get("usertype").get.toString.equals("7")) {
 
       <div class="starter-template">
       	<h1>All @users.size users</h1>
@@ -48,5 +51,8 @@
     	} );
       </script>
     </div><!-- /.container -->
-}
+    }
+  }.getOrElse{
+       <div class="starter-template"><h1>you should probably <a href="login">login</a></h1></div>
+  }  
 }
