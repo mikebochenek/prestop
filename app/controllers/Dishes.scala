@@ -259,26 +259,34 @@ object Dishes extends Controller with Secured {
   def uploadDish(user_id: Long, dish_name: String, price: String, place_id: String) = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
       Logger.info("uploadDish userId:" + user_id + " name: " + dish_name + " price: " + price + " place_id: " + place_id)
+
+      try {
+        val rest = Restaurant.findAll().filter { x => place_id.equals(x.misc.place_id.getOrElse("")) }
+        val restId = (rest.isEmpty) match  {
+          case true => Restaurant.create(place_id, "", "", 0.0, 0.0, "", 0, None, 4).get
+          case false => rest(0).id
+        }
       
-      val rest = Restaurant.findAll().filter { x => place_id.equals(x.misc.place_id.getOrElse("")) }
-      val restId = (rest.isEmpty) match  {
-        case true => Restaurant.create(place_id, "", "", 0.0, 0.0, "", 0, None, 4).get
-        case false => rest(0).id
-      }
+        //TODO user_id?
       
-      //TODO user_id?
-      
-      if (rest.isEmpty) { //hmmm.. kinda hacky, but we need to store place_id
-        val r = Restaurant.findById("", restId)(0)
-        Restaurant.update(r.id, r.name, r.city, r.address, r.longitude, r.latitude, r.schedule, r.restype, 
+        if (rest.isEmpty) { //hmmm.. kinda hacky, but we need to store place_id
+          val r = Restaurant.findById("", restId)(0)
+          Restaurant.update(r.id, r.name, r.city, r.address, r.longitude, r.latitude, r.schedule, r.restype, 
             r.status, "", "", "", "", "", "", place_id)
-      }
+        }
       
-      val id = Dish.create(restId, price.replaceAll("[A-Za-z]", "").trim.toDouble, dish_name, 0.0, 4);
-      Logger.info("dish created with " + dish_name + " with id:" + id + " restaurantID:"+ restId + " existing? " + !rest.isEmpty)
-      Image.saveAndResizeImages(picture, id.get, "dish")
+        val id = Dish.create(restId, price.replaceAll("[A-Za-z]", "").trim.toDouble, dish_name, 0.0, 4);
+        Logger.info("dish created with " + dish_name + " with id:" + id + " restaurantID:"+ restId + " existing? " + !rest.isEmpty)
+        Image.saveAndResizeImages(picture, id.get, "dish")
       
-      Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
+        Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
+        
+      } catch {
+        case e: javax.imageio.IIOException => {
+          Logger.error("uploadDish failure ", e)
+          Ok(Json.prettyPrint(Json.toJson(ErrorJSONResponse("error", e.toString))))
+        }
+      } 
     }.getOrElse {
       Ok(Json.prettyPrint(Json.toJson(ErrorJSONResponse("error", "missing file - http post required with param named 'picture'"))))
     }
