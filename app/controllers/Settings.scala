@@ -408,6 +408,9 @@ object Settings extends Controller with Secured {
   
   def checkExistingUser() = Action {
     implicit request => {
+      
+      Thread.sleep(2000)
+      
       Logger.info("check existing user - body:" + request.body.asJson)
       
       val email = (request.body.asJson.get \ "email")
