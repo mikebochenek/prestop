@@ -175,6 +175,7 @@ window.onload = function() {
       </div>
 
 
+  @if(dish.status != 4) {
     <h3 class="top50">@Messages("dishedit.statistics")</h3>
       <div class="row ">
         <div class="col-sm-8">@Messages("dishedit.barchart.info")</div>
@@ -236,6 +237,8 @@ file.onchange = function(e){
        alert('filename contains invalid characters ' + this.value);
     }
 };
+
+}
 		</script>
 
 </div><!-- /.container -->
