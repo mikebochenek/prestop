@@ -267,8 +267,6 @@ object Dishes extends Controller with Secured {
           case false => rest(0).id
         }
       
-        //TODO user_id?
-      
         if (rest.isEmpty) { //hmmm.. kinda hacky, but we need to store place_id
           val r = Restaurant.findById("", restId)(0)
           Restaurant.update(r.id, r.name, r.city, r.address, r.longitude, r.latitude, r.schedule, r.restype, 
@@ -278,6 +276,8 @@ object Dishes extends Controller with Secured {
         val id = Dish.create(restId, price.replaceAll("[A-Za-z]", "").trim.toDouble, dish_name, 0.0, 4);
         Logger.info("dish created with " + dish_name + " with id:" + id + " restaurantID:"+ restId + " existing? " + !rest.isEmpty)
         Image.saveAndResizeImages(picture, id.get, "dish")
+        
+        ActivityLog.create(user_id, ActivityLog.TYPE_PAYMENT_AUDIT, id.get, null)
       
         Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
         
