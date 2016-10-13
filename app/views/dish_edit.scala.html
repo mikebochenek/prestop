@@ -1,6 +1,6 @@
 @(form: Form[(String,String,String,String,String,String,String,String,String,String,String,String,String,String,String)], 
 	dish: Dish, url: String, tags: String, greenscoretags: String, diet: String, dishtype: String, meatorigin: String, 
-	restaurantName: String, allTags: String)(implicit flash: Flash, session: Session, lang: Lang)
+	restaurantName: String, allTags: String, uploadUser: UserFull)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -57,6 +57,16 @@
                <span class="badge" title="@Messages("dishedit.tags.tooltip")">?</span>
             </span>
           </div>
+
+       @if(uploadUser != null) {
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Credit</span>
+            <input class="form-control span4" type="text" name="tags" id="tags" value="@uploadUser.fullname (@uploadUser.email)">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+               <span class="badge" title="who uploaded this dish">?</span>
+            </span>
+          </div>
+        }
 
 <div style="display: none">
           <div class="input-group">

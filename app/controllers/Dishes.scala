@@ -80,13 +80,18 @@ object Dishes extends Controller with Secured {
       val meatorigin = Tag.findByRef(id, 36).map(_.name)
       val url = Image.findByDish(id).sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       val restaurantName = Restaurant.findById("", dish(0).restaurant_id)(0).name
+      val activityLogUpload = ActivityLog.findAllBySubType(ActivityLog.TYPE_DISH_UPLOAD, dish(0).id)
+      val uploadUser = activityLogUpload.size match {
+        case 1 => { User.getFullUser(activityLogUpload(0).user_id)}
+        case _ => null
+      }
 
       val allTags = tags ++ diet ++ dishtype ++ greenscoretags
       
       dish.foreach { x => x.greenScore = calculateGreenScore(greenscoretags.size) }
       
       Ok(views.html.dish_edit(dishForm, dish(0), url, tags.mkString(", "), greenscoretags.mkString(", "), 
-          diet.mkString(", "), dishtype.mkString(", "), meatorigin.mkString(", "), restaurantName, allTags.sorted.mkString(", ")))
+          diet.mkString(", "), dishtype.mkString(", "), meatorigin.mkString(", "), restaurantName, allTags.sorted.mkString(", "), uploadUser))
     }
   }
   

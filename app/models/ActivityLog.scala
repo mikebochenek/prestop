@@ -94,6 +94,14 @@ object ActivityLog {
           + " order by id asc").on('user_id -> user_id, 'atype -> atype).as(ActivityLog.simple *)
     }
   }  
+  
+  def findAllBySubType(atype: Long, subtype: Long): Seq[ActivityLog] = {
+    DB.withConnection { implicit connection =>
+      SQL(selectSQL + " where activity_type = {atype}"
+          + " and activity_subtype = {subtype} "
+          + " order by id asc").on('atype -> atype, 'subtype -> subtype).as(ActivityLog.simple *)
+    }
+  }
 
   def findAllByType(interval: Long, atype: Long): Seq[ActivityLog] = {
     DB.withConnection { implicit connection =>
