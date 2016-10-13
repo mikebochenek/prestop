@@ -277,7 +277,7 @@ object Dishes extends Controller with Secured {
         Logger.info("dish created with " + dish_name + " with id:" + id + " restaurantID:"+ restId + " existing? " + !rest.isEmpty)
         Image.saveAndResizeImages(picture, id.get, "dish")
         
-        ActivityLog.create(user_id, ActivityLog.TYPE_PAYMENT_AUDIT, id.get, null)
+        ActivityLog.create(user_id, ActivityLog.TYPE_DISH_UPLOAD, id.get, "")
       
         Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
         
