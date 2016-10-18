@@ -447,6 +447,9 @@ object Settings extends Controller with Secured {
       val userStatus = existingUser match {
         case true => { 
           val settings = getPreviousSettingsSafely(User.getFullUser(newid))
+          Logger.info("checkExistingUser settings.favCuisines: " + settings.favCuisines 
+              + " settings.preferToAvoid: " + settings.preferToAvoid 
+              + " settings.sampleDishLikes: " + settings.sampleDishLikes) 
           val existingUserStatus = settings.favCuisines.length == 0 && 
                settings.preferToAvoid.get.length == 0 && settings.sampleDishLikes.get.length == 0 match {
             case true => "existing_user_without_settings"
@@ -532,5 +535,4 @@ object Settings extends Controller with Secured {
       User.update(newUser, email, settings)
       Redirect(routes.Settings.userEdit(id.toLong))
   }  
-  
 }
