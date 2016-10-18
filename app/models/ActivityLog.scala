@@ -142,6 +142,8 @@ object ActivityLog {
   val TYPE_RESTAURANT_DETAILS_API_CALL = 9
   val TYPE_DISH_LIKE = 11
   val TYPE_DISH_UPLOAD = 13
+  val TYPE_SEARCH_SUGGEST = 15
+  val TYPE_SEARCH = 17
   
   implicit val activityLogReads = Json.reads[ActivityLog]
   implicit val activityLogWrites = Json.writes[ActivityLog]
