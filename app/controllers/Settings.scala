@@ -445,7 +445,15 @@ object Settings extends Controller with Secured {
       }
       
       val userStatus = existingUser match {
-        case true => "existing_user"
+        case true => { 
+          val settings = getPreviousSettingsSafely(User.getFullUser(newid))
+          val existingUserStatus = settings.favCuisines.length == 0 && 
+               settings.preferToAvoid.get.length == 0 && settings.sampleDishLikes.get.length == 0 match {
+            case true => "existing_user_without_settings"
+            case false =>  "existing_user"
+          }
+          existingUserStatus
+        }
         case false => "user_not_found"
       }
       
