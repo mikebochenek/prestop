@@ -26,9 +26,16 @@ object Search extends Controller with Secured {
   def suggest(keyword: String, id: Long) = Action {
     implicit request => {
       ActivityLog.create(id, ActivityLog.TYPE_SEARCH_SUGGEST, 0, keyword)
-      val test1 = SearchSuggestion("Chicken", "110'003 dishes")
-      val test2 = SearchSuggestion("Pizza", "49'843 dishes")
-      Ok(Json.prettyPrint(Json.toJson(Array(test1, test2))))
+      val popular = Tag.findAllPopular(Tag.TYPE_INGREDIENTS)
+      
+      if (keyword.length < 2) {
+        val popularSearches = popular.take(10).map { x => SearchSuggestion(x.en_text.get, "100 dishes") }
+        Ok(Json.prettyPrint(Json.toJson(popularSearches)))
+      } else {
+        val matches = popular.filter { x => x.en_text.get.toLowerCase.startsWith(keyword.toLowerCase.trim) }
+          .take(10).map { x => SearchSuggestion(x.en_text.get, "100 dishes") }
+        Ok(Json.prettyPrint(Json.toJson(matches)))
+      }
     }
   }
 

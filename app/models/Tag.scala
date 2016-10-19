@@ -85,7 +85,7 @@ object Tag {
   
   def findAllPopular(status: Long): Seq[Tag] = {
     DB.withConnection { implicit connection =>
-      SQL("select t.*, (select count(*) from presto.tagref tr where t.id = tr.tagid) as c from presto.tag t where t.status = {status} order by c desc, t.name ")
+      SQL("select t.*, (select count(*) from tagref tr where t.id = tr.tagid) as c from tag t where t.status = {status} order by c desc, t.name ")
       .on('status -> status).as(Tag.simple *)
     }
   }
