@@ -108,6 +108,7 @@ object Activities extends Controller with Secured {
   
   def unlikeSeveral() = Action { 
     implicit request => {
+      Thread.sleep(800)
       val user_id = (request.body.asJson.get \ "user_id")
       val dish_ids = (request.body.asJson.get \ "dish_ids").as[List[Long]]
       Logger.info("ActivityLog deleted called:  dishId: " + dish_ids +  " user: " + user_id)

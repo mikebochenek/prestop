@@ -243,6 +243,7 @@ object Settings extends Controller with Secured {
   
   def personalizeTasteProfile() = Action {
     implicit request => {
+      Thread.sleep(800)
       Logger.info("personalize taste profile - body:" + request.body.asJson)
       
       val userId = (request.body.asJson.get \ "user_id" )
@@ -267,6 +268,7 @@ object Settings extends Controller with Secured {
 
   def personalize() = Action {
     implicit request => {
+      Thread.sleep(800)
       Logger.info("personalize user - body:" + request.body.asJson)
       
       val userId = (request.body.asJson.get \ "user_id" )
@@ -330,6 +332,7 @@ object Settings extends Controller with Secured {
   
   def register() = Action {
     implicit request => {
+      Thread.sleep(800)
       Logger.info("register user - body:" + request.body.asJson)
       
       val email = (request.body.asJson.get \ "user_data" \ "email")
@@ -408,8 +411,7 @@ object Settings extends Controller with Secured {
   
   def checkExistingUser() = Action {
     implicit request => {
-      
-      Thread.sleep(2000)
+      Thread.sleep(800)
       
       Logger.info("check existing user - body:" + request.body.asJson)
       
