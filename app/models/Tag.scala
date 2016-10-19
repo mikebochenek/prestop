@@ -15,7 +15,8 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.Logger
 
-case class Tag(id: Long, name: String, en_text: Option[String], de_text: Option[String], it_text: Option[String], fr_text: Option[String], status: Int, lastupdate: Date)
+case class Tag(id: Long, name: String, en_text: Option[String], de_text: Option[String], 
+    it_text: Option[String], fr_text: Option[String], status: Int, lastupdate: Date, count: Option[Long])
 
 case class TagRefSimple(tagid: Long, name: String, status: Int, refid: Long)
 
@@ -30,10 +31,26 @@ object Tag {
       get[Option[String]]("tag.fr_text") ~
       get[Int]("tag.status") ~
       get[Date]("tag.lastupdate") map {
-        case id ~ name ~ en_text ~ de_text ~ it_text ~ fr_text ~ status ~ lastupdate => Tag(id, name, en_text, de_text, it_text, fr_text, status, lastupdate)
+        case id ~ name ~ en_text ~ de_text ~ it_text ~ fr_text ~ status ~ lastupdate 
+          => Tag(id, name, en_text, de_text, it_text, fr_text, status, lastupdate, Some(0))
       }
   }
 
+  val simpleWithCount = {
+      get[Long]("tag.id") ~
+      get[String]("tag.name") ~
+      get[Option[String]]("tag.en_text") ~
+      get[Option[String]]("tag.de_text") ~
+      get[Option[String]]("tag.it_text") ~
+      get[Option[String]]("tag.fr_text") ~
+      get[Int]("tag.status") ~
+      get[Date]("tag.lastupdate") ~
+      get[Option[Long]]("c") map {
+        case id ~ name ~ en_text ~ de_text ~ it_text ~ fr_text ~ status ~ lastupdate ~ c
+          => Tag(id, name, en_text, de_text, it_text, fr_text, status, lastupdate, c)
+      }
+  }
+  
   val optimized = {
       get[Long]("tag.id") ~
       get[String]("tag.name") ~
@@ -86,7 +103,7 @@ object Tag {
   def findAllPopular(status: Long): Seq[Tag] = {
     DB.withConnection { implicit connection =>
       SQL("select t.*, (select count(*) from tagref tr where t.id = tr.tagid) as c from tag t where t.status = {status} order by c desc, t.name ")
-      .on('status -> status).as(Tag.simple *)
+      .on('status -> status).as(Tag.simpleWithCount *)
     }
   }
 
@@ -148,7 +165,7 @@ object Tag {
 			    }
 			    case None => { 
             // instead of ignoring the tag, we create it (OR reactivate with if status < 0 above!)
-            val newId = Tag.create(new Tag(-1, tag.trim.toLowerCase, Some(tag.trim.toLowerCase), Some(null), Some(null), Some(null), status(0), new Date()))
+            val newId = Tag.create(new Tag(-1, tag.trim.toLowerCase, Some(tag.trim.toLowerCase), Some(null), Some(null), Some(null), status(0), new Date(), Some(0)))
             Logger.warn("new tag created:" + tag + " with newId=" + newId)
             TagRef.create(new TagRef(-1, newId.getOrElse(0), id, status(0), null))
           }

@@ -29,11 +29,11 @@ object Search extends Controller with Secured {
       val popular = Tag.findAllPopular(Tag.TYPE_INGREDIENTS)
       
       if (keyword.length < 2) {
-        val popularSearches = popular.take(10).map { x => SearchSuggestion(x.en_text.get, "100 dishes") }
+        val popularSearches = popular.take(10).map { x => SearchSuggestion(x.en_text.get, x.count.get + " dishes") }
         Ok(Json.prettyPrint(Json.toJson(popularSearches)))
       } else {
         val matches = popular.filter { x => x.en_text.get.toLowerCase.startsWith(keyword.toLowerCase.trim) }
-          .take(10).map { x => SearchSuggestion(x.en_text.get, "100 dishes") }
+          .take(10).map { x => SearchSuggestion(x.en_text.get, x.count.get + " dishes") }
         Ok(Json.prettyPrint(Json.toJson(matches)))
       }
     }
