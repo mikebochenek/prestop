@@ -41,7 +41,7 @@
 
       	<h3>New dish likes in the last 24h (@activities.size)</h3>
       	<table class="table table-striped" border="1">
-      	@for((activity, index) <- activities.filter{x => x.activity_type != 7}.zipWithIndex)  {	
+      	@for((activity, index) <- activities.filter{x => x.activity_type == 11}.zipWithIndex)  {	
 		  <tr>
 		  <td>@activity.user_id</td>
 		  <td>@activity.activity_subtype</td>
