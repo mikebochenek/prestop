@@ -188,8 +188,19 @@ object Settings extends Controller with Secured {
   def getByUser(id: Long) = Action { 
     implicit request => {
       Logger.info("calling Activities get - load data for id:" + id)
-      val all = getPreviousSettingsSafely(User.getFullUser(id))
-      Ok(Json.prettyPrint(Json.toJson(all)))
+      try {
+        val all = getPreviousSettingsSafely(User.getFullUser(id))
+        Ok(Json.prettyPrint(Json.toJson(all)))
+      } catch {
+        case e: Exception => {
+          Logger.error("Recommend.getWithFilters(..)", e)
+          if ("SqlMappingError(No rows when expecting a single one)".equalsIgnoreCase(e.getMessage)) {
+            Ok(Json.toJson(new ErrorJSONResponse("user does not exist", id+"")))
+          } else {
+            Ok(Json.toJson(new ErrorJSONResponse("general error", "")))
+          }
+        }
+      }
     }
   } 
 
