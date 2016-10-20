@@ -11,6 +11,7 @@ import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.libs.functional.syntax._
 import java.util.Date
+import java.util.Calendar
 import play.api.Logger
 import models.Tag
 import models.RestaurantFriends
@@ -329,7 +330,9 @@ object Restaurants extends Controller with Secured {
       var total = 0
       for (activity <- activities) {
         if (activity.activity_details.contains(dish.id + ",") || activity.activity_details.contains(dish.id + "]")) { 
-          val month = activity.createdate.getMonth
+          val cal = Calendar.getInstance()
+          cal.setTime(activity.createdate)
+          val month = cal.get(Calendar.MONTH)
           totals(month) += 1
         }
       }
@@ -337,7 +340,7 @@ object Restaurants extends Controller with Secured {
     
     Logger.info("getBarChartData elapsed: " + (System.currentTimeMillis() - startTS))
     
-    val currentMonth = new java.util.Date().getMonth
+    val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
     
     var output = ""
     for (i <- (currentMonth + 6) to (currentMonth+12)) {
