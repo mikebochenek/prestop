@@ -44,7 +44,7 @@
           
           <div class="input-group top5">
             <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("dishedit.price")</span>
-            <input class="form-control span4" type="text" name="price" id="price" value="@dish.price">
+            <input class="form-control span4" type="text" name="price" id="price" value="@("%1.2f".format(dish.price))">
             <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
                <span class="badge" title="@Messages("dishedit.price.tooltip")">?</span>
             </span>
