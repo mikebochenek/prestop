@@ -30,5 +30,4 @@ object Reports extends Controller with Secured {
           ActivityLog.findAll, Restaurant.findAll.filter { r => r.status == 4 }, Dish.findAll().filter { d => d.status == 4 }))
     }
   }
-  
 }

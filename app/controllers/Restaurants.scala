@@ -26,7 +26,6 @@ import models.json.GooglePlacesResponse
 
 object Restaurants extends Controller with Secured {
 
-
   def index = Action { implicit request =>
     Ok(html.restaurants());
   }
@@ -39,31 +38,39 @@ object Restaurants extends Controller with Secured {
     Ok(html.contact());
   }
 
-  def createAndPopulate(id: Long, longitude: String, latitude: String, name: String, 
-      street: String, postalcode: String, phone: String, website: String, schedule: String, place_id: String) = IsAuthenticated { username =>
+  def createAndPopulate(id: Long, longitude: String, latitude: String, name: String, street: String, postalcode: String, 
+      phone: String, website: String, schedule: String, place_id: String) = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling restaurant edit AND populate - load data for id:" + id)
       val newid = _create(name, username);
       Logger.info("restaurant created with " + name + " with id:" + newid)
       
-      val misc = new RestaurantMiscInfo(Option(postalcode), Option(""), Option(website), Option("Switzerland"), Option(0), Option(place_id), null)
-      val r = new Restaurant(newid.get, name, "Zürich", street, longitude.toDouble, latitude.toDouble, schedule.replaceAll(":::", "\n"), false, 0, 0, 
-          Option("+"+phone.trim), Option(""), Option(postalcode), Option("Zürich"), Option(website), null, null, Seq.empty[String], Seq.empty[String],
+      val misc = new RestaurantMiscInfo(Option(postalcode), Option(""), Option(website), Option("Switzerland"), 
+          Option(0), Option(place_id), null)
+      val r = new Restaurant(newid.get, name, "Zürich", street, longitude.toDouble, latitude.toDouble, 
+          schedule.replaceAll(":::", "\n"), false, 0, 0, Option("+"+phone.trim), Option(""), Option(postalcode), 
+          Option("Zürich"), Option(website), null, null, Seq.empty[String], Seq.empty[String],
           Seq.empty[RestaurantFriends], misc)
       
-      Ok(views.html.restaurant_edit(restaurantForm, r, "", "", "", "", Reservation.findAllByRestaurant(id), Restaurant.findAllByParent(id)))
+      Ok(views.html.restaurant_edit(restaurantForm, r, "", "", "", "", 
+          Reservation.findAllByRestaurant(id), Restaurant.findAllByParent(id)))
     }
   }
 
+  /**
+   * called from /api/restaurant/:id
+   */
   def getById(id: Long) = Action {
     implicit request => {
       val all = Restaurant.findById(null, id)
       for (restaurant <- all) {
         restaurant.paymentoptions =  Tag.findByRef(restaurant.id, 12).map(_.en_text.get) //TODO good, but this has to be dynamic somehow
         restaurant.cuisines =  Tag.findByRef(restaurant.id, 21).map(_.en_text.get) //TODO should be dynamic
-        val defaultImage = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 750 && x.status == 0}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+        val defaultImage = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 750 && x.status == 0}
+          .headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
         restaurant.url = defaultImage.url
-        restaurant.smallurl = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 72 && x.status == 1}.headOption.getOrElse(defaultImage).asInstanceOf[Image].url
+        restaurant.smallurl = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 72 && x.status == 1}
+          .headOption.getOrElse(defaultImage).asInstanceOf[Image].url
         
         restaurant.open_now = common.RecommendationUtils.checkSchedule(restaurant.schedule)
         
@@ -71,7 +78,8 @@ object Restaurants extends Controller with Secured {
           restaurant.city = restaurant.city + ", Switzerland" //TODO remove this when we add country field
         }
         
-        val friends = List(new RestaurantFriends(1, "Mike Bochenek", Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url))
+        val friends = List(new RestaurantFriends(1, "Mike Bochenek", 
+            Image.findByUser(1).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url))
         restaurant.friendsWhoBooked = friends;
         
         try {
@@ -112,8 +120,10 @@ object Restaurants extends Controller with Secured {
       
       val tags = Tag.findByRef(id, 12).map(_.name).mkString(", ")
       val cuisines = Tag.findByRef(id, 21).map(_.name).mkString(", ")
-      val url = Image.findByRestaurant(id).filter { x => x.status == 0 }.sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
-      val logourl = Image.findByRestaurant(id).filter { x => x.status == 1 }.sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+      val url = Image.findByRestaurant(id).filter { x => x.status == 0 }.sortBy{ _.id }
+        .headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+      val logourl = Image.findByRestaurant(id).filter { x => x.status == 1 }.sortBy{ _.id }
+        .headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       val reservations = Reservation.findAllByRestaurant(id)
       val childRestaurants = Restaurant.findAllByParent(id)
       
@@ -196,7 +206,8 @@ object Restaurants extends Controller with Secured {
       for (restaurant <- all) {
         restaurant.paymentoptions =  Tag.findByRef(restaurant.id, 12).map(_.name)
         restaurant.cuisines =  Tag.findByRef(restaurant.id, 21).map(_.name)
-        restaurant.url = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+        restaurant.url = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 750}
+          .headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       }
       Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
     }
@@ -350,5 +361,4 @@ object Restaurants extends Controller with Secured {
     
     output
   }
-  
 }

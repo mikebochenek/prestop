@@ -34,7 +34,8 @@ object Recommend extends Controller with Secured  {
   def testsubmit() = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling recommend test submit")
-      val (id, longitude, latitude, openNow, maxdistance, minPrice, maxPrice, maxDishes, avoid, lastDishID) = testForm.bindFromRequest.get
+      val (id, longitude, latitude, openNow, maxdistance, minPrice, maxPrice, maxDishes, 
+          avoid, lastDishID) = testForm.bindFromRequest.get
       val fullUser = User.getFullUser(id.toLong)
       var favs = ""
       if (fullUser.settings != null) {
@@ -43,8 +44,8 @@ object Recommend extends Controller with Secured  {
       }
       val response = Recommendation.recommend(User.getFullUser(id.toLong), longitude.toDouble, latitude.toDouble, maxdistance.toDouble, 
           minPrice.toDouble, maxPrice.toDouble, openNow.toBoolean, lastDishID.toLong, maxDishes.toLong, avoid)
-      Ok(views.html.test(testForm, response, Json.prettyPrint(Json.toJson(response)), favs, id, longitude, latitude, openNow, maxdistance, 
-          minPrice, maxPrice, maxDishes, avoid, lastDishID))
+      Ok(views.html.test(testForm, response, Json.prettyPrint(Json.toJson(response)), favs, id, 
+          longitude, latitude, openNow, maxdistance, minPrice, maxPrice, maxDishes, avoid, lastDishID))
     }
   }
   
@@ -61,13 +62,16 @@ object Recommend extends Controller with Secured  {
       "avoid" -> text,
       "lastDishID" -> text))  
   
-  def getWithFilters(id: Long, longitude: String, latitude: String, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean, lastDishID: Long, maxDishes: Long, avoid: String) = Action {
+  def getWithFilters(id: Long, longitude: String, latitude: String, maxDistance: Double, minPrice: Double, 
+      maxPrice: Double, openNow: Boolean, lastDishID: Long, maxDishes: Long, avoid: String) = Action {
     implicit request => {
-      Logger.info("calling Recommend.get with id:" + id + " longitude:" + longitude + " latitude:" + latitude + " maxDistance:" + maxDistance
-          + " minPrice:" + minPrice + " maxPrice:" + maxPrice + " openNow:" + openNow + " lastDishID:" + lastDishID + " maxDishes:" + maxDishes)
+      Logger.info("calling Recommend.get with id:" + id + " longitude:" + longitude + " latitude:" + latitude 
+          + " maxDistance:" + maxDistance + " minPrice:" + minPrice + " maxPrice:" + maxPrice + " openNow:" 
+          + openNow + " lastDishID:" + lastDishID + " maxDishes:" + maxDishes)
       try {
         val user = User.getFullUser(id)
-        val recommendations = Recommendation.recommend(user, parseLongitude(longitude), parseLatitude(latitude), maxDistance, minPrice, maxPrice, openNow, lastDishID, maxDishes, avoid)
+        val recommendations = Recommendation.recommend(user, parseLongitude(longitude), parseLatitude(latitude), 
+            maxDistance, minPrice, maxPrice, openNow, lastDishID, maxDishes, avoid)
         val json = Json.prettyPrint(Json.toJson(recommendations.dishes.map(a => Json.toJson(a))))
         ActivityLog.create(user.id, 7, lastDishID, Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
         Ok(json)
@@ -88,12 +92,14 @@ object Recommend extends Controller with Secured  {
       Logger.info("calling Recommend.get with id:" + id + " longitude:" + longitude + " latitude:" + latitude + " filter:" + filter)
       val user = User.getFullUser(id)
       
-      val recommendations = Recommendation.recommend(user, parseLongitude(longitude), parseLatitude(latitude), 10, 0, 4000.0, false, 0, 100, "")
+      val recommendations = Recommendation.recommend(user, parseLongitude(longitude), 
+          parseLatitude(latitude), 10, 0, 4000.0, false, 0, 100, "")
       val json = Json.prettyPrint(Json.toJson(recommendations.dishes.map(a => Json.toJson(a))))
       ActivityLog.create(user.id, 7, 1, Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
       Ok(json)
     }
   }
+  
   def parseLongitude(longitude: String) = {
     if (!(allCatch opt longitude.toDouble).isDefined) {
       47.392 // default longitude
@@ -101,6 +107,7 @@ object Recommend extends Controller with Secured  {
       longitude.toDouble
     }
   }
+  
   def parseLatitude(latitude: String) = {
     if (!(allCatch opt latitude.toDouble).isDefined) {
       8.5129 // default latitude
