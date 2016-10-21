@@ -21,6 +21,9 @@ import models.json.DishLikesContainer
 
 object Activities extends Controller with Secured {
 
+  /**
+   * called from /api/getlikes/:id
+   */
   def getLikesByUser(id: Long) = Action { 
     implicit request => {
 	    Logger.info("calling get activities (getByUser) id:" + id)
@@ -30,7 +33,7 @@ object Activities extends Controller with Secured {
 
       var result = DishLikesContainer(MutableList.empty);
 
-      val activities = ActivityLog.findAllByUserType(id, 11).filter { x => x.activity_type == 11} //still needs to be optimized
+      val activities = ActivityLog.findAllByUserType(id, 11).filter { x => x.activity_type == 11} //needs to be optimized
       Logger.info("activities " + activities + " size:" + activities.size)
 
       val dishIDList = (activities.map { x => x.activity_subtype}).toList
@@ -47,20 +50,23 @@ object Activities extends Controller with Secured {
           val allLikes = Activities.getLikeActivitiesByDish(dish.id)
           val like = true
        
-          //val friendLikedDishURLs = allLikes.map(x => x.profileImageURL) 
-          val friendLikedDishURLs = dishLikers.filter { x => x.dish_id == dish.id && x.friend_image_url != null}.map { y => y.friend_image_url }
+          val friendLikedDishURLs = dishLikers.filter { x => x.dish_id == dish.id && x.friend_image_url != null}
+            .map { y => y.friend_image_url }
 
           val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.en_text.getOrElse(""))
         
           val r = restaurants.get(dish.restaurant_id).head
-          val ri = new DishLikes(id, dish.id, dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, dish.source, dish.description.getOrElse(""), like, Dishes.calculateGreenScore(greenscoretags.size), 
+          val ri = new DishLikes(id, dish.id, dish.id, RecommendationUtils.makePriceString(dish.price), 
+              dish.name, dish.source, dish.description.getOrElse(""), like, Dishes.calculateGreenScore(greenscoretags.size), 
             greenscoretags,
             dishImages172.filter{x => x.dish_id == dish.id}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
             dishImages750.filter{x => x.dish_id == dish.id}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
             null,
             allIngredientTags.filter{x => x.refid == dish.id}.map(_.name),
             r.id,
-            r.name, r.city + ", " + r.misc.country.getOrElse(""), Image.findByRestaurant(r.id).filter{x => x.width.get == 72 && x.status == 1}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
+            r.name, r.city + ", " + r.misc.country.getOrElse(""), 
+            Image.findByRestaurant(r.id).filter{x => x.width.get == 72 && x.status == 1}
+              .headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
             friendLikedDishURLs,
             allDietTags.filter{x => x.refid == dish.id}.map(_.name),
             Tag.findByRef(dish.id, 35).map(_.name))
@@ -72,6 +78,9 @@ object Activities extends Controller with Secured {
 	  }
   } 
   
+  /**
+   * called from /api/activities/:id
+   */
   def getByUser(id: Long) = Action { 
     implicit request => {
       Logger.info("calling get activities (getByUser) id:" + id)
@@ -80,6 +89,9 @@ object Activities extends Controller with Secured {
     }
   } 
 
+  /**
+   * called from /api/getlikers/:dishId,:userId
+   */
   def getByDish(dishId: Long, userId: Long) = Action { 
     implicit request => {
       Logger.info("calling getlikers (getByDish) dishId:" + dishId + "  userId:" + userId)
@@ -90,13 +102,18 @@ object Activities extends Controller with Secured {
   } 
   
   def getLikeActivitiesByDish(id: Long) = {
-    val activities = ActivityLog.findAll().filter { x => x.activity_type == 11 && x.activity_subtype == id } // TODO this should be optimized on the DB as well
+    val activities = ActivityLog.findAll().filter { x => x.activity_type == 11 && x.activity_subtype == id } 
+      // TODO this should be optimized on the DB as well
     val allUsers = activities.map(a => User.getFullUser(a.user_id)) //TODO this should be optimized as well
     val all = allUsers.distinct.map(userFull => new UserProfile(userFull.id, userFull.email, userFull.username, 0, 0, 0, 0, null))
-    all.foreach { user => user.profileImageURL = Image.findByUser(user.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url } 
+    all.foreach { user => user.profileImageURL = Image.findByUser(user.id).filter{x => x.width.get == 72}.headOption
+      .getOrElse(Image.blankImage).asInstanceOf[Image].url } 
     all
   }
 
+  /**
+   * called from /api/like/:userId,:dishId
+   */
   def like(userId: Long, dishId: Long) = Action { 
     implicit request => {
       Logger.info("calling like for dishid:" + dishId + " userid:" + userId)
@@ -106,6 +123,9 @@ object Activities extends Controller with Secured {
     }
   } 
   
+  /**
+   * called from /api/unlike (as an http post)
+   */
   def unlikeSeveral() = Action { 
     implicit request => {
       Thread.sleep(800)
@@ -117,6 +137,9 @@ object Activities extends Controller with Secured {
     }
   } 
   
+  /**
+   * called from /api/unlike/:userId,:dishId
+   */
   def unlike(userId: Long, dishIdString: String) = Action { 
     implicit request => {
       val dishId = dishIdString.toLong
@@ -127,14 +150,19 @@ object Activities extends Controller with Secured {
     }
   } 
 
+  /**
+   * called from /api/activities/create
+   */
   def create() = Action {
     implicit request => {
       val user_id = (request.body.asJson.get \ "user_id")
       val activity_type = (request.body.asJson.get \ "activity_type")
       val activity_subtype = (request.body.asJson.get \ "activity_subtype")
       val activity_details = (request.body.asJson.get \ "activity_details")
-      val id = ActivityLog.create(user_id.as[String].toLong, activity_type.as[String].toLong, activity_subtype.as[String].toLong, activity_details.as[String])
-      Logger.info("ActivityLog created - id: "+ id.get + " type:" + activity_type.as[String] + " subtype: " + activity_subtype.as[String] +  " user: " + user_id.as[String])
+      val id = ActivityLog.create(user_id.as[String].toLong, activity_type.as[String].toLong, 
+          activity_subtype.as[String].toLong, activity_details.as[String])
+      Logger.info("ActivityLog created - id: "+ id.get + " type:" + activity_type.as[String] 
+        + " subtype: " + activity_subtype.as[String] +  " user: " + user_id.as[String])
       Ok(Json.toJson(CommonJSONResponse.OK))
     }
   }
