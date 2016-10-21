@@ -37,7 +37,8 @@ object Friends extends Controller with Secured {
       user.following = Friend.findAllByUser(user.id).size
       user.reservations = Reservation.findAllByUser(user.id).size
       user.likes = ActivityLog.findAllByUser(user.id).size //TODO filtering for likes
-      user.profileImageURL = Image.findByUser(userFull.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url //TODO populate user.profileImageURL
+      user.profileImageURL = Image.findByUser(userFull.id).filter{x => x.width.get == 72}
+        .headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url //TODO populate user.profileImageURL
       Ok(Json.prettyPrint(Json.toJson(user)))
     }
   }
@@ -55,7 +56,7 @@ object Friends extends Controller with Secured {
         case false => Seq.empty[Friend]
         case true => Friend.findAllByUser(user.get)
       }
-      friends.foreach(f => Logger.info("suggestFriendsToFollow EXISTIN userID: " + f.user_id + " friend:" + f.friend_user_id))
+      friends.foreach(f => Logger.info("suggestFriendsToFollow EXISTING userID: " + f.user_id + " friend:" + f.friend_user_id))
       
       Logger.info("suggestFriendsToFollow " + phones.length)
       val all = MutableList.empty[FriendSuggestion]
@@ -63,7 +64,8 @@ object Friends extends Controller with Secured {
         val user = User.getFullUserByPhone(Settings.cleanPhoneString(phone))
         if (user.size > 0 && !friends.exists(f => f.friend_user_id == user(0).id)) {
           val newFriend = new FriendSuggestion(user(0).id, 
-              Image.findByUser(user(0).id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
+              Image.findByUser(user(0).id).filter{x => x.width.get == 72}.headOption
+                .getOrElse(Image.blankImage).asInstanceOf[Image].url, 
               user(0).username, user(0).fullname, user(0).phone)
           Logger.info("suggesting: " + newFriend)
           all += newFriend
@@ -123,7 +125,8 @@ object Friends extends Controller with Secured {
       val txt = (request.body.asJson.get \ "donetext")
       val restId = (request.body.asJson.get \ "restaurantID")
       val id = 13;
-      Logger.info("nothing has been created yet - " + txt.as[String] + " with id:" + id + " restaurantID:"+ restId.as[String].toLong)
+      Logger.info("nothing has been created yet - " + txt.as[String] + " with id:" + id 
+          + " restaurantID:"+ restId.as[String].toLong)
       Ok("ok")
     }
   }

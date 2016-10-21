@@ -35,8 +35,10 @@ object Dishes extends Controller with Secured {
       Logger.info("calling dish crop - load data for id:" + id)
       val img = imgType match {
         case "dish" => Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
-        case "restaurant" => Image.findByRestaurant(id).filter { x => x.status == 0 }.sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
-        case "restaurantProfile" => Image.findByRestaurant(id).filter { x => x.status == 1 }.sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+        case "restaurant" => Image.findByRestaurant(id).filter { x => x.status == 0 }
+          .sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+        case "restaurantProfile" => Image.findByRestaurant(id).filter { x => x.status == 1 }
+          .sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
       }
         
       Ok(views.html.dish_crop(imgType, img.url, id, img.width.get, img.height.get, img.width.get / maxW))
@@ -50,13 +52,16 @@ object Dishes extends Controller with Secured {
   def cropImagePost(id: Long, imgType: String) = IsAuthenticated { username =>
     implicit request => {
       val (x, y, w, h) = dishCropForm.bindFromRequest.get
-      Logger.info("cropping - calling dish crop POST - type: " + imgType + " id:" + id + "cropping x:" + x + " y:" + y + " w:" + w + " h:" + h)
+      Logger.info("cropping - calling dish crop POST - type: " + imgType + " id:" + id 
+          + "cropping x:" + x + " y:" + y + " w:" + w + " h:" + h)
       
       //1242 ratio! don't forget ratio could be greater than one, and less than one
       val originalImg = imgType match {
         case "dish" => Image.findByDish(id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
-        case "restaurant" => Image.findByRestaurant(id).filter { x => x.status == 0 }.sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
-        case "restaurantProfile" => Image.findByRestaurant(id).filter { x => x.status == 1 }.sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+        case "restaurant" => Image.findByRestaurant(id).filter { x => x.status == 0 }
+          .sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
+        case "restaurantProfile" => Image.findByRestaurant(id).filter { x => x.status == 1 }
+          .sortBy{ _.id }.headOption.getOrElse(Image.blankImage).asInstanceOf[Image]
       }
       val wd = originalImg.width.get.toInt
       Image.crop(originalImg.id, adjust(wd, x.toInt), adjust(wd, y.toInt), adjust(wd, w.toInt), adjust(wd, h.toInt))
@@ -121,7 +126,8 @@ object Dishes extends Controller with Secured {
       
   def save = IsAuthenticated { username =>
     implicit request =>  
-      val (id, tags, price, name, serving, description, greenscore, restaurant_id, status, itags, greenscoretags, diet, dishtype, meatorigin, source) = dishForm.bindFromRequest.get
+      val (id, tags, price, name, serving, description, greenscore, restaurant_id, status, itags, greenscoretags, 
+          diet, dishtype, meatorigin, source) = dishForm.bindFromRequest.get
       var validationErrors = ""      
       val fullUser = User.getFullUser(username).get
       val newStatus = ("7".equals(fullUser.ttype) || status.toInt == -1) match {
@@ -141,11 +147,13 @@ object Dishes extends Controller with Secured {
         Tag.updateTags(id.toLong, dishtype, 35)
         Tag.updateTags(id.toLong, meatorigin, 36)
         Tag.updateTags(id.toLong, tags, Seq(11, 31, 34, 35)) //NB: order is important, 11 should be first, because we will create with status=11
-        Logger.info("calling restaurant update for id:" + id + " price:" + price + " newStatus:" + newStatus + " name:" + name 
-            + " tags:" + itags + " greenscoretags: " + greenscoretags + " alltags: " + tags)
-        Redirect(routes.Dishes.getById(id.toLong)).flashing("success" -> ("Changes saved successfully at " + RecommendationUtils.currentTime()))
+        Logger.info("calling restaurant update for id:" + id + " price:" + price + " newStatus:" + newStatus 
+            + " name:" + name + " tags:" + itags + " greenscoretags: " + greenscoretags + " alltags: " + tags)
+        Redirect(routes.Dishes.getById(id.toLong)).flashing("success" -> ("Changes saved successfully at " 
+            + RecommendationUtils.currentTime()))
       } else {
-        Logger.info("failed calling restaurant update for id:" + id + " price:" + price + " newStatus:" + newStatus + " name:" + name + " tags:" + itags + " greenscoretags: " + greenscoretags + " validationErrors: " + validationErrors)
+        Logger.info("failed calling restaurant update for id:" + id + " price:" + price + " newStatus:" + newStatus 
+            + " name:" + name + " tags:" + itags + " greenscoretags: " + greenscoretags + " validationErrors: " + validationErrors)
         Redirect(routes.Dishes.getById(id.toLong)).flashing("error" -> validationErrors)
       }
   }
@@ -164,20 +172,23 @@ object Dishes extends Controller with Secured {
       for (dish <- dishes) {
         val like = !(allLikes.find { x => x.activity_subtype == dish.id }.isEmpty)
       
-        val friendLikedDishURLs = dishLikers.filter { x => x.dish_id == dish.id && x.friend_image_url != null}.map { y => y.friend_image_url }  //TODO in cases where its null, should we show a default image?
+        val friendLikedDishURLs = dishLikers.filter { x => x.dish_id == dish.id && x.friend_image_url != null}
+          .map { y => y.friend_image_url }  //TODO in cases where its null, should we show a default image?
               
         val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.en_text.getOrElse(""))
 
       
         val r = restaurants.get(dish.restaurant_id).head
-        val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, dish.source, dish.description.getOrElse(""), like, calculateGreenScore(greenscoretags.size), 
+        val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, 
+            dish.source, dish.description.getOrElse(""), like, calculateGreenScore(greenscoretags.size), 
           greenscoretags,
           Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
           Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
           null,
           Tag.findByRef(dish.id, 11).map(_.name),
           r.id,
-          r.name, r.city + ", " + r.misc.country.getOrElse(""), Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
+          r.name, r.city + ", " + r.misc.country.getOrElse(""), 
+          Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
           friendLikedDishURLs,
           Tag.findByRef(dish.id, 34).map(_.name),
           Tag.findByRef(dish.id, 35).map(_.name),
@@ -209,14 +220,16 @@ object Dishes extends Controller with Secured {
 
       
         val r = restaurants.get(dish.restaurant_id).head
-        val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, dish.source, dish.description.getOrElse(""), like, calculateGreenScore(greenscoretags.size), 
+        val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, 
+            dish.source, dish.description.getOrElse(""), like, calculateGreenScore(greenscoretags.size), 
           greenscoretags,
           Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
           Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
           null,
           Tag.findByRef(dish.id, 11).map(_.name),
           r.id,
-          r.name, r.city + ", " + r.misc.country.getOrElse(""), Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
+          r.name, r.city + ", " + r.misc.country.getOrElse(""), 
+          Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
           friendLikedDishURLs,
           Tag.findByRef(dish.id, 34).map(_.name),
           Tag.findByRef(dish.id, 35).map(_.name),
@@ -285,7 +298,6 @@ object Dishes extends Controller with Secured {
         ActivityLog.create(user_id, ActivityLog.TYPE_DISH_UPLOAD, id.get, "")
       
         Ok(Json.prettyPrint(Json.toJson(CommonJSONResponse.OK)))
-        
       } catch {
         case e: javax.imageio.IIOException => {
           Logger.error("uploadDish failure ", e)
