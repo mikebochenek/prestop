@@ -65,17 +65,6 @@
 
         <hr/>
         
-      	<h3>All Restaurants (@restaurants.size)</h3>
-      	<table class="table table-striped" border="1">
-      	@for((restaurant, index) <- restaurants.zipWithIndex)  {	
-		  <tr>
-		  <td>@restaurant.id</td>
-		  <td>@restaurant.name</td>
-		  <td>@restaurant.status</td>
-		  </tr>
-		  }
-		</table>
-              
       	<h3>Dishes without images (@dishesWithoutImages.size)</h3>
       	<table class="table table-striped" border="1">
       	@for((dish, index) <- dishesWithoutImages.zipWithIndex)  {	
