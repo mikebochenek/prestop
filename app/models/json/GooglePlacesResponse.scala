@@ -23,7 +23,8 @@ object GooglePlacesResponseResultGeometry {
   implicit val googlePlacesResponseResultGeometryWrites = Json.writes[GooglePlacesResponseResultGeometry]
 }
 
-case class GooglePlacesResponseResult (name: String, international_phone_number: String, website: String, geometry: Option[GooglePlacesResponseResultGeometry])
+case class GooglePlacesResponseResult (name: String, international_phone_number: String, 
+    website: String, geometry: Option[GooglePlacesResponseResultGeometry])
 
 object GooglePlacesResponseResult {
   implicit val googlePlacesResponseResultReads = Json.reads[GooglePlacesResponseResult]

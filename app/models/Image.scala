@@ -21,7 +21,6 @@ import java.io.File
 import javax.imageio.ImageIO
 import org.imgscalr.Scalr
 
-
 case class Image(id: Long, filename: String, url: String, restaurant_id: Long, dish_id: Long, 
     user_id: Option[Long], width: Option[Long], height: Option[Long], status: Int, lastupdate: Date)
 
@@ -271,4 +270,3 @@ object Image {
   implicit val imageReads = Json.reads[Image]
   implicit val imageWrites = Json.writes[Image]
 }
-

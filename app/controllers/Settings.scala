@@ -250,7 +250,6 @@ object Settings extends Controller with Secured {
   def cleanPhoneString(p: String) = {
     p.replaceAll("[^\\+\\d]", "") //http://stackoverflow.com/questions/1533659/how-do-i-remove-the-non-numeric-character-from-a-string-in-java
   }
-
   
   def personalizeTasteProfile() = Action {
     implicit request => {
@@ -266,7 +265,8 @@ object Settings extends Controller with Secured {
 
       val restaurantIDs = Restaurant.findAll().map { x => x.id }
       
-      Logger.info("personalize taste profile parsed user_id:" + userId + "  favCuisines:" + favCuisines + "  preferToAvoid:" + preferToAvoid)
+      Logger.info("personalize taste profile parsed user_id:" + userId + "  favCuisines:" 
+          + favCuisines + "  preferToAvoid:" + preferToAvoid)
       
       val desiredWidth = 750
       val all = Random.shuffle(Dish.findAll).filter { x => restaurantIDs.contains(x.restaurant_id) }.take(5).map { dish => new TasteProfileDish(dish.id, 
@@ -287,7 +287,8 @@ object Settings extends Controller with Secured {
       val preferToAvoid = (request.body.asJson.get \ "preferToAvoid" )
       val sampleDishLikes = (request.body.asJson.get \ "sampleDishLikes" )
       
-      Logger.info("personalize parsed user_id:" + userId + "  favCuisines:" + favCuisines + "  preferToAvoid:" + preferToAvoid + "  sampleDishLikes:" + sampleDishLikes)
+      Logger.info("personalize parsed user_id:" + userId + "  favCuisines:" + favCuisines + "  preferToAvoid:" 
+          + preferToAvoid + "  sampleDishLikes:" + sampleDishLikes)
 
       smartInsertUpdate(userId, favCuisines, preferToAvoid, sampleDishLikes)
       
@@ -497,7 +498,8 @@ object Settings extends Controller with Secured {
       val friendDel = Friend.deleteByUserId(id)
       val friendFDel = Friend.deleteByFriendUserId(id)
       val userDel = User.delete(id)
-      Logger.info("deleted " + activityDel + " activities, " + friendDel + " friends, " + friendFDel + " ffriends, " + userDel + " users")
+      Logger.info("deleted " + activityDel + " activities, " + friendDel + " friends, " + friendFDel 
+          + " ffriends, " + userDel + " users")
       Redirect(routes.Settings.userList)
     }
   }

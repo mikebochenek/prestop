@@ -79,6 +79,4 @@ object TagRef {
 
   implicit val tagReads = Json.reads[TagRef]
   implicit val tagWrites = Json.writes[TagRef]
-
 }
-

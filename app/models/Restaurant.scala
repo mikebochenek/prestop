@@ -144,7 +144,6 @@ object Restaurant {
 
   val selectString = """select id, name, city, address, longitude, latitude, schedulecron, restype, status, phone, email, 
    postalcode, state, country, google_places_id, lastupdate, parent_id, website from restaurant """
-    
   
   def findById(username: String, id: Long): Seq[Restaurant] = {
     DB.withConnection { implicit connection =>
@@ -185,5 +184,4 @@ object Restaurant {
   
   implicit val restaurantReads = Json.reads[Restaurant]
   implicit val restaurantWrites = Json.writes[Restaurant]
-
 }

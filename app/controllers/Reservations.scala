@@ -67,5 +67,4 @@ object Reservations extends Controller with Secured {
       Ok("ok")
     }
   }
-  
 }
