@@ -30,7 +30,7 @@ object Search extends Controller with Secured {
         val popularSearches = popular.take(10).map { x => SearchSuggestion(x.en_text.get, x.count.get + " dishes") }
         Ok(Json.prettyPrint(Json.toJson(popularSearches)))
       } else {
-        val matches = popular.filter { x => x.en_text.get.toLowerCase.startsWith(keyword.toLowerCase.trim) }
+        val matches = popular.filter { x => x.en_text.get.toLowerCase.contains(keyword.toLowerCase.trim) }
           .take(10).map { x => SearchSuggestion(x.en_text.get, x.count.get + " dishes") }
         Ok(Json.prettyPrint(Json.toJson(matches)))
       }
