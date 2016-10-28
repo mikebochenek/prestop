@@ -33,7 +33,7 @@
 		  <tr>
 		  <td>@index</td>
 		  <td>@dish.id</td>
-		  <td>@dish.lastupdate.format("dd MMM YYYY HH:mm")</td>
+		  <td>@dish.lastupdate.format("dd MMM YYYY HH:mm:ss")</td>
 		  <td>@dish.name</td>
 		  <td>@("%.2f".format(dish.price))</td>
 		  <td>@dish.restaurant_id</td>
@@ -57,7 +57,7 @@
 		  <tr>
 		  <td>@index</td>
 		  <td>@dish.id</td>
-		  <td>@dish.lastupdate.format("dd MMM YYYY HH:mm")</td>
+		  <td>@dish.lastupdate.format("dd MMM YYYY HH:mm:ss")</td>
 		  <td>@dish.name</td>
 		  <td>@("%.2f".format(dish.price))</td>
 		  <td>@dish.restaurant_id</td>
@@ -82,7 +82,7 @@
 		  <td>@user.id</td>
 		  <td>@user.email</td>
 		  <td>@user.username</td>
-		  <td>@user.createdate.format("dd MMM YYYY HH:mm")</td>
+		  <td>@user.createdate.format("dd MMM YYYY HH:mm:ss")</td>
 		  </tr>
 		  }
 		</table>
@@ -104,7 +104,7 @@
 		  <td>@friend.id</td>
 		  <td>@friend.user_id</td>
 		  <td>@friend.friend_user_id</td>
-		  <td>@friend.lastupdate.format("dd MMM YYYY HH:mm")</td>
+		  <td>@friend.lastupdate.format("dd MMM YYYY HH:mm:ss")</td>
 		  </tr>
 		  }
 		</table>
@@ -117,10 +117,10 @@
 		  <td>@reservation.user_id</td>
 		  <td>@reservation.restaurant_id</td>
 		  <td>@reservation.id</td>
-		  <td>@reservation.reservationtime.format("dd MMM YYYY HH:mm")</td>
+		  <td>@reservation.reservationtime.format("dd MMM YYYY HH:mm:ss")</td>
 		  <td>@reservation.guestcount</td>
 		  <td>@reservation.special_requests</td>
-		  <td>@reservation.lastupdate.format("dd MMM YYYY HH:mm")</td>
+		  <td>@reservation.lastupdate.format("dd MMM YYYY HH:mm:ss")</td>
 		  <td>@reservation.status</td>
 		  </tr>
 		  }
@@ -148,7 +148,7 @@
 		  <td>@activity.activity_type</td>
 		  <td>@activity.activity_subtype</td>
 		  <td>@activity.activity_details</td>
-		  <td>@activity.createdate.format("dd MMM YYYY HH:mm")</td>
+		  <td>@activity.createdate.format("dd MMM YYYY HH:mm:ss")</td>
 		  </tr>
 		  }
 		</table>
@@ -174,7 +174,7 @@
 		  <td>@activity.activity_type</td>
 		  <td>@activity.activity_subtype</td>
 		  <td>@activity.activity_details.toString.take(60)</td>
-		  <td>@activity.createdate.format("dd MMM YYYY HH:mm")</td>
+		  <td>@activity.createdate.format("dd MMM YYYY HH:mm:ss")</td>
 		  </tr>
 		  }
 		</table>

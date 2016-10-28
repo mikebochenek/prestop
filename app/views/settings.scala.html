@@ -59,7 +59,7 @@
             @for((payment, index) <- Settings.showPaymentHistory(me.id).zipWithIndex)  {	
  		    <tr>
 		       <td>@(payment.amount / 100)</td>
-		       <td>@payment.date.format("dd.MM.YYYY HH:mm")</td>
+		       <td>@payment.date.format("dd.MM.YYYY HH:mm:ss")</td>
 		       <td>@payment.paymentPeriod</td>
 		       <td>@payment.status</td>
 		    </tr>

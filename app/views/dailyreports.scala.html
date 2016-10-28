@@ -23,7 +23,7 @@
 		  <td>@user.id</td>
 		  <td>@user.email</td>
 		  <td>@user.username</td>
-		  <td>@user.createdate.format("dd.MM.YYYY HH:mm")</td>
+		  <td>@user.createdate.format("dd.MM.YYYY HH:mm:ss")</td>
 		  </tr>
 		  }
 		</table>
@@ -34,7 +34,7 @@
 		  <tr>
 		  <td>@friend.friend_user_id</td>
 		  <td>@friend.user_id</td>
-		  <td>@friend.lastupdate.format("dd.MM.YYYY HH:mm")</td>
+		  <td>@friend.lastupdate.format("dd.MM.YYYY HH:mm:ss")</td>
 		  </tr>
 		  }
 		</table>
@@ -46,7 +46,7 @@
 		  <td>@activity.user_id</td>
 		  <td>@activity.activity_subtype</td>
 		  <td>@activity.activity_details</td>
-		  <td>@activity.createdate.format("dd.MM.YYYY HH:mm")</td>
+		  <td>@activity.createdate.format("dd.MM.YYYY HH:mm:ss")</td>
 		  </tr>
 		  }
 		</table>
@@ -57,7 +57,7 @@
 		  <tr>
 		  <td>@dish.id</td>
 		  <td>@dish.name</td>
-		  <td>@dish.lastupdate.format("dd.MM.YYYY HH:mm")</td>
+		  <td>@dish.lastupdate.format("dd.MM.YYYY HH:mm:ss")</td>
 		  <td>@("%.2f".format(dish.price))</td>
 		  </tr>
 		  }
@@ -70,7 +70,7 @@
       	@for((dish, index) <- dishesWithoutImages.zipWithIndex)  {	
 		  <tr>
 		  <td>@dish.id</td>
-		  <td>@dish.lastupdate.format("dd.MM.YYYY HH:mm")</td>
+		  <td>@dish.lastupdate.format("dd.MM.YYYY HH:mm:ss")</td>
 		  <td>@("%.2f".format(dish.price))</td>
 		  <td>@dish.name</td>
 		  </tr>
@@ -84,7 +84,7 @@
 		  <td>@dish.id</td>
 		  <td>@dish.name</td>
 		  <td>@("%.2f".format(dish.price))</td>
-		  <td>@dish.lastupdate.format("dd.MM.YYYY HH:mm")</td>
+		  <td>@dish.lastupdate.format("dd.MM.YYYY HH:mm:ss")</td>
 		  </tr>
 		  }
 		</table>
@@ -96,7 +96,7 @@
 		  <td>@restaurant.id</td>
 		  <td>@restaurant.name</td>
 		  <td>@restaurant.status</td>
-		  <td>@restaurant.misc.lastupdate.format("dd.MM.YYYY HH:mm")</td>
+		  <td>@restaurant.misc.lastupdate.format("dd.MM.YYYY HH:mm:ss")</td>
 		  </tr>
 		  }
 		</table>

@@ -38,7 +38,7 @@
   		      <a target="_blank" href="https://www.facebook.com/@user.username"><img src="@routes.Assets.at("img/facebook.jpg")" width="24px" /></a>
 		    }  
 		  </td>
-		  <td>@user.fullname</td><td>@user.phone</td><td>@user.createdate.format("dd.MMM.YY")</td>
+		  <td>@user.fullname</td><td>@user.phone</td><td title="@user.createdate.format("dd.MMM.YY HH:mm:ss")">@user.createdate.format("dd.MMM.YY")</td>
 		  <td>@user.allTime</td><td>@user.threeMonths</td><td>@user.month</td><td>@user.week</td>
 		  </tr>
 		}
