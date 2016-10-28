@@ -54,6 +54,15 @@ object TagRef {
     }
   }
 
+  def findByENTagText(en_text: String): Seq[TagRef] = {
+    DB.withConnection { implicit connection =>
+      SQL("""select tr.id, tr.tagid, tr.refid, tr.status, tr.lastupdate from tagref tr 
+             join tag t on t.id = tr.tagid 
+             where tr.status > 0 and t.en_text LIKE {en_text+"%"}""").on(
+        'en_text -> en_text.toLowerCase.trim).as(TagRef.simple *)
+    }
+  }
+  
 
   def deletesoftly(tagid: Long, refid: Long) = {
     DB.withConnection { implicit connection =>
