@@ -49,16 +49,15 @@ object Search extends Controller with Secured {
           + maxPrice + " openNow:" + openNow + " lastDishID:" + lastDishID + " maxDishes:" + maxDishes)
       try {
         val user = User.getFullUser(id)
-        
-        val trs = TagRef.findByENTagText(keyword)
-        Logger.debug("trs size ---> " + trs.size) //TODO but this should not give 1700 entries!!
-        trs.foreach { x => Logger.debug(""+x.refid) }
-        
         val recommendations = common.Recommendation.recommend(user, Recommend.parseLongitude(longitude), 
             Recommend.parseLatitude(latitude), maxDistance, minPrice, maxPrice, openNow, lastDishID, maxDishes, avoid, keyword)
         val json = Json.prettyPrint(Json.toJson(recommendations.dishes.map(a => Json.toJson(a))))
         ActivityLog.create(user.id, ActivityLog.TYPE_SEARCH, lastDishID, keyword + "---" 
             + Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
+            
+        //TODO we would also need this, for infinite scrolling to work... but its corrupting recommend scrolling etc!!
+        ActivityLog.create(user.id, 7, lastDishID, Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
+            
         Ok(json)
       } catch {
         case e: Exception => {

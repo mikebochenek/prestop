@@ -107,7 +107,16 @@ object Recommendation {
     
     val dishesAlreadyRecommended = getDishesAlreadyRecommended()
     
-    val dishes = Dish.findAll() // getAllDishes()
+    val allDishes = (keyword != null && keyword.trim.length > 0) match {
+      case true => {
+        val dishesWithKeyword = TagRef.findByENTagText(keyword).map { x => x.refid }
+        Logger.debug("dishesWithKeyword ---> " + dishesWithKeyword.size + " --> " + dishesWithKeyword) 
+        Dish.findAll.filter { x => dishesWithKeyword.contains(x.id) }
+      }
+      case false => Dish.findAll
+    } // NB: this is a little bit hacky, because we fill allDishes with either all, or already filtered by keyword search
+    
+    val dishes = allDishes //Dish.findAll() //TODO !!! use local allDishes // getAllDishes()
       .filter { x => RecommendationUtils.within(maxDistance, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
       .filter { x => (maxPrice >= x.price && minPrice <= x.price) } // filter by price
       .filter { x => !openNow || RecommendationUtils.checkOpenTime(restaurants, x.restaurant_id)} // filter out restaurants currently closed
