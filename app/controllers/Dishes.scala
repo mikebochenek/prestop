@@ -291,7 +291,7 @@ object Dishes extends Controller with Secured {
             r.status, "", "", "", "", "", "", place_id)
         }
       
-        val id = Dish.create(restId, price.replaceAll("[A-Za-z]", "").trim.toDouble, dish_name, 0.0, 4);
+        val id = Dish.create(restId, extractPrice(price), dish_name, 0.0, 4);
         Logger.info("dish created with " + dish_name + " with id:" + id + " restaurantID:"+ restId + " existing? " + !rest.isEmpty)
         Image.saveAndResizeImages(picture, id.get, "dish")
         
@@ -308,6 +308,15 @@ object Dishes extends Controller with Secured {
       Ok(Json.prettyPrint(Json.toJson(ErrorJSONResponse("error", "missing file - http post required with param named 'picture'"))))
     }
   }  
+  
+  /** this allows to upload dishes without a price, we assign zero by default */
+  def extractPrice(p: String) = {
+    try {
+      p.replaceAll("[A-Za-z]", "").trim.toDouble
+    } catch {
+      case _ : Throwable => { 0 }
+    }
+  }
   
   def getBarChartData(id: Long): String = {
     val dishes = Dish.findById("", id)
