@@ -38,7 +38,8 @@ object Recommendation {
   }
   
   
-  def recommend(user: UserFull, latitude: Double, longitude: Double, maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean, lastDishID: Long, maxDishes: Long, avoid: String) = {
+  def recommend(user: UserFull, latitude: Double, longitude: Double, maxDistance: Double, minPrice: Double, 
+      maxPrice: Double, openNow: Boolean, lastDishID: Long, maxDishes: Long, avoid: String, keyword: String) = {
     val random = new java.util.Random
     val dishesAlreadyRecommendedActivities = ActivityLog.findRecentByUserType(user.id, 7).reverse
     

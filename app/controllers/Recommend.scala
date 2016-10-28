@@ -43,7 +43,7 @@ object Recommend extends Controller with Secured  {
         favs = Json.prettyPrint(Json.toJson(settings.favCuisines))
       }
       val response = Recommendation.recommend(User.getFullUser(id.toLong), longitude.toDouble, latitude.toDouble, maxdistance.toDouble, 
-          minPrice.toDouble, maxPrice.toDouble, openNow.toBoolean, lastDishID.toLong, maxDishes.toLong, avoid)
+          minPrice.toDouble, maxPrice.toDouble, openNow.toBoolean, lastDishID.toLong, maxDishes.toLong, avoid, null)
       Ok(views.html.test(testForm, response, Json.prettyPrint(Json.toJson(response)), favs, id, 
           longitude, latitude, openNow, maxdistance, minPrice, maxPrice, maxDishes, avoid, lastDishID))
     }
@@ -71,7 +71,7 @@ object Recommend extends Controller with Secured  {
       try {
         val user = User.getFullUser(id)
         val recommendations = Recommendation.recommend(user, parseLongitude(longitude), parseLatitude(latitude), 
-            maxDistance, minPrice, maxPrice, openNow, lastDishID, maxDishes, avoid)
+            maxDistance, minPrice, maxPrice, openNow, lastDishID, maxDishes, avoid, null)
         val json = Json.prettyPrint(Json.toJson(recommendations.dishes.map(a => Json.toJson(a))))
         ActivityLog.create(user.id, 7, lastDishID, Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
         Ok(json)
@@ -93,7 +93,7 @@ object Recommend extends Controller with Secured  {
       val user = User.getFullUser(id)
       
       val recommendations = Recommendation.recommend(user, parseLongitude(longitude), 
-          parseLatitude(latitude), 10, 0, 4000.0, false, 0, 100, "")
+          parseLatitude(latitude), 10, 0, 4000.0, false, 0, 100, "", null)
       val json = Json.prettyPrint(Json.toJson(recommendations.dishes.map(a => Json.toJson(a))))
       ActivityLog.create(user.id, 7, 1, Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
       Ok(json)

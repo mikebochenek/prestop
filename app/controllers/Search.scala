@@ -55,7 +55,7 @@ object Search extends Controller with Secured {
         trs.foreach { x => Logger.debug(""+x.refid) }
         
         val recommendations = common.Recommendation.recommend(user, Recommend.parseLongitude(longitude), 
-            Recommend.parseLatitude(latitude), maxDistance, minPrice, maxPrice, openNow, lastDishID, maxDishes, avoid)
+            Recommend.parseLatitude(latitude), maxDistance, minPrice, maxPrice, openNow, lastDishID, maxDishes, avoid, keyword)
         val json = Json.prettyPrint(Json.toJson(recommendations.dishes.map(a => Json.toJson(a))))
         ActivityLog.create(user.id, ActivityLog.TYPE_SEARCH, lastDishID, keyword + "---" 
             + Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
