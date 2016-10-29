@@ -189,8 +189,11 @@ object Settings extends Controller with Secured {
     implicit request => {
       Logger.info("calling Activities get - load data for id:" + id)
       try {
-        val all = getPreviousSettingsSafely(User.getFullUser(id))
-        Ok(Json.prettyPrint(Json.toJson(all)))
+        if (id == -1) {
+          Ok(Json.prettyPrint(Json.toJson(UserSettings.default(-1))))
+        } else {
+          Ok(Json.prettyPrint(Json.toJson(getPreviousSettingsSafely(User.getFullUser(id)))))
+        }
       } catch {
         case e: Exception => {
           Logger.error("Recommend.getWithFilters(..)", e)
