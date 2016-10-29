@@ -18,6 +18,13 @@ import models.json.DishLikers
 
 object Reservations extends Controller with Secured {
 
+  def load(id: Long) = IsAuthenticated { username =>
+    implicit request => {
+      //TODO check that user is either super admin OR is the restaurant owner
+      Ok(views.html.reservations(Restaurant.findById(username, id)(0), Reservation.findAll))
+    }
+  }
+
   def getByUser(id: Long) = Action { 
     implicit request => {
       Logger.info("calling Activities get - load data for id:" + id)

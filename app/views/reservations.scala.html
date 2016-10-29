@@ -1,0 +1,53 @@
+@(restaurant: Restaurant, reservations: Seq[Reservation])(implicit flash: Flash, session: Session, lang: Lang)
+
+@main(title = "settings") {
+
+<div class="container">
+
+  <div class="starter-template">
+
+    <div><a href="/reservations">Reservatons</a> > @restaurant.name</div>
+
+    @flash.get("error").map { message =>
+      <div class="row">
+        <div class="alert alert-danger col-sm-4 col-md-offset-4" role="alert">@message</div>
+      </div>
+    }
+            
+    @flash.get("success").map { message =>
+      <div class="row">
+        <div class="alert alert-info col-sm-4 col-md-offset-4" role="alert">@message</div>            	
+      </div>
+    }
+      
+    <h2 class="top50">@restaurant.name</h2>
+
+      	<h3 class="top50">@Messages("restedit.reservations") (@reservations.size)</h3>
+ 
+      	<table class="table table-hover">
+      	  <thead>
+      	    <tr>
+      	       <td>@Messages("restedit.reservations.userid")</td>
+      	       <td>@Messages("restedit.reservations.datetime")</td>
+      	       <td>@Messages("restedit.reservations.guests")</td>
+      	       <td>@Messages("restedit.reservations.special")</td>
+      	       <td>@Messages("restedit.reservations.status")</td>
+      	    </tr>
+      	  </thead>
+      	  <tbody>
+      	@for((reservation, index) <- reservations.zipWithIndex)  {	
+		  <tr>
+		  <td>@reservation.user_id</td>
+		  <td>@reservation.reservationtime.format("dd MMM YYYY HH:MM")</td>
+		  <td>@reservation.guestcount</td>
+		  <td>@reservation.special_requests</td>
+		  <td>@reservation.status</td>
+		  </tr>
+		  }
+      	  </tbody>
+		</table>
+
+ 
+   </div>
+</div><!-- /.container -->
+}
