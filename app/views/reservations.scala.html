@@ -22,8 +22,17 @@
       
     <h2 class="top50">@restaurant.name</h2>
 
-      	<h3 class="top50">@Messages("restedit.reservations") (@reservations.size)</h3>
- 
+    <h3 class="top50">@Messages("restedit.reservations") for <input type="text" id="datepicker"></h3>
+       	
+    <script>
+      $( function() {
+        $( "#datepicker" ).datepicker({
+        	autoSize: true, 
+        	dateFormat: "dd.mm.yy"
+        });
+      } );
+    </script>
+  
       	<table class="table table-hover">
       	  <thead>
       	    <tr>
@@ -47,6 +56,29 @@
       	  </tbody>
 		</table>
 
+
+    <h3 class="top50">Configuration</h3>
+    
+    <div class="row">
+      <div class="col-md-6">
+        <h4>Basic</h4>
+        <span>I have <input type="text" size=4 id="seats" style="text-align:right;" value="25"> seats in my restaurant</span>
+        <br>
+        <input type="checkbox" checked="checked"> Reservations are automatically approved</input>
+        <br>
+        <input type="checkbox" checked="checked"> Reservations are made for a period of two hours</input>
+        <br>
+        <input type="checkbox" checked="checked"> Send me an e-mail each time a reservation is made</input>
+      </div>
+    
+    
+
+    </div>
+    <button class="top10 span4 btn btn-primary" type="submit" id="generalsavebutton">@Messages("save")</button>
+
+    <h3 class="top50">Statistics</h3>
+
+    <h3 class="top50">Test and Preview Reservation Functionality</h3>
  
    </div>
 </div><!-- /.container -->
