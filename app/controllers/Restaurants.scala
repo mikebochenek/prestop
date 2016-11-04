@@ -104,7 +104,11 @@ object Restaurants extends Controller with Secured {
   def edit(id: Long) = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling restaurant edit - load data for id:" + id)
-      val all = Restaurant.findById(username, id)
+      val user = User.getFullUser(username).get
+      val all = "7".equals(user.ttype) match {
+        case true => Restaurant.findById(username, id)
+        case false => Restaurant.findAllByUser(user.id).filter { x => x.id == id }
+      } 
       
       if (all(0).name.equals(all(0).misc.place_id.getOrElse("")) && all(0).name.length == 27) { // NB: because Dishes.uploadDish makes them equal
         val googlePlaces = callGooglePlacesAPI(all(0).misc.place_id.get)
