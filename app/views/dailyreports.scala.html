@@ -23,6 +23,7 @@
 		  <td>@user.id</td>
 		  <td>@user.email</td>
 		  <td>@user.username</td>
+		  <td>@user.phone</td>
 		  <td>@user.createdate.format("dd.MM.YYYY HH:mm:ss")</td>
 		  </tr>
 		  }
@@ -32,8 +33,8 @@
       	<table class="table table-striped" border="1">
       	@for((friend, index) <- friends.zipWithIndex)  {	
 		  <tr>
-		  <td>@friend.friend_user_id</td>
-		  <td>@friend.user_id</td>
+		  <td>@friend.friend_user_id (@Reports.lookupEmail(friend.friend_user_id))</td>
+		  <td>@friend.user_id  (@Reports.lookupEmail(friend.user_id))</td>
 		  <td>@friend.lastupdate.format("dd.MM.YYYY HH:mm:ss")</td>
 		  </tr>
 		  }
@@ -43,7 +44,7 @@
       	<table class="table table-striped" border="1">
       	@for((activity, index) <- activities.filter{x => x.activity_type == 11}.zipWithIndex)  {	
 		  <tr>
-		  <td>@activity.user_id</td>
+		  <td>@activity.user_id (@Reports.lookupEmail(activity.user_id))</td>
 		  <td>@activity.activity_subtype</td>
 		  <td>@activity.activity_details</td>
 		  <td>@activity.createdate.format("dd.MM.YYYY HH:mm:ss")</td>
@@ -58,6 +59,7 @@
 		  <td>@dish.id</td>
 		  <td>@dish.name</td>
 		  <td>@dish.lastupdate.format("dd.MM.YYYY HH:mm:ss")</td>
+		  <td>@Reports.getDishOwner(dish.id)</td>
 		  <td>@("%.2f".format(dish.price))</td>
 		  </tr>
 		  }
@@ -84,6 +86,7 @@
 		  <td>@dish.id</td>
 		  <td>@dish.name</td>
 		  <td>@("%.2f".format(dish.price))</td>
+		  <td>@Reports.getDishOwner(dish.id)</td>
 		  <td>@dish.lastupdate.format("dd.MM.YYYY HH:mm:ss")</td>
 		  </tr>
 		  }
