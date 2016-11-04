@@ -131,7 +131,7 @@ object ActivityLog {
        + " from activity_log al, user u "
        + " where u.id = al.user_id  "
        + " and al.activity_type = {atype} "
-       + " and al.createdate >= DATE(NOW()) - INTERVAL " + interval + " DAY "
+       + " and al.createdate >= (NOW() - INTERVAL " + interval + " DAY) "
        + " group by u.email, al.user_id, al.activity_type order by ccount desc "
       ).on('atype -> atype).as(ActivityLogUserStats.simple *)
     }
