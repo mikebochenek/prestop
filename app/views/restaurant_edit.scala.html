@@ -260,7 +260,7 @@ window.onload = function() {
           <ul class="list-group" style="text-align: left;">
             <li ng-repeat="dish in dishes | orderBy:['id']" 
                 class="list-group-item"><a href="/dishedit/{{dish.id}}">
-                   <img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" />{{dish.name}} {{dish.price | currency}}</a>
+                   <img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" />{{dish.name}} {{dish.price}}</a>
             </li>
             
             <li class="list-group-item"><span ng-hide="editing" style="text-align: left;">
