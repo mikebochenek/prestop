@@ -77,7 +77,19 @@ object Dishes extends Controller with Secured {
   def getById(id: Long) = IsAuthenticated { username =>
     implicit request => {
       Logger.info("calling dish edit - load data for id:" + id)
-      val dish = Dish.findById(username, id)
+      val user = User.getFullUser(username).get
+      val dish = "7".equals(user.ttype) match {
+        case true => Dish.findById(username, id)
+        case false => {
+          val _dish = Dish.findById(username, id)
+          if (Restaurant.findAllByUser(user.id).exists { x => x.id == _dish(0).restaurant_id }) {
+            _dish
+          } else {
+            null
+          }
+        }
+      } 
+      
       val tags = Tag.findByRef(id, 11).map(_.name)
       val greenscoretags = Tag.findByRef(id, Tag.TYPE_GREENSCORE).map(_.name) //here we must return name (not the english/german text)
       val diet = Tag.findByRef(id, 34).map(_.name)
