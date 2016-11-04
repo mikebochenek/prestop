@@ -139,7 +139,7 @@
             <select class="form-control span4" type="text" name="status" id="status" value="@restaurant.status">
               <option value="4" @if(restaurant.status == 4) { selected }   >Draft (4)</option>
               <option value="-1" @if(restaurant.status == -1) { selected } >Deleted (-1)</option>
-             @if(session.get("usertype").get.toString.equals("7")) {
+             @if(session.get("usertype").getOrElse("").toString.equals("7")) {
               <option value="0" @if(restaurant.status == 0) { selected }  >Active (0)</option>
              }
             </select>
@@ -189,7 +189,7 @@ window.onload = function() {
           </br>
                       
           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">@Messages("save")</button>
-          @if(restaurant.status == 4) {
+          @if(restaurant.status == 4 && session.get("usertype").getOrElse("").toString.equals("7")) {
           <button class="span4 btn btn-primary" type="submit" id="approve" onclick="$('#status').val('0');return false;">approve</button>
           <button class="span4 btn btn-primary" type="submit" id="approve" onclick="$('#status').val('-1');return false;">reject</button>
           }

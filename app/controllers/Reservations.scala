@@ -25,6 +25,15 @@ object Reservations extends Controller with Secured {
     }
   }
 
+  val settingsForm = Form(
+    tuple(
+      "email" -> text,
+      "language" -> text,
+      "password" -> text,
+      "passwordnew1" -> text,
+      "passwordnew2" -> text,
+      "additionalsettings" -> text))
+  
   def getByUser(id: Long) = Action { 
     implicit request => {
       Logger.info("calling Activities get - load data for id:" + id)
