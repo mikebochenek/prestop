@@ -15,7 +15,7 @@
           <ul class="list-group" style="text-align: left;">
             <li ng-repeat="restaurant in restaurants | orderBy:['id']" 
                 class="list-group-item"><a href="restaurantedit/{{restaurant.id}}">
-                   <img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" />{{restaurant.name}}</a>
+                   <img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" />{{restaurant.name}} ({{restaurant.city}})</a>
             </li>
             
             <li class="list-group-item"><span ng-hide="editing" style="text-align: left;">
