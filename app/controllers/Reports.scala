@@ -53,4 +53,8 @@ object Reports extends Controller with Secured {
       case _ => "" 
     }
   }
+  
+  def getDishName(id: Long) = {
+    Dish.findById(null, id)(0).name
+  }
 }

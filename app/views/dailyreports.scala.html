@@ -46,7 +46,7 @@
 		  <tr>
 		  <td>@activity.user_id (@Reports.lookupEmail(activity.user_id))</td>
 		  <td>@activity.activity_subtype</td>
-		  <td>@activity.activity_details</td>
+		  <td>@Reports.getDishName(activity.activity_subtype)</td>
 		  <td>@activity.createdate.format("dd.MM.YYYY HH:mm:ss")</td>
 		  </tr>
 		  }
