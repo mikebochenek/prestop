@@ -73,7 +73,7 @@ object Application extends Controller {
       formWithErrors => BadRequest(html.login(formWithErrors)),
       user => {
         val fullUser = User.getFullUser(user._1)
-        ActivityLog.create(fullUser.get.id, ActivityLog.TYPE_LOGIN_ATTEMPT, 0, null)
+        ActivityLog.create(fullUser.get.id, ActivityLog.TYPE_LOGIN_ATTEMPT, 0, "")
         Redirect(routes.Restaurants.index).withSession("email" -> user._1, "usertype" -> fullUser.get.ttype)
       })
   }
