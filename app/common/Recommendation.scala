@@ -246,7 +246,7 @@ object Recommendation {
     
     // and lastly, this is how we ensure that we only show dishes with photos
     result.dishes.clear
-    result.dishes ++= (sortedResultSubset.filter { x => x.url != null })
+    result.dishes ++= (sortedResultSubset.filter { x => x.url != null }.distinct)
     result
   }
 
