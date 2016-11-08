@@ -233,25 +233,6 @@ window.onload = function() {
         </div>
       </div>
 
-    <h3 class="top50">@Messages("restedit.statistics")</h3>
-      <div class="row ">
-        <div class="col-sm-8">@Messages("restedit.piechart.info")</div>
-      </div>  
-      <div class="row ">
-         <div class="col-sm-8">
-           <div id="pie_chart_div">@Messages("restedit.stats.loading")</div>
-        </div>        
-      </div>  
-      <div class="row ">
-        <div class="col-sm-8">@Messages("restedit.barchart.info")</div>
-      </div>  
-      <div class="row ">
-        <div class="col-sm-8">
-           <div id="bar_chart_div">@Messages("restedit.stats.loading")</div>
-        </div>
-      </div>
- 
-      
     <h3 class="top50">@Messages("restedit.menu")</h3>
 
         <div data-ng-app="app" data-ng-controller="ListDishCtrl" lang="en" class="row mycenter" >
@@ -277,6 +258,24 @@ window.onload = function() {
 
          </div><!-- /.col-sm-6 -->
         </div>
+
+    <h3 class="top50">@Messages("restedit.statistics")</h3>
+      <div class="row ">
+        <div class="col-sm-8">@Messages("restedit.piechart.info")</div>
+      </div>  
+      <div class="row ">
+         <div class="col-sm-8">
+           <div id="pie_chart_div">@Messages("restedit.stats.loading")</div>
+        </div>        
+      </div>  
+      <div class="row ">
+        <div class="col-sm-8">@Messages("restedit.barchart.info")</div>
+      </div>  
+      <div class="row ">
+        <div class="col-sm-8">
+           <div id="bar_chart_div">@Messages("restedit.stats.loading")</div>
+        </div>
+      </div>
 
      	<h3 class="top50">@Messages("restedit.locations")</h3>
      	@if(children.size > 0) {
@@ -310,8 +309,8 @@ window.onload = function() {
             <button class="span4 btn btn-primary" type="submit" id="createlocation" >@Messages("restedit.locations.addbutton")</button>
         }
 
-      	<h3 class="top50">@Messages("restedit.reservations") (@reservations.size)</h3>
-      	<table class="table table-hover">
+      	<h3 class="hidden top50">@Messages("restedit.reservations") (@reservations.size)</h3>
+      	<table class="hidden table table-hover">
       	  <thead>
       	    <tr>
       	       <td>@Messages("restedit.reservations.userid")</td>
