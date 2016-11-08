@@ -65,11 +65,17 @@ object Application extends Controller {
   }
 
   def authenticate = Action { implicit request =>
-    Logger.info("request.Content-Type   : " + request.headers.get("Content-Type"))
-    Logger.info("request.Accept-Charset : " + request.headers.get("Accept-Charset"))
+    Logger.debug("request.Content-Type   : " + request.headers.get("Content-Type"))
+    Logger.debug("request.Accept-Charset : " + request.headers.get("Accept-Charset"))
+    
+
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(html.login(formWithErrors)),
-      user => Redirect(routes.Restaurants.index).withSession("email" -> user._1, "usertype" -> User.getFullUser(user._1).get.ttype))
+      user => {
+        val fullUser = User.getFullUser(user._1)
+        ActivityLog.create(fullUser.get.id, ActivityLog.TYPE_LOGIN_ATTEMPT, 0, null)
+        Redirect(routes.Restaurants.index).withSession("email" -> user._1, "usertype" -> fullUser.get.ttype)
+      })
   }
 
   def authenticateTest(email: String) = Action { implicit request =>
