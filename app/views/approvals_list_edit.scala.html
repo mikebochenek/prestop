@@ -15,6 +15,7 @@
 		  <tr>
 		  <td><a href="restaurantedit/@restaurant.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @restaurant.id</td>
 		  <td>@restaurant.name</td><td>@restaurant.url</td>
+		  <td>@restaurant.misc.lastupdate.format("dd MMM YYYY HH:mm:ss")</td>
 		  </tr>
 		}
 		</table>
@@ -29,6 +30,7 @@
 		  <tr>
 		  <td><a href="dishedit/@dish.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @dish.id</td>
 		  <td>@dish.name</td><td>@dish.price</td>
+		  <td>@dish.lastupdate.format("dd MMM YYYY HH:mm:ss")</td>
 		  </tr>
 		}
 		</table>
