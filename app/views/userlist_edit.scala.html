@@ -32,7 +32,11 @@
 		@for((user, index) <- users.zipWithIndex)  {
 		  <tr>
 		  <td><a href="useredit/@user.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a></td>
-		  <td>@user.email</td>
+		  <td>@user.email
+  		    @if(!"1".equals(user.ttype)) {
+		       <img src="@routes.Assets.at("img/admin-512.png")" width="18px" hspace="4" />
+		    }
+		  </td>
 		  <td>
   		    @if(user.username != null && user.username.length > 0) {
   		      <a target="_blank" href="https://www.facebook.com/@user.username"><img src="@routes.Assets.at("img/facebook.jpg")" width="24px" /></a>

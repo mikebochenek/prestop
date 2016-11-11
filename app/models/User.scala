@@ -42,7 +42,7 @@ case class UserProfile(id: Long, email: String, username: String,
     var following: Int, var followers: Int, var likes: Int, var reservations: Int, var profileImageURL: String)
 
 case class UserStat(id: Long, createdate: Date, email: String, username: String, fullname: String,
-    phone: String, allTime: Long, threeMonths: Long, month: Long, week: Long)
+    phone: String, allTime: Long, threeMonths: Long, month: Long, week: Long, ttype: String)
     
 object User {
 
@@ -68,9 +68,10 @@ object User {
       get[Long]("allTime") ~
       get[Long]("threeMonths") ~
       get[Long]("month") ~
-      get[Long]("week") map {
-        case id ~ createdate ~ email ~ username ~ fullname ~ phone ~ allTime ~ threeMonths ~ month ~ week => 
-          UserStat(id, createdate, email, username, fullname.getOrElse(null), phone.getOrElse(null), allTime, threeMonths, month, week)
+      get[Long]("week") ~
+      get[Option[String]]("user.type") map {
+        case id ~ createdate ~ email ~ username ~ fullname ~ phone ~ allTime ~ threeMonths ~ month ~ week ~ ttype => 
+          UserStat(id, createdate, email, username, fullname.getOrElse(null), phone.getOrElse(null), allTime, threeMonths, month, week, ttype.getOrElse(""))
       }
   }
   
@@ -147,7 +148,8 @@ object User {
              (select count(*) from activity_log al where activity_type = 7 and al.user_id = u.id) as allTime, 
              (select count(*) from activity_log al where activity_type = 7 and al.user_id = u.id and createdate >= DATE(NOW()) - INTERVAL 90 DAY) as threeMonths, 
              (select count(*) from activity_log al where activity_type = 7 and al.user_id = u.id and createdate >= DATE(NOW()) - INTERVAL 30 DAY) as month, 
-             (select count(*) from activity_log al where activity_type = 7 and al.user_id = u.id and createdate >= DATE(NOW()) - INTERVAL 7 DAY) as week
+             (select count(*) from activity_log al where activity_type = 7 and al.user_id = u.id and createdate >= DATE(NOW()) - INTERVAL 7 DAY) as week,
+             type
            from user u order by createdate desc""").as(User.stat. *)
     }
   }
