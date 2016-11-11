@@ -9,8 +9,16 @@
 
         @if(restaurants.size == 0) {
         <div>@Messages("approvals.all_restaurants_approved")</div>	
-        }      	
+        } else {     	
       	<table class="table table-striped">
+      	<thead>
+      	  <tr>
+      	    <td><b>id</b></td>
+      	    <td><b>restaurant name</b></td>
+      	    <td><b>last update</b></td>
+      	  </tr>
+      	 </thead>
+      	
 		@for((restaurant, index) <- restaurants.zipWithIndex)  {	
 		  <tr>
 		  <td><a href="restaurantedit/@restaurant.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @restaurant.id</td>
@@ -19,13 +27,24 @@
 		  </tr>
 		}
 		</table>
+		}
 
       	<h1>@Messages("approvals.dishes_count") @dishes.size</h1>
         @if(dishes.size == 0) {
         <div>@Messages("approvals.all_dishes_approved")</div>	
-        }      	
+        } else {      	
       	
       	<table class="table table-striped">
+      	<thead>
+      	  <tr>
+      	    <td><b>id</b></td>
+      	    <td><b>dish name</b></td>
+      	    <td><b>dish price</b></td>
+      	    <td><b>user who uploaded dish</b></td>
+      	    <td><b>last update</b></td>
+      	  </tr>
+      	 </thead>
+      	
 		@for((dish, index) <- dishes.zipWithIndex)  {	
 		  <tr>
 		  <td><a href="dishedit/@dish.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @dish.id</td>
@@ -39,6 +58,7 @@
 		  </tr>
 		}
 		</table>
+		}
 		
       </div>
 
