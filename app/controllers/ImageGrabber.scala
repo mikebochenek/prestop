@@ -20,6 +20,7 @@ import models.json.DishLikers
 import java.nio.file.{Files, Path}
 import scala.io.Source
 import models.json.IGResponse
+import models.json.IGNode
 
 object ImageGrabber extends Controller with Secured {
 
@@ -36,19 +37,21 @@ object ImageGrabber extends Controller with Secured {
       val filenames = allfiles.map { x => x.getName }
       val selectedFile = filenames.find { x => name.equals(x) }.getOrElse(null)
       val file = allfiles.find { x => name.equals(x.getName) }.getOrElse(null)
+      val buf = scala.collection.mutable.ArrayBuffer.empty[IGNode]
 
       if (name.length > 0) {
-        val source: String = Source.fromFile(file).getLines.mkString
-        val json: JsValue = Json.parse(source)
+        val source = Source.fromFile(file).getLines
+
         
-        val resp = IGResponse.getInstance(source)
+        while (source.hasNext) {
+          val resp = IGResponse.getInstance(source.next)
         
-        println(resp.status)
-        resp.media.nodes.foreach(println)
+          buf ++= resp.media.nodes
+        }
         
       }
 
-      Ok(views.html.imagegrabber(filenames, selectedFile))
+      Ok(views.html.imagegrabber(filenames, selectedFile, buf))
     }
   }
 }
