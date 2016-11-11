@@ -30,6 +30,11 @@
 		  <tr>
 		  <td><a href="dishedit/@dish.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @dish.id</td>
 		  <td>@dish.name</td><td>@dish.price</td>
+		  <td>
+		  @if(null != Dishes.getUploadUser(dish.id)) {
+		  	@Dishes.getUploadUser(dish.id).email
+		  }
+		  </td>
 		  <td>@dish.lastupdate.format("dd MMM YYYY HH:mm:ss")</td>
 		  </tr>
 		}
