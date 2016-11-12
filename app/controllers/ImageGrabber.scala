@@ -3,6 +3,7 @@ package controllers
 import java.io.File
 import play.api.libs.json._
 import play.Play
+import play.api.Logger
 import play.api.Play.current
 import play.api.mvc.Action
 import play.api.mvc.Session
@@ -42,6 +43,10 @@ object ImageGrabber extends Controller with Secured {
   def getFiles() = {
     new java.io.File(getPath).listFiles.filter(_.getName.endsWith(".json")) 
   }
+  
+  def getTagSuggestions() = {
+    Tag.findAllPopular(Tag.TYPE_INGREDIENTS)
+  }
 
   def load(name: String) = IsAuthenticated { username =>
     implicit request => {
@@ -50,6 +55,8 @@ object ImageGrabber extends Controller with Secured {
       val selectedFile = filenames.find { x => name.equals(x) }.getOrElse(null)
       val file = allfiles.find { x => name.equals(x.getName) }.getOrElse(null)
       val buf = scala.collection.mutable.ArrayBuffer.empty[IGNode]
+
+      val tags = getTagSuggestions
 
       if (name.length > 0) {
         val source = Source.fromFile(file).getLines
@@ -67,9 +74,10 @@ object ImageGrabber extends Controller with Secured {
             
             val filename = getPath + name.dropRight(5) + f
             if (!(new java.io.File(filename).exists)) {
+              Logger.debug ("ImageGrabber: " + filename + " downloading " + url)
               FileDownloader.download(url, filename)
             } else {
-              //println ("already exists")
+              Logger.debug ("ImageGrabber: " + filename + " already exists " + url)
             }
           }
         }
