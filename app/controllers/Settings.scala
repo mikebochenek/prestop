@@ -529,7 +529,9 @@ object Settings extends Controller with Secured {
       val user = User.getFullUser(id)
       val url = Image.findByUser(user.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       Ok(views.html.user_edit(userForm, user, getPreviousSettingsSafely(user), url,
-          ActivityLog.findRecentByUserType(id, 7), ActivityLog.findRecentByUserType(id, 11)))
+          ActivityLog.findRecentByUserType(id, ActivityLog.TYPE_RECOMMEND_API_CALL), 
+          ActivityLog.findRecentByUserType(id, ActivityLog.TYPE_DISH_LIKE), 
+          ActivityLog.findAllByUserType(id, ActivityLog.TYPE_LOGIN_ATTEMPT)))
     }
   }
 

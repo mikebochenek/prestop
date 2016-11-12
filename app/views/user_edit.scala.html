@@ -1,5 +1,5 @@
 @(form: Form[(String,String,String,String,String,String,String)], user: UserFull, settings: UserSettings, url: String,
-	userRecommendations: Seq[ActivityLog], userLikes: Seq[ActivityLog])(implicit flash: Flash, session: Session, lang: Lang)
+	userRecommendations: Seq[ActivityLog], userLikes: Seq[ActivityLog], logins: Seq[ActivityLog])(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 @if(session.get("usertype").get.toString.equals("7")) {
@@ -118,6 +118,37 @@
 		</table>
       </div>
 
+    @if(logins.size > 0) {
+    <h3>All logins attempts</h3>
+
+      <div class="row ">
+      	<table class="table table-striped">
+      	<thead>
+      	  <tr>
+      	    <td>#</td>
+      	    <td>id</td>
+      	    <td><b>user_id</b></td>
+      	    <td><b>activity_type</b></td>
+      	    <td><b>dish_id (activity_subtype)</b></td>
+      	    <td><b>activity_details</b></td>
+      	    <td>lastupdate</td>
+      	  </tr>
+      	 </thead>
+      	@for((activity, index) <- logins.zipWithIndex)  {	
+		  <tr>
+		  <td>@index</td>
+		  <td>@activity.id</td>
+		  <td>@activity.user_id</td>
+		  <td>@activity.activity_type</td>
+		  <td>@activity.activity_subtype</td>
+		  <td>@activity.activity_details</td>
+		  <td>@activity.createdate.format("dd MMM YYYY HH:mm:ss")</td>
+		  </tr>
+		  }
+		</table>
+      </div>
+    	
+    }	
     <hr/>
     
     <h3>Permanently delete user</h3>
