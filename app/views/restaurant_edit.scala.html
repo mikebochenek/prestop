@@ -190,8 +190,10 @@ window.onload = function() {
                       
           <button class="span4 btn btn-primary" type="submit" id="generalsavebutton">@Messages("save")</button>
           @if(restaurant.status == 4 && session.get("usertype").getOrElse("").toString.equals("7")) {
-          <button class="span4 btn btn-primary" type="submit" id="approve" onclick="$('#status').val('0');return false;">approve</button>
-          <button class="span4 btn btn-primary" type="submit" id="approve" onclick="$('#status').val('-1');return false;">reject</button>
+          <button class="span4 btn btn-primary" type="submit" id="approve" 
+                  onclick="$('#status').val('0');$('#generalsavebutton').click(); setTimeout(function () { window.location.href = '/approvals' }, 500);return false;">approve</button>
+          <button class="span4 btn btn-primary" type="submit" id="approve" 
+                  onclick="$('#status').val('-1');$('#generalsavebutton').click(); setTimeout(function () { window.location.href = '/approvals' }, 500);return false;">reject</button>
           }
         </div>
       </div>
