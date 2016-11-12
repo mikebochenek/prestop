@@ -56,7 +56,7 @@ object ImageGrabber extends Controller with Secured {
       val file = allfiles.find { x => name.equals(x.getName) }.getOrElse(null)
       val buf = scala.collection.mutable.ArrayBuffer.empty[IGNode]
 
-      val tags = getTagSuggestions
+      val tags = getTagSuggestions.map { x => x.en_text.getOrElse("").toLowerCase }
 
       if (name.length > 0) {
         val source = Source.fromFile(file).getLines
@@ -71,6 +71,12 @@ object ImageGrabber extends Controller with Secured {
             val fullurl = n.display_src
             val url = fullurl.substring(0, fullurl.lastIndexOf('?'))
             val f = url.substring(url.lastIndexOf('/'))
+            
+            val captionWords = n.caption.split(" ").filter{x => x.length > 3}
+            //Logger.debug("captionWords: " + captionWords.mkString(","))
+            val suggestedTags = captionWords.filter { x => tags.contains (x.replaceAll("#", "").toLowerCase) }
+            n.tags = Option(suggestedTags.distinct.mkString(",").toLowerCase)
+            n.name = Option("no clue yet...") //TODO maybe same for dish names?
             
             val filename = getPath + name.dropRight(5) + f
             if (!(new java.io.File(filename).exists)) {

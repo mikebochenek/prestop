@@ -17,7 +17,7 @@ object IGLikes {
 }
 
 case class IGNode (caption: String, display_src: String, id: String, likes: IGLikes, 
-    name: Option[String], tags: Option[String])
+    var name: Option[String], var tags: Option[String])
 
 object IGNode {
   implicit val igNodeReads = Json.reads[IGNode]
