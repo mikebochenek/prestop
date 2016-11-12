@@ -83,7 +83,7 @@ object ImageGrabber extends Controller with Secured {
         }
       }
 
-      Ok(views.html.imagegrabber(filenames, selectedFile, buf))
+      Ok(views.html.imagegrabber(filenames, selectedFile, buf.sortWith(_.likes.count > _.likes.count)))
     }
   }
 }
