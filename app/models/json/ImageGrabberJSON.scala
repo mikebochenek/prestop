@@ -9,7 +9,14 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.Logger
 
-case class IGNode (caption: String, display_src: String, id: String)
+case class IGLikes (count: Long)
+
+object IGLikes {
+  implicit val igLikesReads = Json.reads[IGLikes]
+  implicit val igLikesWrites = Json.writes[IGLikes]
+}
+
+case class IGNode (caption: String, display_src: String, id: String, likes: IGLikes)
 
 object IGNode {
   implicit val igNodeReads = Json.reads[IGNode]

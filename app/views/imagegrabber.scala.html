@@ -27,8 +27,12 @@
       	  <tbody>
       	  @for((node, index) <- array.zipWithIndex)  {	
 		  <tr>
-		  <td><img src="@ImageGrabber.createUrl(node.display_src, selectedFile)" width="600px"></img></td>
-		  <td>@node.caption</td>
+		  <td><img src="@ImageGrabber.createUrl(node.display_src, selectedFile)" width="250px"></img></td>
+		  <td><b>likes: </b>@node.likes.count<br>
+		      <b>caption: </b>@node.caption<br><br><br><br><br><br>
+		      <a class="span4 btn btn-primary" type="submit" id="backbutton" href="../dishedit/37" role="button">create dish!</a>
+		  </td>
+		      
 		  </tr>
 		  }
       	  </tbody>
