@@ -47,6 +47,15 @@ object ImageGrabber extends Controller with Secured {
   def getTagSuggestions() = {
     Tag.findAllPopular(Tag.TYPE_INGREDIENTS)
   }
+  
+  def getNameSuggestions() = {
+    val dishes = Dish.findAll().map { x => x.name }
+    val result = scala.collection.mutable.ArrayBuffer.empty[String]
+    for (d <- dishes) {
+      result ++= d.toLowerCase.split(" ") 
+    }
+    result.filter { x => x.length > 4 && !"zurich".equals(x)}
+  }
 
   def load(name: String) = IsAuthenticated { username =>
     implicit request => {
@@ -57,6 +66,7 @@ object ImageGrabber extends Controller with Secured {
       val buf = scala.collection.mutable.ArrayBuffer.empty[IGNode]
 
       val tags = getTagSuggestions.map { x => x.en_text.getOrElse("").toLowerCase }
+      val names = getNameSuggestions
 
       if (name.length > 0) {
         val source = Source.fromFile(file).getLines
@@ -72,11 +82,14 @@ object ImageGrabber extends Controller with Secured {
             val url = fullurl.substring(0, fullurl.lastIndexOf('?'))
             val f = url.substring(url.lastIndexOf('/'))
             
-            val captionWords = n.caption.split(" ").filter{x => x.length > 3}
+            val captionWords = n.caption.split(" ").filter{x => x.length > 3}.map { x => x.replaceAll("#", "").toLowerCase }
             //Logger.debug("captionWords: " + captionWords.mkString(","))
-            val suggestedTags = captionWords.filter { x => tags.contains (x.replaceAll("#", "").toLowerCase) }
+            
+            val suggestedTags = captionWords.filter { x => tags.contains (x) }
             n.tags = Option(suggestedTags.distinct.mkString(",").toLowerCase)
-            n.name = Option("no clue yet...") //TODO maybe same for dish names?
+            
+            val suggestedNames = captionWords.filter { x => names.contains (x) }
+            n.name = Option(suggestedNames.distinct.mkString(" ").toLowerCase)
             
             val filename = getPath + name.dropRight(5) + f
             if (!(new java.io.File(filename).exists)) {
