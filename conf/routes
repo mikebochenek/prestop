@@ -53,12 +53,12 @@ POST     /api/dishes/new             controllers.Dishes.create
 
 POST     /api/user/new               controllers.Settings.createUser
 
-
-GET      /dishedit/:id              controllers.Dishes.getById(id: Long)
-GET      /crop/:id,:imgType     controllers.Dishes.cropImage(id: Long, imgType: String)
-POST     /crop/:id,:imgType     controllers.Dishes.cropImagePost(id: Long, imgType: String)
-POST     /dishedit                  controllers.Dishes.save
-POST	 /dish						controllers.Dishes.upload(id: Long)
+GET      /createdish                 controllers.Dishes.createAndPopulate(name: String ?= "", tags: String ?= "", restaurant: Long ?= 2, jsonFilename: String ?= "", imageFilename: String ?= "")
+GET      /dishedit/:id               controllers.Dishes.getById(id: Long)
+GET      /crop/:id,:imgType          controllers.Dishes.cropImage(id: Long, imgType: String)
+POST     /crop/:id,:imgType          controllers.Dishes.cropImagePost(id: Long, imgType: String)
+POST     /dishedit                   controllers.Dishes.save
+POST	 /dish						 controllers.Dishes.upload(id: Long)
 
 GET      /test            controllers.Recommend.test
 GET      /testsubmit      controllers.Recommend.testsubmit

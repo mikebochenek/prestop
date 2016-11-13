@@ -32,7 +32,9 @@
 		      <b>caption: </b>@node.caption<br><br>
 		      <b>suggested tags: </b>@node.tags.getOrElse("")<br>
 		      <b>suggested name: </b>@node.name.getOrElse("")<br><br><br>
-		      <a class="span4 btn btn-primary" type="submit" id="backbutton" href="../dishedit/37" role="button">create dish! (not implemented yet)</a>
+		      <a class="span4 btn btn-primary" type="submit" id="backbutton" 
+		         href="../createdish?name=@node.name.getOrElse("")&tags=@node.tags.getOrElse("")&jsonFilename=@selectedFile&imageFilename=@node.display_src" 
+		         role="button">create dish!</a>
 		  </td>
 		      
 		  </tr>

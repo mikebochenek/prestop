@@ -277,6 +277,26 @@ object Dishes extends Controller with Secured {
     }
   }
 
+  def createAndPopulate(name: String, tags: String, restaurant: Long, jsonFilename: String, 
+      imageFilename: String) = IsAuthenticated { username =>
+    implicit request => {
+      
+      Logger.debug("Dish.createAndPopulate name: " + name + " tags: " + tags 
+          + " restaurant: " + restaurant + " jsonFilename: " + jsonFilename + " imageFilename: " + imageFilename)
+      
+      val id = Dish.create(restaurant, 0.0, name, 0.0, 4);
+      val restaurantName = "todo restaurantName" //TODO restaurantName
+      val url = ImageGrabber.createUrl(imageFilename, jsonFilename) //TODO, but wouldn't we need to re-size and all?
+      val dish = Dish.findById("", id.get)
+      
+      //TODO need to save tags
+      //TODO need to re-link image
+
+      Ok(views.html.dish_edit(dishForm, dish(0), url, tags, "" /* greenscore */, 
+          "" /* diet */, "" /* dishtype */, "" /* meatorigin */, restaurantName, tags, null))
+    }
+  }
+  
   def upload(id: Long) = Action(parse.multipartFormData) { request =>
     Logger.info("request.Content-Type   : " + request.headers.get("Content-Type"))
     Logger.info("request.Accept-Charset : " + request.headers.get("Accept-Charset"))
