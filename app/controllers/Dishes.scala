@@ -15,6 +15,9 @@ import models._
 import views._
 import javax.imageio.ImageIO
 import org.imgscalr.Scalr
+import play.api.mvc.MultipartFormData.FilePart
+import play.api.libs.iteratee._
+import play.api.libs.Files.TemporaryFile
 import play.api.libs.Files
 import scala.collection.mutable.MutableList
 import common.RecommendationUtils
@@ -284,13 +287,16 @@ object Dishes extends Controller with Secured {
       Logger.debug("Dish.createAndPopulate name: " + name + " tags: " + tags 
           + " restaurant: " + restaurant + " jsonFilename: " + jsonFilename + " imageFilename: " + imageFilename)
       
-      val id = Dish.create(restaurant, 0.0, name, 0.0, 4);
+      val id = Dish.create(restaurant, 0.0, name, 0.0, 4).get;
       val restaurantName = "todo restaurantName" //TODO restaurantName
-      val url = ImageGrabber.createUrl(imageFilename, jsonFilename) //TODO, but wouldn't we need to re-size and all?
-      val dish = Dish.findById("", id.get)
+      val url = ImageGrabber.createUrl(imageFilename, jsonFilename) 
+      val dish = Dish.findById("", id)
       
-      //TODO need to save tags
-      //TODO need to re-link image
+      //TODO still need to save tags
+      
+      val filename = ImageGrabber.getPath + jsonFilename.dropRight(5) + url.substring(url.lastIndexOf('/'))
+      Logger.debug("filename: " + filename)
+      Image.saveAndResizeImages(FilePart("qqfile", "dish" + id + ".jpg", Some("image/jpeg"), TemporaryFile(new File(filename))), id, "dish") 
 
       Ok(views.html.dish_edit(dishForm, dish(0), url, tags, "" /* greenscore */, 
           "" /* diet */, "" /* dishtype */, "" /* meatorigin */, restaurantName, tags, null))
