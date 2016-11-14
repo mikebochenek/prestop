@@ -93,7 +93,7 @@ POST    /login                              controllers.Application.authenticate
 GET     /logout                             controllers.Application.logout
 
 POST    /acceptpayment                      controllers.Settings.acceptpayment
-GET     /reports                            controllers.Reports.load
+GET     /reports                            controllers.Reports.load(mode: String ?= "")
 GET     /dailyreports                       controllers.Reports.loaddaily
 GET     /settings                           controllers.Settings.load
 POST    /settings                           controllers.Settings.save

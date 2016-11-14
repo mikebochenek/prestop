@@ -280,6 +280,9 @@ object Dishes extends Controller with Secured {
     }
   }
 
+  /**
+   * Called from ImageGrabber with a particular input..
+   */
   def createAndPopulate(name: String, tags: String, restaurant: Long, jsonFilename: String, 
       imageFilename: String) = IsAuthenticated { username =>
     implicit request => {
@@ -288,11 +291,11 @@ object Dishes extends Controller with Secured {
           + " restaurant: " + restaurant + " jsonFilename: " + jsonFilename + " imageFilename: " + imageFilename)
       
       val id = Dish.create(restaurant, 0.0, name, 0.0, 4).get;
-      val restaurantName = "todo restaurantName" //TODO restaurantName
+      val restaurantName = "todo restaurantName" //TODO restaurantName - how do we get it from json, or do we allow user to change it later?
       val url = ImageGrabber.createUrl(imageFilename, jsonFilename) 
       val dish = Dish.findById("", id)
       
-      //TODO still need to save tags
+      //TODO still need to save tags (or worst case, wait for next "save" action
       
       val filename = ImageGrabber.getPath + jsonFilename.dropRight(5) + url.substring(url.lastIndexOf('/'))
       Logger.debug("filename: " + filename)
