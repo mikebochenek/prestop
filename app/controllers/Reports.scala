@@ -20,14 +20,11 @@ object Reports extends Controller with Secured {
     implicit request => {
       if ("imagecleanup".equals(mode)) {
         //TODO also find images for users who had been permanently deleted
+        Logger.info(mode + " starting \n\n\n")
         val di = Image.findAll().filter { x => x.status == -1 }
-        val deleteCommands = di.map { x => "mv  '" + x.filename + "'  '" + x.filename.replaceAll(".jpg", "_delme_.jpg") + "'"}
+        val deleteCommands = di.map { x => "rm  '" + x.filename + "'"} // "'  '" + x.filename.replaceAll(".jpg", "_delme_.jpg") + "'"}
         deleteCommands.foreach(println)
-        
-        Logger.info(mode)
-      }
-      if ("imagecleanup-dryrun".equals(mode)) {
-        Logger.info(mode)
+        Logger.info(mode + " ending \n\n\n")
       }
       Ok(views.html.reports(Restaurant.findAll, Dish.findAll, Dish.findAllDeleted, User.findAll, 
           Friend.findAll, Reservation.findAll, ActivityLog.findAll, ActivityLog.findRecentActivities,
