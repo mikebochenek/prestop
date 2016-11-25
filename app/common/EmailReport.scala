@@ -23,7 +23,7 @@ object EmailReport {
     Logger.debug ("processing sendemail to email:" + user.email + "  " + user.ttype)
     if ("7".equals(user.ttype) && (user.email.contains("sebastian") || user.email.contains("mike"))) {
   
-      val dateStr = prettySdf.format(new Date())
+      val dateStr = prettySdf.format(new Date(System.currentTimeMillis()-24*60*60*1000))
   
       var html = "<html><body><h1>Stats for: " + dateStr + "</h1>"
   
@@ -43,6 +43,7 @@ object EmailReport {
       html += "</body></html>"
   
       val subject = "Presto backend stats for: " + dateStr
+      Logger.debug("subject:" + subject)
   
       val mail = use[MailerPlugin].email
       mail.setSubject(subject)
