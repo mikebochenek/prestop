@@ -153,13 +153,14 @@ object Dishes extends Controller with Secured {
         case true => status.toInt
         case false => 4
       }
+      Logger.debug("Dish.save for id: " + id + " restaurant_id: " + restaurant_id + " by: " + fullUser)    
       
       if (!(allCatch opt price.toDouble).isDefined) {
         validationErrors += "Price should be a valid number (i.e. 15.90)"
       }
       
       if (validationErrors.length() == 0) {
-        Dish.update(id.toLong, price.toDouble, name, greenscore.toDouble, newStatus, serving, description, source)
+        Dish.update(id.toLong, price.toDouble, name, greenscore.toDouble, newStatus, serving, description, source, restaurant_id.toLong)
         Tag.updateTags(id.toLong, itags, 11)
         Tag.updateTags(id.toLong, greenscoretags, 31)
         Tag.updateTags(id.toLong, diet, 34)

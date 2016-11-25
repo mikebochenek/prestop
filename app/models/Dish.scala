@@ -53,12 +53,13 @@ object Dish {
   }
 
 
-  def update(id: Long, price: Double, name: String, greenscore: Double, status: Int, serving: String, description: String, source: String) = {
+  def update(id: Long, price: Double, name: String, greenscore: Double, status: Int, serving: String, 
+      description: String, source: String, restaurant_id: Long) = {
     DB.withConnection { implicit connection =>
       SQL(
         """
          update dish set price = {price}, name = {name}, serving = {serving}, description = {description}, source = {source},
-         greenscore = {greenscore}, lastupdate = {lastupdate}, status = {status} where id = {id}
+         greenscore = {greenscore}, lastupdate = {lastupdate}, restaurant_id = {restaurant_id}, status = {status} where id = {id}
         """).on(
           'id -> id,
           'price -> price,
@@ -67,6 +68,7 @@ object Dish {
           'description -> description,
           'greenscore -> greenscore,
           'source -> source,
+          'restaurant_id -> restaurant_id,
           'lastupdate -> new Date(),
           'status -> status).executeUpdate
     }
