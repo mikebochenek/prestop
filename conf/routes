@@ -44,7 +44,7 @@ GET      /api/getlikers/:dishId,:userId  controllers.Activities.getByDish(dishId
 
 GET      /api/getfriendswhobooked/:id  controllers.Reservations.getByRestaurant(id: Long)
 
-POST     /api/new_post               controllers.Dishes.uploadDish(user_id: Long, dish_name: String, price: String, place_id: String)
+POST     /api/new_post               controllers.Dishes.uploadDish(user_id: Long, dish_name: String, price: String ?= "", price_bucket: String ?= "", place_id: String)
 GET      /api/restaurants            controllers.Restaurants.getAll
 POST     /api/restaurants/new        controllers.Restaurants.create
 GET      /api/dishes/:restId         controllers.Dishes.getAll(restId: Long)

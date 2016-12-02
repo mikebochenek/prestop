@@ -388,9 +388,10 @@ object Dishes extends Controller with Secured {
   }  
 
   // http://stackoverflow.com/questions/20322528/uploading-images-to-server-android
-  def uploadDish(user_id: Long, dish_name: String, price: String, place_id: String) = Action(parse.multipartFormData) { request =>
+  def uploadDish(user_id: Long, dish_name: String, price: String, price_bucket: String, place_id: String) = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
-      Logger.info("uploadDish userId:" + user_id + " name: " + dish_name + " price: " + price + " place_id: " + place_id)
+      Logger.info("uploadDish userId:" + user_id + " name: " + dish_name + " price: " + price 
+          + " price_bucket: " + price_bucket + " place_id: " + place_id)
 
       try {
         val rest = Restaurant.findAll().filter { x => place_id.equals(x.misc.place_id.getOrElse("")) }
