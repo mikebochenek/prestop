@@ -88,10 +88,10 @@
           <input class="hidden form-control span4" type="text" name="restaurant_id" id="restaurant_id" value="@dish.restaurant_id">
 
           <div class="input-group top5">
-            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Diet (food categories)</span>
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Diet</span>
             <input class="form-control span4" type="text" name="diet" id="diet" value="@diet">
             <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
-               <span class="badge" title="@Messages("dishedit.tags.tooltip")">?</span>
+               <span class="badge" title="Diet (food categories)">?</span>
             </span>
           </div>
           
@@ -111,16 +111,19 @@
                <span class="badge" title="@Messages("dishedit.tags.tooltip")">?</span>
             </span>
           </div>
-          
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Status</span>
+
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Status</span>
             <select class="form-control span4" type="text" name="status" id="status" value="@dish.status">
               <option value="4" @if(dish.status == 4) { selected }   >Draft (4)</option>
               <option value="-1" @if(dish.status == -1) { selected } >Deleted (-1)</option>
-        @if(session.get("usertype").getOrElse("").toString.equals("7")) {
+             @if(session.get("usertype").getOrElse("").toString.equals("7")) {
               <option value="0" @if(dish.status == 0) { selected }  >Active (0)</option>
-        }
+             }
             </select>
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="status">?</span>
+            </span>
           </div>
 
           <div class="input-group top5">
@@ -149,21 +152,30 @@ window.onload = function() {
 }
           </script>
 
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Serving size</span>
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Serving</span>
             <input class="form-control span4" type="text" name="serving" id="serving" value="@dish.serving">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="Serving size">?</span>
+            </span>
           </div>
 
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Submitted by (source)</span>
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Source</span>
             <input class="form-control span4" type="text" name="source" id="source" value="@dish.source">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="Source">?</span>
+            </span>
           </div>
           
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Description</span>
-            <textarea NAME="description" cols=70 rows=9>@dish.description</textarea>
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Description</span>
+            <textarea class="form-control span4" type="text" name="description" id="description" cols=80 rows=5>@dish.description</textarea> 
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="full dish description">?</span>
+            </span>
           </div>
-         </div>
+        </div>
           
           </br>
                       
