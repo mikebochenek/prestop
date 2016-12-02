@@ -50,6 +50,8 @@ POST     /api/restaurants/new        controllers.Restaurants.create
 GET      /api/dishes/:restId         controllers.Dishes.getAll(restId: Long)
 GET      /api/restdishes/:restId,:userId   controllers.Dishes.getAllForUser(restId: Long, userId: Long)
 POST     /api/dishes/new             controllers.Dishes.create
+GET      /api/allDishes              controllers.Dishes.getActiveDishes(longitude: String ?= "", latitude: String ?= "", maxDishes: Long ?= 1000)
+GET      /api/dishDetails            controllers.Dishes.getDishDetails(user_id: Long ?= 1, dish_id: Long) 
 
 POST     /api/user/new               controllers.Settings.createUser
 

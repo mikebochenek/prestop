@@ -178,9 +178,77 @@ object Dishes extends Controller with Secured {
       }
   }
 
+  
+  def createRI(dish: Dish, r: Restaurant, friendLikedDishURLs: Seq[String], greenscoretags: Seq[String], like: Boolean) = {
+    new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, 
+       dish.source, dish.description.getOrElse(""), like, calculateGreenScore(greenscoretags.size), 
+       greenscoretags,
+       Image.findByDish(dish.id).filter{x => x.width.get == 172}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+       Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+       null,
+       Tag.findByRef(dish.id, 11).map(_.name),
+       r.id,
+       r.name, r.city + ", " + r.misc.country.getOrElse(""), 
+       Image.findByRestaurant(r.id).filter{x => x.width.get == 72}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url, 
+       friendLikedDishURLs,
+       Tag.findByRef(dish.id, 34).map(_.name),
+       Tag.findByRef(dish.id, 35).map(_.name),
+       Tag.findByRef(dish.id, 36).map(_.name), 0)
+  }
+  
+  def getActiveDishes(longitude: String, latitude: String, maxDishes: Long) = Action {
+    implicit request => {  
+      val dishes = Dish.findAll().take(maxDishes.toInt)
+      val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*)
+      val result = new Recommendations(MutableList.empty);
+
+      for (dish <- dishes) {
+        val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.en_text.getOrElse(""))
+      
+        if (restaurants.get(dish.restaurant_id).isEmpty) {
+          Logger.debug("deleted restaurant - restaurants.get(dish.restaurant_id) " + dish.restaurant_id + " dish_id:" + dish.id)
+        } else {
+          val r = restaurants.get(dish.restaurant_id).head
+          result.dishes += createRI(dish, r, Seq.empty, greenscoretags, false)
+        }
+      }
+      
+      Ok(Json.prettyPrint(Json.toJson(result.dishes.map(a => Json.toJson(a)))))
+    }
+  }
+  
+  def getDishDetails(user_id: Long, dish_id: Long) = Action {
+    implicit request => {  
+      val dishes = Dish.findById(null, dish_id)
+      val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*)
+      val result = new Recommendations(MutableList.empty);
+      val allLikes = ActivityLog.findAllByUserType(user_id, 11)
+      val dishLikers = Friend.findDishLikers((dishes.map { x => x.id }).toList, user_id)  
+
+      for (dish <- dishes) {
+        val like = !(allLikes.find { x => x.activity_subtype == dish.id }.isEmpty)
+        val friendLikedDishURLs = dishLikers.filter { x => x.dish_id == dish.id && x.friend_image_url != null}
+          .map { y => y.friend_image_url }  //TODO in cases where its null, should we show a default image?
+        val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.en_text.getOrElse(""))
+        
+        if (restaurants.get(dish.restaurant_id).isEmpty) {
+          Logger.debug("deleted restaurant - restaurants.get(dish.restaurant_id) " + dish.restaurant_id + " dish_id:" + dish.id)
+        } else {
+          val r = restaurants.get(dish.restaurant_id).head
+          result.dishes += createRI(dish, r, friendLikedDishURLs, greenscoretags, like)
+        }
+      }
+      
+      Ok(Json.prettyPrint(Json.toJson(result.dishes.map(a => Json.toJson(a)))))
+    }
+  }
+  
   def getAllForUser(restId: Long, userId: Long) = Action {
     implicit request => {
-      val dishes = Dish.findAll(restId)
+      val dishes = restId match {
+        case -1 => Dish.findAll()
+        case _  => Dish.findAll(restId)
+      }
 
       //TODO all the below is way too similar to Recommendation.recommend and should be refactored into a common method
       val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*)
