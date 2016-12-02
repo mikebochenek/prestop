@@ -203,6 +203,7 @@ object Dishes extends Controller with Secured {
       val result = new Recommendations(MutableList.empty);
 
       for (dish <- dishes) {
+        dish.name = dish.name.replaceAll("ü", "u").replaceAll("ä", "a").replaceAll(" ", "_").replaceAll("\\W+", "")
         val greenscoretags = Tag.findByRef(dish.id, Tag.TYPE_GREENSCORE).map(_.en_text.getOrElse(""))
       
         if (restaurants.get(dish.restaurant_id).isEmpty) {

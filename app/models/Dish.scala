@@ -15,7 +15,7 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.Logger
 
-case class Dish(id: Long, restaurant_id: Long, price: Double, name: String, serving: Option[String], description: Option[String], 
+case class Dish(id: Long, restaurant_id: Long, price: Double, var name: String, serving: Option[String], description: Option[String], 
     var greenScore: Double, lastupdate: Date, status: Int, source: String, var url: String, var distance: Double, var tags: Seq[String])
 
 object Dish {
