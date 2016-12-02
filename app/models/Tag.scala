@@ -192,6 +192,7 @@ object Tag {
   val TYPE_DIET = 34
   val TYPE_DISHTYPE = 35
   val TYPE_MEATORIGIN = 36
+  val TYPE_SEARCH = 37
   val TYPE_INTRO_TEXTS = 41
 }
 

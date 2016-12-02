@@ -102,12 +102,13 @@ object Dishes extends Controller with Secured {
       val restaurantName = Restaurant.findById("", dish(0).restaurant_id)(0).name
       val uploadUser = getUploadUser(dish(0).id)
 
-      val allTags = tags ++ diet ++ dishtype ++ greenscoretags
+      //val allTags = tags ++ diet ++ dishtype ++ greenscoretags
+      val searchTags = Tag.findByRef(id, Tag.TYPE_SEARCH).map(_.name)
       
       dish.foreach { x => x.greenScore = calculateGreenScore(greenscoretags.size) }
       
       Ok(views.html.dish_edit(dishForm, dish(0), url, tags.mkString(", "), greenscoretags.mkString(", "), 
-          diet.mkString(", "), dishtype.mkString(", "), meatorigin.mkString(", "), restaurantName, allTags.sorted.mkString(", "), uploadUser))
+          diet.mkString(", "), dishtype.mkString(", "), meatorigin.mkString(", "), restaurantName, searchTags.sorted.mkString(", "), uploadUser))
     }
   }
   
@@ -128,7 +129,7 @@ object Dishes extends Controller with Secured {
   val dishForm = Form(
     tuple(
       "id" -> text,
-      "tags" -> text,
+      "searchtags" -> text,
       "price" -> text,
       "name" -> text,
       "serving" -> text,
@@ -145,7 +146,7 @@ object Dishes extends Controller with Secured {
       
   def save = IsAuthenticated { username =>
     implicit request =>  
-      val (id, tags, price, name, serving, description, greenscore, restaurant_id, status, itags, greenscoretags, 
+      val (id, searchtags, price, name, serving, description, greenscore, restaurant_id, status, itags, greenscoretags, 
           diet, dishtype, meatorigin, source) = dishForm.bindFromRequest.get
       var validationErrors = ""      
       val fullUser = User.getFullUser(username).get
@@ -153,7 +154,7 @@ object Dishes extends Controller with Secured {
         case true => status.toInt
         case false => 4
       }
-      Logger.debug("Dish.save for id: " + id + " restaurant_id: " + restaurant_id + " by: " + fullUser)    
+      Logger.debug("Dish.save for id: " + id + " restaurant_id: " + restaurant_id + " by: " + fullUser + " searchtags: " + searchtags)    
       
       if (!(allCatch opt price.toDouble).isDefined) {
         validationErrors += "Price should be a valid number (i.e. 15.90)"
@@ -166,13 +167,14 @@ object Dishes extends Controller with Secured {
         Tag.updateTags(id.toLong, diet, 34)
         Tag.updateTags(id.toLong, dishtype, 35)
         Tag.updateTags(id.toLong, meatorigin, 36)
-        Tag.updateTags(id.toLong, tags, Seq(11, 31, 34, 35)) //NB: order is important, 11 should be first, because we will create with status=11
-        Logger.info("calling restaurant update for id:" + id + " price:" + price + " newStatus:" + newStatus 
-            + " name:" + name + " tags:" + itags + " greenscoretags: " + greenscoretags + " alltags: " + tags)
+        Tag.updateTags(id.toLong, searchtags, Tag.TYPE_SEARCH)
+        //Tag.updateTags(id.toLong, tags, Seq(11, 31, 34, 35)) //NB: order is important, 11 should be first, because we will create with status=11
+        Logger.info("calling dish update for id:" + id + " price:" + price + " newStatus:" + newStatus 
+            + " name:" + name + " itags:" + itags + " greenscoretags: " + greenscoretags + " searchtags: " + searchtags)
         Redirect(routes.Dishes.getById(id.toLong)).flashing("success" -> ("Changes saved successfully at " 
             + RecommendationUtils.currentTime()))
       } else {
-        Logger.info("failed calling restaurant update for id:" + id + " price:" + price + " newStatus:" + newStatus 
+        Logger.info("failed calling dish update for id:" + id + " price:" + price + " newStatus:" + newStatus 
             + " name:" + name + " tags:" + itags + " greenscoretags: " + greenscoretags + " validationErrors: " + validationErrors)
         Redirect(routes.Dishes.getById(id.toLong)).flashing("error" -> validationErrors)
       }
