@@ -84,8 +84,12 @@
             </span>
           </div>
         }
+        
+        <div id="moreoptionslink"><a href="#" 
+             onclick="$('#moreoptionslink').hide(800);$('#advancedsettings').show(800);return false"><i>
+             <small>show even more options</small></i></a></div>
 
-       <div>
+       <div id="advancedsettings" style="display: none">
           <div class="input-group top5">
             <span class="input-group-addon input-group-addon-label" id="basic-addon1">Greenscore</span>
             <input class="form-control span4" type="text" name="greenscoretags" id="greenscoretags" value="@greenscoretags">
