@@ -52,9 +52,26 @@
 
           <div class="input-group top5">
             <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("dishedit.tags")</span>
-            <input class="form-control span4" type="text" name="tags" id="tags" value="@allTags">
+            <input class="form-control span4" type="text" name="tags" id="tags" value="">
             <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
                <span class="badge" title="@Messages("dishedit.tags.tooltip")">?</span>
+            </span>
+          </div>
+
+
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Ingredients</span>
+            <input class="form-control span4" type="text" name="itags" id="itags" value="@tags">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+               <span class="badge" title="@Messages("dishedit.tags.tooltip")">?</span>
+            </span>
+          </div>
+
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Description</span>
+            <textarea class="form-control span4" type="text" name="description" id="description" cols=80 rows=5>@dish.description</textarea> 
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="full dish description">?</span>
             </span>
           </div>
 
@@ -70,10 +87,10 @@
 
        <div>
           <div class="input-group top5">
-            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Greenscore tags</span>
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Greenscore</span>
             <input class="form-control span4" type="text" name="greenscoretags" id="greenscoretags" value="@greenscoretags">
             <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
-               <span class="badge" title="@Messages("dishedit.tags.tooltip")">?</span>
+               <span class="badge" title="greenscore tags">?</span>
             </span>
           </div>
           
@@ -126,14 +143,6 @@
             </span>
           </div>
 
-          <div class="input-group top5">
-            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Ingredients</span>
-            <input class="form-control span4" type="text" name="itags" id="itags" value="@tags">
-            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
-               <span class="badge" title="@Messages("dishedit.tags.tooltip")">?</span>
-            </span>
-          </div>
-
           <script language="Javascript">
 attachTags = function(elemId, tagsArray) {
  $(elemId).tokenfield({  autocomplete: { delay: 100,
@@ -160,6 +169,7 @@ window.onload = function() {
             </span>
           </div>
 
+       @if(dish.source != null && dish.source.length > 0) {
           <div class="input-group top5">
             <span class="input-group-addon input-group-addon-label" id="basic-addon1">Source</span>
             <input class="form-control span4" type="text" name="source" id="source" value="@dish.source">
@@ -167,14 +177,8 @@ window.onload = function() {
               <span class="badge " title="Source">?</span>
             </span>
           </div>
+       }
           
-          <div class="input-group top5">
-            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Description</span>
-            <textarea class="form-control span4" type="text" name="description" id="description" cols=80 rows=5>@dish.description</textarea> 
-            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
-              <span class="badge " title="full dish description">?</span>
-            </span>
-          </div>
         </div>
           
           </br>
