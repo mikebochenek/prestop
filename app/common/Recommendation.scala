@@ -43,7 +43,7 @@ object Recommendation {
     val random = new java.util.Random
     val dishesAlreadyRecommendedActivities = ActivityLog.findRecentByUserType(user.id, 7).reverse
     
-    Logger.info("avoid: " + avoid)
+    Logger.info("avoid: " + avoid + "  onlyShow:" + onlyShow)
     
     def getDishesAlreadyRecommended() :SortedSet[Long] = {
       val dar = SortedSet[Long]()
@@ -215,6 +215,12 @@ object Recommendation {
         }
       }
       prevRestaurantID = sortedResult(i).restaurantID 
+    }
+    
+    if (null != onlyShow && onlyShow.length > 0) {
+      for (i <- 0 until sortedResult.length) {
+        //TODO for each one, check greenscore tags..? but we should optimize this as well..
+      }
     }
     
     Logger.debug("------startIdx-------- " + startIdx + "    " + sortedResult.size)
