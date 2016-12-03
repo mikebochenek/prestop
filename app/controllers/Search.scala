@@ -42,7 +42,7 @@ object Search extends Controller with Secured {
    */
   def searchWithFilters(keyword: String, id: Long, longitude: String, latitude: String, 
       maxDistance: Double, minPrice: Double, maxPrice: Double, openNow: Boolean, lastDishID: Long, 
-      maxDishes: Long, avoid: String) = Action {
+      maxDishes: Long, avoid: String, showOnly: String) = Action {
     implicit request => {
       Logger.info("calling Search with keyword: " + keyword + " id:" + id + " longitude:" + longitude 
           + " latitude:" + latitude + " maxDistance:" + maxDistance + " minPrice:" + minPrice + " maxPrice:" 
@@ -50,7 +50,7 @@ object Search extends Controller with Secured {
       try {
         val user = User.getFullUser(id)
         val recommendations = common.Recommendation.recommend(user, Recommend.parseLongitude(longitude), 
-            Recommend.parseLatitude(latitude), maxDistance, minPrice, maxPrice, openNow, lastDishID, maxDishes, avoid, keyword)
+            Recommend.parseLatitude(latitude), maxDistance, minPrice, maxPrice, openNow, lastDishID, maxDishes, avoid, keyword, showOnly)
         val json = Json.prettyPrint(Json.toJson(recommendations.dishes.map(a => Json.toJson(a))))
         ActivityLog.create(user.id, ActivityLog.TYPE_SEARCH, lastDishID, keyword + "---" 
             + Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())

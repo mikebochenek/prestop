@@ -221,7 +221,7 @@ object Dishes extends Controller with Secured {
     }
   }
   
-  def getDishDetails(user_id: Long, dish_id: Long) = Action {
+  def getDishDetails(user_id: Long, dish_id: Long, longitude: String, latitude: String) = Action {
     implicit request => {  
       val dishes = Dish.findById(null, dish_id)
       val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*)
