@@ -461,6 +461,8 @@ object Settings extends Controller with Secured {
         case false => -1
       }
       
+      Logger.info("checkExistingUser userByUsername.isDefined:" + userByUsername.isDefined + "  userByPhone.size:" + userByPhone.size + " userByEmail.isDefined:" + userByEmail.isDefined + " existingUser:" + existingUser)
+      
       val userStatus = existingUser match {
         case true => { 
           val settings = getPreviousSettingsSafely(User.getFullUser(newid))
@@ -476,6 +478,8 @@ object Settings extends Controller with Secured {
         }
         case false => "user_not_found"
       }
+      
+      Logger.info("checkExistingUser returns newid:" + newid + " userStatus: " + userStatus);
       
       Ok(Json.prettyPrint(Json.toJson(new RegisterResponse("OK", newid, userStatus))))
     }
