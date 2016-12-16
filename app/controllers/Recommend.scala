@@ -63,15 +63,15 @@ object Recommend extends Controller with Secured  {
       "lastDishID" -> text))  
   
   def getWithFilters(id: Long, longitude: String, latitude: String, maxDistance: Double, minPrice: Double, 
-      maxPrice: Double, openNow: Boolean, lastDishID: Long, maxDishes: Long, avoid: String, onlyShow: String) = Action {
+      maxPrice: Double, openNow: Boolean, lastDishID: Long, maxDishes: Long, avoid: String, showOnly: String) = Action {
     implicit request => {
       Logger.info("calling Recommend.get with id:" + id + " longitude:" + longitude + " latitude:" + latitude 
           + " maxDistance:" + maxDistance + " minPrice:" + minPrice + " maxPrice:" + maxPrice + " openNow:" 
-          + openNow + " lastDishID:" + lastDishID + " maxDishes:" + maxDishes + " onlyShow:" + onlyShow)
+          + openNow + " lastDishID:" + lastDishID + " maxDishes:" + maxDishes + " onlyShow:" + showOnly)
       try {
         val user = User.getFullUser(id)
         val recommendations = Recommendation.recommend(user, parseLongitude(longitude), parseLatitude(latitude), 
-            maxDistance, minPrice, maxPrice, openNow, lastDishID, maxDishes, avoid, null, onlyShow)
+            maxDistance, minPrice, maxPrice, openNow, lastDishID, maxDishes, avoid, null, showOnly)
         val json = Json.prettyPrint(Json.toJson(recommendations.dishes.map(a => Json.toJson(a))))
         ActivityLog.create(user.id, 7, lastDishID, Json.toJson(recommendations.dishes.map(x => Json.toJson(x.id))).toString())
         Ok(json)

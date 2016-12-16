@@ -180,7 +180,7 @@ object Recommendation {
       }
     }
     
-    val sortedResult = result.dishes.sortBy(_.score).reverse
+    var sortedResult = result.dishes.sortBy(_.score).reverse
     
     // after we sort, we can skip the dishes which were already shown (recently?) to the user
     var startIdx = 0
@@ -218,9 +218,14 @@ object Recommendation {
     }
     
     if (null != onlyShow && onlyShow.length > 0) {
-      for (i <- 0 until sortedResult.length) {
-        //TODO for each one, check greenscore tags..? but we should optimize this as well..
+      val gTags = onlyShow.split(",")
+      val dishesShowOnly = MutableList.empty[Long]
+      for (_tag <- gTags) {
+        val greenTagID = Tag.findAll().filter { x => _tag.equals(x.name) }(0).id
+        dishesShowOnly ++= TagRef.findByTag(greenTagID).map { x => x.refid }
       }
+      Logger.info("onlyShow: " + onlyShow + "  dishesShowOnly: " + dishesShowOnly)
+      sortedResult = sortedResult.filter { x => dishesShowOnly.contains(x.id) }
     }
     
     Logger.debug("------startIdx-------- " + startIdx + "    " + sortedResult.size)
