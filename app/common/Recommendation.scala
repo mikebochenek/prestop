@@ -69,6 +69,25 @@ object Recommendation {
       dar
     }
 
+
+    /** Task #404: Bug: sometimes we return a dish which has already been seen (seems to happen a lot) */
+    def getDishesRecentlyRecommended() :SortedSet[Long] = {
+      val dar = SortedSet[Long]()
+      
+      if (keyword != null && keyword.trim.length > 0) return dar //because for search, we can return same results
+      
+      val onlySubset = dishesAlreadyRecommendedActivities.take(5) //TODO
+      for (actDish <- onlySubset) {
+        val a = actDish.activity_details
+        if (a.contains("[") && a.indexOf(']') > 0) {
+          val ids = a.substring(1, a.indexOf(']')).split(",")
+          ids.foreach { x => if (!"".equals(x)) dar += x.toLong }
+        }
+      }
+
+      Logger.info("getDishesRecentlyRecommended() returns: " + dar.mkString(","))
+      dar
+    }
     
     // http://stackoverflow.com/questions/2925041/how-to-convert-a-seqa-to-a-mapint-a-using-a-value-of-a-as-the-key-in-the-ma
     val restaurants = Map(Restaurant.findAll map { a => a.id -> a}: _*) //getAllRestaurants()
@@ -106,6 +125,7 @@ object Recommendation {
     //Logger.debug ("desiredWidth: " + desiredWidth)
     
     val dishesAlreadyRecommended = getDishesAlreadyRecommended()
+    val dishesRecentlyRecommended = getDishesRecentlyRecommended()
     
     val allDishes = (keyword != null && keyword.trim.length > 0) match {
       case true => {
@@ -121,6 +141,7 @@ object Recommendation {
       .filter { x => (maxPrice >= x.price && minPrice <= x.price) } // filter by price
       .filter { x => !openNow || RecommendationUtils.checkOpenTime(restaurants, x.restaurant_id)} // filter out restaurants currently closed
       .filter { x => !dishesAlreadyRecommended.contains(x.id) } // filter out dishes already recommended (list would be empty if lastDishID is 0 or null)
+      .filter { x => !dishesRecentlyRecommended.contains(x.id) } // filter out dishes RECENTLY recommended 
       .filter { x => x.status != 4 } // filter out dishes in draft mode
 
     val allDietTags = Tag.findByRefList((dishes.map { x => x.id }).toList, Tag.TYPE_DIET)
