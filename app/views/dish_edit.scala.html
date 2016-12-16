@@ -83,20 +83,20 @@
             </span>
           </div>
         }
-        
-        <div id="moreoptionslink"><a href="#" 
-             onclick="$('#moreoptionslink').hide(800);$('#advancedsettings').show(800);return false"><i>
-             <small>advanced settings</small></i></a></div>
 
-       <div id="advancedsettings" style="display: none">
           <div class="input-group top5">
-            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Greenscore</span>
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Diet</span>
             <input class="form-control span4" type="text" name="greenscoretags" id="greenscoretags" value="@greenscoretags">
             <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
-               <span class="badge" title="greenscore tags">?</span>
+               <span class="badge" title="diet tags">?</span>
             </span>
           </div>
-          
+        
+        <div id="moreoptionslink"><a href="#" 
+             onclick="$('#moreoptionslink').hide(800);$('#advancedsettings').show(800);return false">
+             <small>advanced settings</small></a></div>
+
+       <div id="advancedsettings" style="display: none">
           <div class="input-group top5">
             <span class="input-group-addon input-group-addon-label" id="basic-addon1">Greenscore</span>
             <input class="form-control span4" type="text" name="greenscore" id="greenscore" readonly value="@dish.greenScore">
@@ -118,7 +118,7 @@
         }	
 
           <div class="input-group top5">
-            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Diet</span>
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Food types</span>
             <input class="form-control span4" type="text" name="diet" id="diet" value="@diet">
             <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
                <span class="badge" title="Diet (food categories)">?</span>
