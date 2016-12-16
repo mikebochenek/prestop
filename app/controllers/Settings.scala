@@ -33,6 +33,9 @@ import com.stripe.model._
 import models.json.PaymentHistory
 import javax.smartcardio.CardException
 import java.util.Date
+import java.net.URLDecoder
+import java.nio.charset.Charset
+
 
 object Settings extends Controller with Secured {
   def load() = IsAuthenticated { username =>
@@ -367,7 +370,7 @@ object Settings extends Controller with Secured {
       
       val emailString = email.isInstanceOf[JsUndefined] match { 
         case true => ""
-        case false => email.as[String]
+        case false => URLDecoder.decode(email.as[String], Charset.forName("utf8").name)
       }
 
       val userByUsername = User.getFullUserByUsername(id)
@@ -386,7 +389,8 @@ object Settings extends Controller with Secured {
                        else if (userByPhone.size > 0) userByPhone(0).id 
                        else if (userByEmail.isDefined) userByEmail.get.id
                        else -1 } 
-        case false => User.create(new UserFull(-1, null, null, false, "test", null, emailString, id, "1", null, name.as[String], null, null, null, cleanPhoneString(phone.as[String]))).get
+        case false => User.create(new UserFull(-1, null, null, false, "test", null, emailString, id, "1", null, 
+            URLDecoder.decode(name.as[String], Charset.forName("utf8").name), null, null, null, cleanPhoneString(phone.as[String]))).get
       }
       
       val userStatus = existingUser match {
@@ -439,7 +443,7 @@ object Settings extends Controller with Secured {
       }
       val emailString = email.isInstanceOf[JsUndefined] match { 
         case true => ""
-        case false => email.as[String]
+        case false => URLDecoder.decode(email.as[String], Charset.forName("utf8").name)
       }
 
       val userByUsername = User.getFullUserByUsername(id)
