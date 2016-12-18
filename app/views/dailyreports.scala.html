@@ -58,6 +58,7 @@
 		  <tr>
 		  <td>@dish.id</td>
 		  <td>@dish.name</td>
+		  <td>@Reports.getRestaurantName(dish.restaurant_id)</td>
 		  <td>@dish.lastupdate.format("dd.MM.YYYY HH:mm:ss")</td>
 		  <td>@Reports.getDishOwner(dish.id)</td>
 		  <td>@("%.2f".format(dish.price))</td>

@@ -62,6 +62,10 @@ object Reports extends Controller with Secured {
     }
   }
   
+  def getRestaurantName(id: Long) = {
+    Restaurant.findById(null, id)(0).name
+  }
+  
   def getDishName(id: Long) = {
     Dish.findById(null, id)(0).name
   }
