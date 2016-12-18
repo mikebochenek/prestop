@@ -240,10 +240,16 @@ object Recommendation {
     
     if (null != onlyShow && onlyShow.length > 0) {
       val gTags = onlyShow.split(",")
-      val dishesShowOnly = MutableList.empty[Long]
+      var dishesShowOnly = MutableList.empty[Long]
       for (_tag <- gTags) {
         val greenTagID = Tag.findAll().filter { x => _tag.equals(x.name) }(0).id
-        dishesShowOnly ++= TagRef.findByTag(greenTagID).map { x => x.refid }
+        val _dishesShowOnly = TagRef.findByTag(greenTagID).map { x => x.refid }
+        Logger.debug("_dishesShowOnly: " + _dishesShowOnly + "  for " + _tag)
+        if (dishesShowOnly.size == 0) {
+          dishesShowOnly ++= _dishesShowOnly
+        } else {
+          dishesShowOnly = dishesShowOnly.intersect(_dishesShowOnly)
+        }
       }
       Logger.info("onlyShow: " + onlyShow + "  dishesShowOnly: " + dishesShowOnly)
       sortedResult = sortedResult.filter { x => dishesShowOnly.contains(x.id) }
