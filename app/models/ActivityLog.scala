@@ -154,14 +154,14 @@ case class ActivityLogUserStats(email: String, user_id: Long, username: String, 
 
 object ActivityLogUserStats {
   val simple = {
-      get[String]("user.email") ~
+      get[Option[String]]("user.email") ~
       get[Long]("activity_log.user_id") ~
       get[String]("user.username") ~
-      get[String]("user.phone") ~
+      get[Option[String]]("user.phone") ~
       get[Long]("activity_log.activity_type") ~
       get[Long]("ccount") map {
         case email ~ user_id ~ username ~ phone ~ activity_type ~ ccount => 
-          ActivityLogUserStats(email, user_id, username, phone, activity_type, ccount)
+          ActivityLogUserStats(email.getOrElse(null), user_id, username, phone.getOrElse(null), activity_type, ccount)
       }
   }
   implicit val activityLogUSReads = Json.reads[ActivityLogUserStats]
