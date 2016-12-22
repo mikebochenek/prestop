@@ -30,7 +30,7 @@ object RecommendationUtils {
   def checkOpenTime(restaurants: Map[Long, Restaurant], id: Long) = {
     restaurants.get(id) match {
       case Some(f) => { 
-        Logger.debug(" checking restaurant schedule: " + f.schedule)
+        //Logger.debug(" checking restaurant schedule: " + f.schedule)
         f.schedule.isEmpty || f.schedule.length == 0 || checkSchedule(f.schedule)
       }
       case None => true
@@ -92,11 +92,11 @@ object RecommendationUtils {
           //Logger.debug("case 2 .... day range - day:" + day + " startday:" + startDay + " endDay:" + extractDay(tokens(1)))
         } else {
           //Logger.info(" .........checkSchedule impossible flow")
-          tokens.foreach{t => Logger.debug(t)}
+          //tokens.foreach{t => Logger.debug(t)}
         }
       } else {
         //Logger.info(" .......checkSchedule impossible flow #2")
-        tokens.foreach{t => Logger.debug(t)}
+        //tokens.foreach{t => Logger.debug(t)}
       }
     }
     
