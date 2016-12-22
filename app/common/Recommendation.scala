@@ -136,14 +136,36 @@ object Recommendation {
       case false => Dish.findAll
     } // NB: this is a little bit hacky, because we fill allDishes with either all, or already filtered by keyword search
     
-    val dishes = allDishes //Dish.findAll() //TODO !!! use local allDishes // getAllDishes()
+    var dishes = allDishes //Dish.findAll() //TODO !!! use local allDishes // getAllDishes()
       .filter { x => RecommendationUtils.within(maxDistance, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
       .filter { x => (maxPrice >= x.price && minPrice <= x.price) } // filter by price
       .filter { x => !openNow || RecommendationUtils.checkOpenTime(restaurants, x.restaurant_id)} // filter out restaurants currently closed
       .filter { x => !dishesAlreadyRecommended.contains(x.id) } // filter out dishes already recommended (list would be empty if lastDishID is 0 or null)
-      .filter { x => !dishesRecentlyRecommended.contains(x.id) } // filter out dishes RECENTLY recommended 
       .filter { x => x.status != 4 } // filter out dishes in draft mode
-
+      
+    if (null != onlyShow && onlyShow.length > 0) {
+      val gTags = onlyShow.split(",")
+      var dishesShowOnly = MutableList.empty[Long]
+      for (_tag <- gTags) {
+        val greenTagID = Tag.findAll().filter { x => _tag.equals(x.name) }(0).id
+        val _dishesShowOnly = TagRef.findByTag(greenTagID).map { x => x.refid }
+        Logger.debug("_dishesShowOnly: " + _dishesShowOnly + "  for " + _tag)
+        if (dishesShowOnly.size == 0) {
+          dishesShowOnly ++= _dishesShowOnly
+        } else {
+          dishesShowOnly = dishesShowOnly.intersect(_dishesShowOnly)
+        }
+      }
+      Logger.info("onlyShow: " + onlyShow + "  dishesShowOnly: " + dishesShowOnly)
+      dishes = dishes.filter { x => dishesShowOnly.contains(x.id) }
+    }
+      
+    Logger.debug("dishes0.size : " + dishes.size)
+    dishes = dishes.size > 50 match {
+      case true => dishes.filter { x => !dishesRecentlyRecommended.contains(x.id) } // filter out dishes RECENTLY recommended 
+      case false => dishes
+    }
+      
     val allDietTags = Tag.findByRefList((dishes.map { x => x.id }).toList, Tag.TYPE_DIET)
     val allIngredientTags = Tag.findByRefList((dishes.map { x => x.id }).toList, 11)
     val allLikes = ActivityLog.findAllByUserType(user.id, 11)
@@ -236,23 +258,6 @@ object Recommendation {
         }
       }
       prevRestaurantID = sortedResult(i).restaurantID 
-    }
-    
-    if (null != onlyShow && onlyShow.length > 0) {
-      val gTags = onlyShow.split(",")
-      var dishesShowOnly = MutableList.empty[Long]
-      for (_tag <- gTags) {
-        val greenTagID = Tag.findAll().filter { x => _tag.equals(x.name) }(0).id
-        val _dishesShowOnly = TagRef.findByTag(greenTagID).map { x => x.refid }
-        Logger.debug("_dishesShowOnly: " + _dishesShowOnly + "  for " + _tag)
-        if (dishesShowOnly.size == 0) {
-          dishesShowOnly ++= _dishesShowOnly
-        } else {
-          dishesShowOnly = dishesShowOnly.intersect(_dishesShowOnly)
-        }
-      }
-      Logger.info("onlyShow: " + onlyShow + "  dishesShowOnly: " + dishesShowOnly)
-      sortedResult = sortedResult.filter { x => dishesShowOnly.contains(x.id) }
     }
     
     Logger.debug("------startIdx-------- " + startIdx + "    " + sortedResult.size)
