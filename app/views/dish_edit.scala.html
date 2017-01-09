@@ -50,6 +50,16 @@
             </span>
           </div>
 
+       @if(dish.priceBucket.isDefined) {
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Price Bucket</span>
+            <input class="form-control span4" type="text" name="price" id="price" readonly value="@Dish.getPriceBucketRange(dish.priceBucket.getOrElse(""))">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+               <span class="badge" title="@Messages("dishedit.price.tooltip")">?</span>
+            </span>
+          </div>
+        }
+
           <div class="input-group top5">
             <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("dishedit.tags")</span>
             <input class="form-control span4" type="text" name="searchtags" id="searchtags" value="@searchTags">

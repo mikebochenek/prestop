@@ -15,7 +15,7 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.Logger
 
-case class Dish(id: Long, restaurant_id: Long, price: Double, var name: String, serving: Option[String], description: Option[String], 
+case class Dish(id: Long, restaurant_id: Long, price: Double, var name: String, priceBucket: Option[String], serving: Option[String], description: Option[String], 
     var greenScore: Double, lastupdate: Date, status: Int, source: String, var url: String, var distance: Double, var tags: Seq[String])
 
 object Dish {
@@ -24,14 +24,15 @@ object Dish {
       get[Long]("dish.restaurant_id") ~
       get[Double]("dish.price") ~
       get[String]("dish.name") ~
+      get[Option[String]]("dish.price_bucket") ~
       get[Option[String]]("dish.serving") ~
       get[Option[String]]("dish.description") ~
       get[Double]("dish.greenscore") ~
       get[Date]("dish.lastupdate") ~
       get[Int]("dish.status") ~
       get[Option[String]]("dish.source") map {
-        case id ~ restaurant_id ~ price ~ name ~ serving ~ description ~ greenscore ~ lastupdate ~ status ~ source => 
-          Dish(id, restaurant_id, price, name, serving, description, greenscore, lastupdate, status, source.getOrElse(""), null, 0.0, Seq.empty[String])
+        case id ~ restaurant_id ~ price ~ name ~ price_bucket ~ serving ~ description ~ greenscore ~ lastupdate ~ status ~ source => 
+          Dish(id, restaurant_id, price, name, price_bucket, serving, description, greenscore, lastupdate, status, source.getOrElse(""), null, 0.0, Seq.empty[String])
       }
   }
 
@@ -80,7 +81,7 @@ object Dish {
     }
   }
   
-  val columns = " id, restaurant_id, price, name, serving, description, greenscore, lastupdate, status, source "
+  val columns = " id, restaurant_id, price, name, price_bucket, serving, description, greenscore, lastupdate, status, source "
 
   def findById(username: String, id: Long): Seq[Dish] = {
     DB.withConnection { implicit connection =>
@@ -121,6 +122,17 @@ object Dish {
     DB.withConnection { implicit connection =>
       SQL("select " + columns + " from dish where restaurant_id in (select r.id from restaurant r where status < 0) "
           + " order by id asc").on().as(Dish.simple *)
+    }
+  }
+  
+  /* Bites/NewPostViewController.swift:	let priceBucketsDict = ["0 – 19.90": "bucketA", "20 – 34.90": "bucketB", "35 – 44.90": "bucketC", "45+": "bucketD"] */
+  def getPriceBucketRange(bucket: String) = {
+    bucket match {
+      case "bucketA" => "0 - 19.90"
+      case "bucketB" => "20 - 34.90"
+      case "bucketC" => "35 - 44.90"
+      case "bucketD" => "45+"
+      case _ => "Unexpected bucket: " + bucket
     }
   }
   
