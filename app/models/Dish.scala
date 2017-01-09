@@ -36,16 +36,17 @@ object Dish {
       }
   }
 
-  def create(restaurant_id: Long, price: Double, name: String, greenscore: Double, status: Int): Option[Long] = {
+  def create(restaurant_id: Long, price: Double, priceBucket: String, name: String, greenscore: Double, status: Int): Option[Long] = {
     DB.withConnection { implicit connection =>
       SQL(
         """
-          insert into dish (restaurant_id, price, name, greenscore, lastupdate, status) values (
-          {restaurant_id}, {price}, {name}, {greenscore}, {lastupdate}, {status}
+          insert into dish (restaurant_id, price, price_bucket, name, greenscore, lastupdate, status) values (
+          {restaurant_id}, {price}, {price_bucket}, {name}, {greenscore}, {lastupdate}, {status}
           )
         """).on(
           'restaurant_id -> restaurant_id,
           'price -> price,
+          'price_bucket -> priceBucket,
           'name -> name,
           'greenscore -> greenscore,
           'lastupdate -> new Date(),

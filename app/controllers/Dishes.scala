@@ -347,7 +347,7 @@ object Dishes extends Controller with Secured {
     implicit request => {
       val txt = (request.body.asJson.get \ "donetext")
       val restId = (request.body.asJson.get \ "restaurantID")
-      val id = Dish.create(restId.as[String].toLong, 0.0, txt.as[String], 0.0, 0);
+      val id = Dish.create(restId.as[String].toLong, 0.0, null, txt.as[String], 0.0, 0);
       Logger.info("dish created with " + txt.as[String] + " with id:" + id + " restaurantID:"+ restId.as[String].toLong)
       Ok("ok")
     }
@@ -363,7 +363,7 @@ object Dishes extends Controller with Secured {
       Logger.debug("Dish.createAndPopulate name: " + name + " tags: " + tags 
           + " restaurant: " + restaurant + " jsonFilename: " + jsonFilename + " imageFilename: " + imageFilename)
       
-      val id = Dish.create(restaurant, 0.0, name, 0.0, 4).get;
+      val id = Dish.create(restaurant, 0.0, null, name, 0.0, 4).get;
       val restaurantName = "todo restaurantName" //TODO restaurantName - how do we get it from json, or do we allow user to change it later?
       val url = ImageGrabber.createUrl(imageFilename, jsonFilename) 
       val dish = Dish.findById("", id)
@@ -410,7 +410,7 @@ object Dishes extends Controller with Secured {
             r.status, "", "", "", "", "", "", place_id)
         }
       
-        val id = Dish.create(restId, extractPrice(price), dish_name, 0.0, 4);
+        val id = Dish.create(restId, extractPrice(price), (price_bucket match { case "" => null; case _ => price_bucket}), dish_name, 0.0, 4);
         Logger.info("dish created with " + dish_name + " with id:" + id + " restaurantID:"+ restId + " existing? " + !rest.isEmpty)
         Image.saveAndResizeImages(picture, id.get, "dish")
         
