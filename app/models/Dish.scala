@@ -112,7 +112,7 @@ object Dish {
   
   def findAllWithoutImages(): Seq[Dish] = {
     DB.withConnection { implicit connection =>
-      SQL("select " + columns + " from dish where id not in (select dish_id from image) "
+      SQL("select " + columns + " from dish where status >= 0 and id not in (select dish_id from image) "
           + " order by id asc").on().as(Dish.simple *)
     }
   }
