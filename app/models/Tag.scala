@@ -155,20 +155,18 @@ object Tag {
     // add new tags 
 		for (tag <- tagsArray) {
 		  if (!oldtags.contains(tag.trim.toLowerCase) && tag.trim.length > 0) {
-		    alltags.find(_.name.equals(tag.trim.toLowerCase)) match {
-			    case Some(f) => {
-			      TagRef.create(new TagRef(-1, f.id, id, f.status, null))
-			      if (f.status < 0) {
-			        Tag.update(f.id.toInt, f.name, f.en_text.getOrElse(""), f.de_text.getOrElse(""), 
-			            f.it_text.getOrElse(""), f.fr_text.getOrElse(""), status(0)) // this doesn't do anything since refactoring - Sept 17
-			      }
+		    val f = alltags.find(_.name.equals(tag.trim.toLowerCase))
+		    if (f.isDefined && status.contains(f.get.status)) {
+			    TagRef.create(new TagRef(-1, f.get.id, id, f.get.status, null))
+			    if (f.get.status < 0) {
+			      Tag.update(f.get.id.toInt, f.get.name, f.get.en_text.getOrElse(""), f.get.de_text.getOrElse(""), 
+			          f.get.it_text.getOrElse(""), f.get.fr_text.getOrElse(""), status(0)) // this doesn't do anything since refactoring - Sept 17
 			    }
-			    case None => { 
-            // instead of ignoring the tag, we create it (OR reactivate with if status < 0 above!)
-            val newId = Tag.create(new Tag(-1, tag.trim.toLowerCase, Some(tag.trim.toLowerCase), Some(null), Some(null), Some(null), status(0), new Date(), Some(0)))
-            Logger.warn("new tag created:" + tag + " with newId=" + newId)
-            TagRef.create(new TagRef(-1, newId.getOrElse(0), id, status(0), null))
-          }
+		    } else {
+          // instead of ignoring the tag, we create it (OR reactivate with if status < 0 above!)
+          val newId = Tag.create(new Tag(-1, tag.trim.toLowerCase, Some(tag.trim.toLowerCase), Some(null), Some(null), Some(null), status(0), new Date(), Some(0)))
+          Logger.warn("new tag created:" + tag + " with newId=" + newId)
+          TagRef.create(new TagRef(-1, newId.getOrElse(0), id, status(0), null))
 			  }
 		  }
 		}
