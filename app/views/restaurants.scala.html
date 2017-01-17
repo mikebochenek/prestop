@@ -13,7 +13,7 @@
          <div class="col-sm-8">         
 
           <ul class="list-group" style="text-align: left;">
-            <li ng-repeat="restaurant in restaurants | orderBy:['id']" 
+            <li ng-repeat="restaurant in restaurants | orderBy:['name']" 
                 class="list-group-item"><a href="restaurantedit/{{restaurant.id}}">
                    <img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" />{{restaurant.name}} ({{restaurant.city}})</a>
             </li>
