@@ -22,7 +22,7 @@ object RestaurantFriends {
 }
 
 case class RestaurantMiscInfo(postalcode: Option[String], var state: Option[String], var website: Option[String], 
-    var country: Option[String], parentRestaurantId: Option[Long], place_id: Option[String], lastupdate: Date)
+    var country: Option[String], parentRestaurantId: Option[Long], place_id: Option[String], lastupdate: Date, var claimed: Option[Boolean])
 
 object RestaurantMiscInfo {
   implicit val restaurantMiscInfoReads = Json.reads[RestaurantMiscInfo]
@@ -61,7 +61,7 @@ object Restaurant {
               longitude, latitude, schedulecron, true, 
               restype, status, phone, email, postalcode, state, website, null, null, 
               Seq.empty[String], Seq.empty[String], Seq.empty[RestaurantFriends], 
-              RestaurantMiscInfo(postalcode, state, website, country, parent_id, google_places_id, lastupdate))
+              RestaurantMiscInfo(postalcode, state, website, country, parent_id, google_places_id, lastupdate, Option.empty))
       }
   }
 
@@ -164,6 +164,13 @@ object Restaurant {
       SQL(selectString + " where status >= 0 and parent_id is null "
           + " and id in (select restaurant_id from restaurant_owner where user_id = {user_id} and status >= 0) order by id asc").on(
               'user_id -> userId).as(Restaurant.simple *)
+    }
+  }
+  
+  def getOwnerID(id: Long): Option[Long] = { //TODO should be Seq[Long]
+    DB.withConnection { implicit connection =>
+      SQL("select user_id from restaurant_owner where restaurant_id = {id} and status >= 0").on(
+              'id -> id).as(scalar[Long].singleOpt)
     }
   }
 

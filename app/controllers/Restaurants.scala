@@ -46,7 +46,7 @@ object Restaurants extends Controller with Secured {
       Logger.info("restaurant created with " + name + " with id:" + newid)
       
       val misc = new RestaurantMiscInfo(Option(postalcode), Option(""), Option(website), Option("Switzerland"), 
-          Option(0), Option(place_id), null)
+          Option(0), Option(place_id), null, Option.empty)
       val r = new Restaurant(newid.get, name, "", street, longitude.toDouble, latitude.toDouble, 
           schedule.replaceAll(":::", "\n"), false, 0, 0, Option("+"+phone.trim), Option(""), Option(postalcode), 
           Option("Zürich"), Option(website), null, null, Seq.empty[String], Seq.empty[String],
@@ -73,6 +73,8 @@ object Restaurants extends Controller with Secured {
           .headOption.getOrElse(defaultImage).asInstanceOf[Image].url
         
         restaurant.open_now = common.RecommendationUtils.checkSchedule(restaurant.schedule)
+        
+        restaurant.misc.claimed = Option(Restaurant.getOwnerID(restaurant.id).isDefined)
         
         if (restaurant.city != null) {
           restaurant.city = restaurant.city + ", Switzerland" //TODO remove this when we add country field
