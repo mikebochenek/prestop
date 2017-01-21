@@ -181,10 +181,11 @@ object Restaurants extends Controller with Secured {
       }).toDouble
       
       val fullUser = User.getFullUser(username).get
-      val newStatus = ("7".equals(fullUser.ttype) || status.toInt == -1) match {
+      val newStatus = status.toInt
+      /* val newStatus = ("7".equals(fullUser.ttype) || status.toInt == -1) match {
         case true => status.toInt
         case false => 4
-      }
+      } */
       
       if (validationErrors.length() == 0) {
         Restaurant.update(id.toLong, name, city, address, longitude, latitude, schedule, restype.toInt, newStatus, 
@@ -212,6 +213,7 @@ object Restaurants extends Controller with Secured {
       for (restaurant <- all) {
         restaurant.paymentoptions =  Tag.findByRef(restaurant.id, 12).map(_.name)
         restaurant.cuisines =  Tag.findByRef(restaurant.id, 21).map(_.name)
+
         restaurant.url = Image.findByRestaurant(restaurant.id).filter{x => x.width.get == 750}
           .headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       }
