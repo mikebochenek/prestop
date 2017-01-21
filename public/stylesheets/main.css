@@ -91,7 +91,7 @@ h1 {
     background-color: #DDD;
 }
 .navbar-default .navbar-toggle .icon-bar {
-    background-color: #FFFFFF;
+    background-color: #FF4D5E;
 }
 @media (max-width: 767px) {
     .navbar-default .navbar-nav .open .dropdown-menu > li > a {
