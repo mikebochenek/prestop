@@ -150,10 +150,10 @@ object Dishes extends Controller with Secured {
           diet, dishtype, meatorigin, source) = dishForm.bindFromRequest.get
       var validationErrors = ""      
       val fullUser = User.getFullUser(username).get
-      val newStatus = ("7".equals(fullUser.ttype) || status.toInt == -1) match {
+      val newStatus = status.toInt /*("7".equals(fullUser.ttype) || status.toInt == -1) match {
         case true => status.toInt
         case false => 4
-      }
+      }*/
       Logger.debug("Dish.save for id: " + id + " restaurant_id: " + restaurant_id + " by: " + fullUser + " searchtags: " + searchtags)    
       
       if (!(allCatch opt price.toDouble).isDefined) {
