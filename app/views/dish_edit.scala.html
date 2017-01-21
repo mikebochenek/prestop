@@ -157,7 +157,7 @@
             <select class="form-control span4" type="text" name="status" id="status" value="@dish.status">
               <option value="4" @if(dish.status == 4) { selected }   >Draft (4)</option>
               <option value="-1" @if(dish.status == -1) { selected } >Deleted (-1)</option>
-             @if(session.get("usertype").getOrElse("").toString.equals("7")) {
+             @if(true || session.get("usertype").getOrElse("").toString.equals("7")) {
               <option value="0" @if(dish.status == 0) { selected }  >Active (0)</option>
              }
             </select>
