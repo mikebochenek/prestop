@@ -20,6 +20,8 @@
       </div>
     }
 
+@if(session.get("usertype").getOrElse("").toString.equals("7")) {
+
     <h3 class="top50">@Messages("settings.billing")</h3>
 
       <div class="row ">
@@ -68,6 +70,7 @@
 		</table>
       </div>
      </div>    
+}
 
     @helper.form(routes.Settings.save) {
           	
