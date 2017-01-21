@@ -8,13 +8,13 @@ test = test
 application.name = presto admin
 menu.home = Home
 menu.restaurants = Restaurants
-menu.tags = Tag Editor
+menu.tags = Tags
 menu.approvals = Approvals
 menu.users = Users
 menu.about = About
-menu.test = Test!
+menu.test = Test
 menu.reports = Reports
-menu.settings = Billing & Settings
+menu.settings = Settings
 menu.logout = Logout
 menu.login = Login
 
