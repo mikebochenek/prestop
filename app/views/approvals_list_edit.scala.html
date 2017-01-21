@@ -48,7 +48,12 @@
 		@for((dish, index) <- dishes.zipWithIndex)  {	
 		  <tr>
 		  <td><a href="dishedit/@dish.id"><img src="@routes.Assets.at("img/edit.png")" width="24px" hspace="4" /></a> @dish.id</td>
-		  <td>@dish.name</td><td>@dish.price</td>
+		  <td>@dish.name</td>
+		  @if(dish.priceBucket.isDefined) {
+		  	 <td>@Dish.getPriceBucketRange(dish.priceBucket.getOrElse(""))</td>
+		  } else {	
+		     <td>@dish.price</td>
+		  }
 		  <td>
 		  @if(null != Dishes.getUploadUser(dish.id)) {
 		  	@Dishes.getUploadUser(dish.id).email
