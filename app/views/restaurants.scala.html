@@ -7,6 +7,10 @@
 @session.get("email").map { user =>
       <div><a href="/restaurant">Restaurants</a></div>
 
+         <div class="col-sm-4 col-md-offset-2">
+             <a class="span4 btn btn-primary" type="submit" id="backbutton" href="/google_places.html" role="button">create restaurant using Google Places</a>
+         </div>
+
       <h3 class="top50">Your Restaurants</h3>
         
         <div class="row mycenter" >
@@ -31,11 +35,6 @@
           </ul>
 
          </div><!-- /.col-sm-6 -->
-         
-         <div class="col-sm-8"> or </div>        
-         <div class="col-sm-8">         
-              <a class="span4 btn btn-primary" type="submit" id="backbutton" href="/google_places.html" role="button">create restaurant using Google Places</a>
-         </div>
          
         </div>
 }.getOrElse{
