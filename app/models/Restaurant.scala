@@ -13,6 +13,7 @@ import play.api.libs.json.JsObject
 import play.api.libs.json.JsString
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import scala.util.Try
 
 case class RestaurantFriends(id: Long, name: String, var url: String)
 
@@ -54,14 +55,15 @@ object Restaurant {
       get[Option[String]]("restaurant.google_places_id") ~
       get[Date]("restaurant.lastupdate") ~
       get[Option[Long]]("restaurant.parent_id") ~
-      get[Option[String]]("restaurant.website") map {
+      get[Option[String]]("restaurant.website") ~
+      get[Long]("owner_count") map {
         case id ~ name ~ city ~ address ~ longitude ~ latitude ~ schedulecron ~ restype 
         ~ status ~ phone ~ email ~ postalcode ~ state ~ country ~ google_places_id 
-        ~ lastupdate ~ parent_id ~ website => Restaurant(id, name, city, address, 
+        ~ lastupdate ~ parent_id ~ website ~ owner_count => Restaurant(id, name, city, address, 
               longitude, latitude, schedulecron, true, 
               restype, status, phone, email, postalcode, state, website, null, null, 
               Seq.empty[String], Seq.empty[String], Seq.empty[RestaurantFriends], 
-              RestaurantMiscInfo(postalcode, state, website, country, parent_id, google_places_id, lastupdate, Option.empty))
+              RestaurantMiscInfo(postalcode, state, website, country, parent_id, google_places_id, lastupdate, Option((owner_count > 0))))
       }
   }
 
@@ -143,7 +145,8 @@ object Restaurant {
   }
 
   val selectString = """select id, name, city, address, longitude, latitude, schedulecron, restype, status, phone, email, 
-   postalcode, state, country, google_places_id, lastupdate, parent_id, website from restaurant """
+   postalcode, state, country, google_places_id, lastupdate, parent_id, website,
+   (select count(*) from restaurant_owner ro where ro.restaurant_id = r.id) as owner_count from restaurant r """
   
   def findById(username: String, id: Long): Seq[Restaurant] = {
     DB.withConnection { implicit connection =>
