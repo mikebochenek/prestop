@@ -53,7 +53,7 @@ object Restaurants extends Controller with Secured {
           Seq.empty[RestaurantFriends], misc)
       
       Ok(views.html.restaurant_edit(restaurantForm, r, "", "", "", "", 
-          Reservation.findAllByRestaurant(id), Restaurant.findAllByParent(id)))
+          Reservation.findAllByRestaurant(id), Restaurant.findAllByParent(id), "", Seq.empty))
     }
   }
 
@@ -137,17 +137,19 @@ object Restaurants extends Controller with Secured {
       val adminUsers = User.findAll.filter { x => ! (defaultPwd.equals(x.password)) }
       adminUsers.foreach { x => Logger.debug(x.email) }
       val ownerId = Restaurant.getOwnerID(all(0).id)
-      val adminOption = adminUsers.filter { x => ownerId.equals(x.email) }.headOption
+      Logger.debug("ownerID: " + ownerId)
+      val adminOption = adminUsers.filter { x => ownerId.getOrElse("").equals(x.id) }.headOption
       val currentAdminEmail = adminOption.isDefined match {
         case true => adminOption.get.email
         case false => ""
       }
+      Logger.debug("currentAdminEmail: " + currentAdminEmail)
       
       if ("".equals(all(0).phone.getOrElse(""))) { all(0).phone = Option("+41") }
       if ("".equals(all(0).city)) { all(0).city = "Zürich" }
       if ("".equals(all(0).state.getOrElse(""))) { all(0).state = Option("Zürich") }
       if ("".equals(all(0).misc.country.getOrElse(""))) { all(0).misc.country = Option("Switzerland") }
-      Ok(views.html.restaurant_edit(restaurantForm, all(0), url, logourl, tags, cuisines, reservations, childRestaurants))
+      Ok(views.html.restaurant_edit(restaurantForm, all(0), url, logourl, tags, cuisines, reservations, childRestaurants, currentAdminEmail, adminUsers))
     }
   }
 
@@ -167,6 +169,7 @@ object Restaurants extends Controller with Secured {
       "schedule" -> text,
       "restype" -> text,
       "status" -> text,
+      "owner" -> text,
       "ptags" -> text,
       "google_places_id" -> text,
       "ctags" -> text))
@@ -175,7 +178,7 @@ object Restaurants extends Controller with Secured {
     implicit request => { 
       var validationErrors = ""
       val (id, name, phone, email, address, city, postalcode, state, country, website, latitudelongitude, 
-          schedule, restype, status, ptags, google_places_id, ctags) = restaurantForm.bindFromRequest.get
+          schedule, restype, status, owner, ptags, google_places_id, ctags) = restaurantForm.bindFromRequest.get
       
       if (!latitudelongitude.contains(",")) {
         validationErrors += "Should contain double,double"

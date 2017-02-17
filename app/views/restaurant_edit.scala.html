@@ -1,4 +1,4 @@
-@(form: Form[(String,String,String,String,String,String,String,String,String,String,String,String,String,String,String,String,String)], restaurant: Restaurant, url: String, logourl: String, tags: String, cuisines: String, reservations: Seq[Reservation], children: Seq[Restaurant])(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String,String,String,String,String,String,String,String,String,String,String,String,String)], restaurant: Restaurant, url: String, logourl: String, tags: String, cuisines: String, reservations: Seq[Reservation], children: Seq[Restaurant], currentOwnerEmail: String, owners: Seq[UserFull])(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -131,6 +131,23 @@
             <input class="form-control span4" type="text" name="restype" id="restype" value="@restaurant.restype">
             <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
               <span class="badge " title="@Messages("restedit.type.tooltip")">?</span>
+            </span>
+          </div>
+
+          @if(session.get("usertype").getOrElse("").toString.equals("7")) {
+           <div class="input-group top5">
+          } else {
+           <div class="input-group top5 hidden">
+          }
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Owner</span>
+            <select class="form-control span4" type="text" name="owner" id="owner" value="@restaurant.status">
+              <option value="-1"></option>
+              @for(ow <- owners) {
+                <option value="@ow.id" @if(ow.email.equals(currentOwnerEmail)) { selected } >@ow.email</option>
+              }	
+            </select>
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="person who can also edit this restaurant">?</span>
             </span>
           </div>
           
