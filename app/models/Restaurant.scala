@@ -89,6 +89,13 @@ object Restaurant {
     }
   }
 
+  def softlyDeleteOwner(restaurant_id: Long) = {
+    DB.withConnection { implicit connection =>
+      SQL("update restaurant_owner set status = -1 where restaurant_id = {restaurant_id}")
+        .on('restaurant_id -> restaurant_id).executeUpdate
+    }
+  }
+  
   def createOwner(restaurant_id: Long, user_id: Long, settings: String): Option[Long] = {
     DB.withConnection { implicit connection =>
       SQL(

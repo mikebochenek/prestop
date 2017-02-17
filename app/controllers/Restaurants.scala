@@ -193,6 +193,17 @@ object Restaurants extends Controller with Secured {
         case default => "0"
       }).toDouble
       
+      if (!"-1".equals(owner)) {
+        val prevOwnerId = Restaurant.getOwnerID(id.toLong)
+        if (prevOwnerId.getOrElse(-2) == owner.toLong) {
+          Logger.debug("no restaurant owner update required: " + owner)
+        } else {
+          Logger.debug("update restaurant owner: " + owner)
+          Restaurant.softlyDeleteOwner(id.toLong)
+          Restaurant.createOwner(id.toLong, owner.toLong, "") // should it be more like insert/update?
+        }
+      }
+      
       val fullUser = User.getFullUser(username).get
       val newStatus = status.toInt
       /* val newStatus = ("7".equals(fullUser.ttype) || status.toInt == -1) match {
