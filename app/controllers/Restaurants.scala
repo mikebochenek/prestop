@@ -133,6 +133,16 @@ object Restaurants extends Controller with Secured {
       val reservations = Reservation.findAllByRestaurant(id)
       val childRestaurants = Restaurant.findAllByParent(id)
       
+      val defaultPwd = User.hash("test")
+      val adminUsers = User.findAll.filter { x => ! (defaultPwd.equals(x.password)) }
+      adminUsers.foreach { x => Logger.debug(x.email) }
+      val ownerId = Restaurant.getOwnerID(all(0).id)
+      val adminOption = adminUsers.filter { x => ownerId.equals(x.email) }.headOption
+      val currentAdminEmail = adminOption.isDefined match {
+        case true => adminOption.get.email
+        case false => ""
+      }
+      
       if ("".equals(all(0).phone.getOrElse(""))) { all(0).phone = Option("+41") }
       if ("".equals(all(0).city)) { all(0).city = "Zürich" }
       if ("".equals(all(0).state.getOrElse(""))) { all(0).state = Option("Zürich") }
