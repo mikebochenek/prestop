@@ -8,7 +8,7 @@ import play.api.libs.json.JsString
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-case class DistanceDetailDish (id: Long, name: String, desc: String, ingredients: String, distance: String, exactDistance: Double)
+case class DistanceDetailDish (id: Long, name: String, desc: String, price: Double, ingredients: String, distance: String, exactDistance: Double)
 
 object DistanceDetailDish {
   implicit val distanceDetailDishReads = Json.reads[DistanceDetailDish]

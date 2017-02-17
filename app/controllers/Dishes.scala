@@ -464,7 +464,7 @@ object Dishes extends Controller with Secured {
           Recommend.parseLatitude(longitude), Recommend.parseLongitude(latitude))
         val distance = RecommendationUtils.makeDistanceString(dist)
 
-        val details = DistanceDetailDish(dish(0).id, dish(0).name, dish(0).description.getOrElse(""), ingredients, distance, dist * 1000)
+        val details = DistanceDetailDish(dish(0).id, dish(0).name, dish(0).description.getOrElse(""), dish(0).price, ingredients, distance, dist * 1000)
         json = Json.prettyPrint(Json.toJson(details))
       } else {
         json = Json.prettyPrint(Json.toJson(ErrorJSONResponse("dish not found", "" + id)))
