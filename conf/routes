@@ -26,6 +26,8 @@ GET      /api/deleteuser/:id         controllers.Settings.deleteUser(id: Long)
 POST     /api/personalize            controllers.Settings.personalize
 POST     /api/personalizetaste       controllers.Settings.personalizeTasteProfile
 GET      /api/intros/:lang           controllers.Settings.introTexts(lang: String)
+GET      /api/alldishes              controllers.Dishes.getAllBasic
+GET      /api/dishByID               controllers.Dishes.getByID(id: Long ?= 0, longitude: String ?= "", latitude: String ?= "")
 
 GET      /api/tags                   controllers.Dishes.getTags(ttype: Int ?= 0)
 POST     /api/invite                 controllers.Friends.invite

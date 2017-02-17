@@ -22,6 +22,9 @@ import play.api.libs.Files
 import scala.collection.mutable.MutableList
 import common.RecommendationUtils
 import scala.util.control.Exception.allCatch
+import models.json.BasicDish
+import models.json.DistanceDetailDish
+import common.Haversine
 
 object Dishes extends Controller with Secured {
 
@@ -441,4 +444,33 @@ object Dishes extends Controller with Secured {
     val dishes = Dish.findById("", id)
     Restaurants.getBarChartData(dishes)
   }
+  
+  def getAllBasic() = Action {
+    implicit request => {
+      val dishes = Dish.findAll().filter { x => x.status == 0 } // only active
+      val basicDishes = dishes.map { x => BasicDish(x.id, x.name) }
+      Ok(Json.prettyPrint(Json.toJson(basicDishes.sortBy { _.name })))
+    }
+  }
+  
+  def getByID(id: Long, longitude: String, latitude: String) = Action {
+    implicit request => {
+      var json = ""
+      val dish = Dish.findById("", id)
+      if (dish.size > 0) {
+        val ingredients = Tag.findByRef(dish(0).id, 11).map(_.name).mkString(",")
+        val r = Restaurant.findById("", dish(0).restaurant_id)(0)
+        val dist = Haversine.haversine(r.latitude, r.longitude, 
+          Recommend.parseLatitude(longitude), Recommend.parseLongitude(latitude))
+        val distance = RecommendationUtils.makeDistanceString(dist)
+
+        val details = DistanceDetailDish(dish(0).id, dish(0).name, dish(0).description.getOrElse(""), ingredients, distance, dist * 1000)
+        json = Json.prettyPrint(Json.toJson(details))
+      } else {
+        json = Json.prettyPrint(Json.toJson(ErrorJSONResponse("dish not found", "" + id)))
+      }
+      Ok(json)
+    }
+  }
+
 }
