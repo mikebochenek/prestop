@@ -131,7 +131,11 @@ object Recommendation {
       case true => {
         val dishesWithKeyword = TagRef.findByENTagText(keyword).map { x => x.refid }
         Logger.debug("dishesWithKeyword ---> " + dishesWithKeyword.size + " --> " + dishesWithKeyword) 
-        Dish.findAll.filter { x => dishesWithKeyword.contains(x.id) || x.name.toLowerCase.contains(keyword.toLowerCase) }
+        
+        val restaurantsMatchingCuisine = restaurants.values.filter{ x => x.cuisines.contains(keyword) }
+        Logger.debug ("restaurantsMatchingCuisine: " + restaurantsMatchingCuisine.map{r=>r.name})
+        
+        Dish.findAll.filter { x => dishesWithKeyword.contains(x.id) || x.name.toLowerCase.contains(keyword.toLowerCase) || restaurantsMatchingCuisine.exists { r => x.restaurant_id == r.id} }
       }
       case false => Dish.findAll
     } // NB: this is a little bit hacky, because we fill allDishes with either all, or already filtered by keyword search
