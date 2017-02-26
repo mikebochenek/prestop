@@ -58,7 +58,7 @@ object TagRef {
     DB.withConnection { implicit connection =>
       SQL("""select tr.id, tr.tagid, tr.refid, tr.status, tr.lastupdate from tagref tr 
              join tag t on t.id = tr.tagid 
-             where tr.status > 0 and t.en_text LIKE '%s'""".format("%" + en_text + "%")).as(TagRef.simple *) //TODO careful - SQL injection
+             where t.status = 37 and tr.status > 0 and t.en_text LIKE '%s'""".format("%" + en_text + "%")).as(TagRef.simple *) //TODO careful - SQL injection
     }
   }
   

@@ -131,7 +131,7 @@ object Recommendation {
       case true => {
         val dishesWithKeyword = TagRef.findByENTagText(keyword).map { x => x.refid }
         Logger.debug("dishesWithKeyword ---> " + dishesWithKeyword.size + " --> " + dishesWithKeyword) 
-        Dish.findAll.filter { x => dishesWithKeyword.contains(x.id) }
+        Dish.findAll.filter { x => dishesWithKeyword.contains(x.id) || x.name.toLowerCase.contains(keyword.toLowerCase) }
       }
       case false => Dish.findAll
     } // NB: this is a little bit hacky, because we fill allDishes with either all, or already filtered by keyword search
