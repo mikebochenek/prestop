@@ -107,6 +107,23 @@ object Tag {
     }
   }
 
+  def findDishSearchTags(): Seq[Tag] = {
+    DB.withConnection { implicit connection =>
+      SQL("select t.*, (select count(*) from tagref tr where t.id = tr.tagid and tr.status >= 0) as c from tag t where t.status in (37) order by c desc, t.name ")
+      .as(Tag.simpleWithCount *)
+    }
+  }
+
+  def findCuisineSearchTags(): Seq[Tag] = {
+    DB.withConnection { implicit connection =>
+      SQL("select t.*, (select count(*) from tagref tr, restaurant r, dish d where t.id = tr.tagid and r.id = tr.refid " +
+          " and r.status >= 0 and d.restaurant_id = r.id and d.status >= 0 and tr.status >= 0) as c " +
+          " from tag t where t.status in (21) order by c desc, t.name ")
+      .as(Tag.simpleWithCount *)
+    }
+  }
+
+  
   def create(tag: Tag): Option[Long] = {
     DB.withConnection { implicit connection =>
       SQL(

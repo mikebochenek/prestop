@@ -18,20 +18,36 @@ import models.json.SearchSuggestion
 
 object Search extends Controller with Secured {
 
+  case class SearchTag(tag: String, count: Long)
+  
   /**
    * called from /api/searchsuggestions
    */
   def suggest(keyword: String, id: Long) = Action {
     implicit request => {
       ActivityLog.create(id, ActivityLog.TYPE_SEARCH_SUGGEST, 0, keyword)
-      val popular = Tag.findAllPopular(Tag.TYPE_INGREDIENTS)
+      
+      val allDishes = Dish.findAll()
+      
+      val dishSearchTags = Tag.findDishSearchTags().map { x => SearchTag(x.en_text.get, x.count.get) }
+      val cuisineSearchTags = Tag.findCuisineSearchTags().map { x => SearchTag(x.en_text.get, x.count.get) }
+      
+      val dishNameSearchTags = allDishes.map { x => x.name }.flatMap(_.split(" ").filter { y => y.length() > 3 })
+         .toList.groupBy((word: String) => word).mapValues(_.length).map { x => SearchTag(x._1, x._2) }
+
+      Logger.debug("___dishNameSearchTags: " + dishNameSearchTags)
+
+      val restaurantSearchTags = Restaurant.findAll() //TODO and check against dishes for each restaurant..
       
       if (keyword.length < 2) {
-        val popularSearches = popular.take(10).map { x => SearchSuggestion(x.en_text.get, x.count.get + " dishes") }
+        val popularSearches = (dishSearchTags ++ cuisineSearchTags ++ dishNameSearchTags).sortWith(_.count > _.count).take(10)
+           .map { x => SearchSuggestion(x.tag, x.count + " dishes") }
         Ok(Json.prettyPrint(Json.toJson(popularSearches)))
       } else {
-        val matches = popular.filter { x => x.en_text.get.toLowerCase.contains(keyword.toLowerCase.trim) }
-          .take(10).map { x => SearchSuggestion(x.en_text.get, x.count.get + " dishes") }
+        val matches = (dishSearchTags ++ cuisineSearchTags ++ dishNameSearchTags).sortWith(_.count > _.count)
+           .filter { x => x.tag.toLowerCase.contains(keyword.toLowerCase.trim) }
+           .take(10)
+           .map { x => SearchSuggestion(x.tag, x.count + " dishes") }
         Ok(Json.prettyPrint(Json.toJson(matches)))
       }
     }
