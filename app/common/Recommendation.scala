@@ -129,10 +129,10 @@ object Recommendation {
     
     val allDishes = (keyword != null && keyword.trim.length > 0) match {
       case true => {
-        val dishesWithKeyword = TagRef.findByENTagText(keyword).map { x => x.refid }
+        val dishesWithKeyword = TagRef.findByENTagText(keyword.replaceAll("'","''")).map { x => x.refid }
         Logger.debug("dishesWithKeyword ---> " + dishesWithKeyword.size + " --> " + dishesWithKeyword) 
         
-        val restaurantsMatchingCuisine = restaurants.values.filter{ x => x.cuisines.contains(keyword) }
+        val restaurantsMatchingCuisine = restaurants.values.filter{ x => x.cuisines.contains(keyword.toLowerCase) }
         Logger.debug ("restaurantsMatchingCuisine: " + restaurantsMatchingCuisine.map{r=>r.name})
         
         Dish.findAll.filter { x => dishesWithKeyword.contains(x.id) || x.name.toLowerCase.contains(keyword.toLowerCase) || restaurantsMatchingCuisine.exists { r => x.restaurant_id == r.id} }
