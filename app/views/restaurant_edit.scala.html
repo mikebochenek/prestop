@@ -390,6 +390,12 @@ window.onload = function() {
         var chart = new google.visualization.BarChart(document.getElementById('bar_chart_div'));
         chart.draw(mdata, {'title':'@Messages("restedit.barchart.title")', 'width':600, 'height':300, 'colors': ['#FF4D5E']});
       }
+      
+     window.onload = function() {
+      document.getElementsByName('picture')[0].onchange = customUploadValidator;
+      document.getElementsByName('logopicture')[0].onchange = customUploadValidator;
+    }
+      
     </script>      
   </div>
 </div><!-- /.container -->

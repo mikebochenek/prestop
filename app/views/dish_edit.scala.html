@@ -268,33 +268,9 @@ window.onload = function() {
     chart.draw(mdata, {'title':'@Messages("restedit.barchart.title")', 'width':600, 'height':300, 'colors': ['#FF4D5E']});
   }
 
-
-var file = document.getElementsByName('picture')[0];
-
-file.onchange = function(e){
-    var ext = this.value.match(/\.([^\.]+)$/)[1];
-    switch(ext)
-    {
-        case 'jpg':
-        case 'jpeg':
-        case 'gif':
-        case 'JPG':
-        case 'JPEG':
-        case 'GIF':
-            break;
-        case 'png':
-        case 'PNG':
-			alert('png files are usually larger and could lead to performance issues, please use jpg or gif instead');
-			break;
-        default:
-            alert('filetype not allowed ' + ext);
-            this.value='';
-    }
-    
-    if (this.value.match(/\//) != null) {
-       alert('filename contains invalid characters ' + this.value);
-    }
-};
+  window.onload = function() {
+    document.getElementsByName('picture')[0].onchange = customUploadValidator;
+  }
 
 }
 		</script>

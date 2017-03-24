@@ -151,3 +151,34 @@ app.controller("CreateDishCtrl", ["$scope", "$resource", "$timeout", "apiUrl", f
 		$timeout(function() { $scope.go('/'); }); // go back to public/html/main.html
 	};
 }]);
+
+
+function customUploadValidator (e){
+    var ext = this.value.match(/\.([^\.]+)$/)[1];
+    switch(ext)
+    {
+        case 'jpg':
+        case 'jpeg':
+        case 'gif':
+        case 'JPG':
+        case 'JPEG':
+        case 'GIF':
+            break;
+        case 'png':
+        case 'PNG':
+			alert('png files are usually larger and could lead to performance issues, please use jpg or gif instead');
+			break;
+        default:
+            alert('filetype not allowed ' + ext);
+            this.value='';
+    }
+    
+    if (this.files[0] && this.files[0].size > 4000000) {
+       alert('file is too large, please use a different file or resize it before uploading');
+       this.value = null;
+    }
+    
+    if (this.value.match(/\//) != null) {
+       alert('filename contains invalid characters ' + this.value);
+    }
+};
