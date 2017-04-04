@@ -98,6 +98,7 @@ GET     /logout                             controllers.Application.logout
 
 POST    /acceptpayment                      controllers.Settings.acceptpayment
 GET     /reports                            controllers.Reports.load(mode: String ?= "")
+GET     /analytics                          controllers.Reports.analytics
 GET     /dailyreports                       controllers.Reports.loaddaily
 GET     /settings                           controllers.Settings.load
 POST    /settings                           controllers.Settings.save

@@ -16,6 +16,13 @@ import models._
 import views._
 
 object Reports extends Controller with Secured {
+  def analytics() = IsAuthenticated { username =>
+    implicit request => {
+      val avgDailyUsers = ActivityLog.averageDailyDishViewers(30L)
+      Logger.info("avgDailyUsers: " + avgDailyUsers)
+      Ok(views.html.analytics(avgDailyUsers.toString))
+    }
+  }
   def load(mode: String) = IsAuthenticated { username =>
     implicit request => {
       if ("imagecleanup".equals(mode)) {

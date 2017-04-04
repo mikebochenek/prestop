@@ -137,6 +137,19 @@ object ActivityLog {
     }
   }  
   
+  def averageDailyDishViewers(days: Long): java.math.BigDecimal = {
+    DB.withConnection { implicit connection =>
+      SQL("select avg(daily_users) from ( "
+           + " select count(*) as daily_users, d from ( "
+           + "   SELECT user_id, DATE(`createdate`) as d, count(*)"
+           + "   FROM activity_log "
+           + "   where activity_type = 7 and createdate > (now() - interval 300 day)"
+           + "   GROUP BY DATE(`createdate`), user_id"
+           + "  ) as TT group by d order by d desc"
+           + ") as TTT").as(scalar[java.math.BigDecimal].single)
+    }
+  }
+  
   val TYPE_PAYMENT_AUDIT = 5
   val TYPE_RECOMMEND_API_CALL = 7
   val TYPE_RESTAURANT_DETAILS_API_CALL = 9
@@ -166,5 +179,4 @@ object ActivityLogUserStats {
   }
   implicit val activityLogUSReads = Json.reads[ActivityLogUserStats]
   implicit val activityLogUSWrites = Json.writes[ActivityLogUserStats]
-
 }
