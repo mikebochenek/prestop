@@ -214,7 +214,7 @@ object Recommendation {
       
       val ri = new RecommendationItem(dish.id, RecommendationUtils.makePriceString(dish.price), dish.name, dish.source, dish.description.getOrElse(""), like, 0.0, 
         null, null, null,
-        RecommendationUtils.makeDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude)),
+        RecommendationUtils.makeCityDistanceString(Haversine.haversine(r.latitude, r.longitude, latitude, longitude), r.city),
         null, r.id, r.name, r.city + ", " + r.misc.country.getOrElse(""), null, null, dishDietTags, null, null, score)
 
       ri.score += scoreDistance(ri.distance)

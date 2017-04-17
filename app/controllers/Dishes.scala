@@ -462,7 +462,7 @@ object Dishes extends Controller with Secured {
         val r = Restaurant.findById("", dish(0).restaurant_id)(0)
         val dist = Haversine.haversine(r.latitude, r.longitude, 
           Recommend.parseLatitude(longitude), Recommend.parseLongitude(latitude))
-        val distance = RecommendationUtils.makeDistanceString(dist)
+        val distance = RecommendationUtils.makeCityDistanceString(dist, r.city)
 
         val details = DistanceDetailDish(dish(0).id, dish(0).name, dish(0).description.getOrElse(""), dish(0).price, ingredients, distance, dist * 1000)
         json = Json.prettyPrint(Json.toJson(details))

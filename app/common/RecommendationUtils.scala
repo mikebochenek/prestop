@@ -140,6 +140,13 @@ object RecommendationUtils {
       ((distance50s / 20.0) * 1000).toLong + " m"
     }
   }
+  def makeCityDistanceString(d: Double, c: String) = {
+    if (c != null && c.trim.length > 0) {
+      c + " - " + makeDistanceString(d)
+    } else {
+      makeDistanceString(d)
+    }
+  }
   
   val timeformat = new SimpleDateFormat("HH:mm:ss")
   def currentTime() = {
