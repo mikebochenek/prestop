@@ -142,7 +142,7 @@ object RecommendationUtils {
   }
   def makeCityDistanceString(d: Double, c: String) = {
     if (c != null && c.trim.length > 0) {
-      c + " - " + makeDistanceString(d)
+      /* c + " - " + */ makeDistanceString(d)
     } else {
       makeDistanceString(d)
     }
