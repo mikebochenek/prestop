@@ -96,12 +96,12 @@ object Global extends WithFilters(LangFromSubdomain, LoggingFilter) {
     delayInSeconds
   }
 
-  /* 500 - internal server error
+  // 500 - internal server error
   override def onError(request: RequestHeader, ex: Throwable) = {
     Future.successful(InternalServerError(
       views.html.error()))
   }
-*/
+
   // 404 - page not found error
   override def onHandlerNotFound(request: RequestHeader) = {
     Future.successful(NotFound(
