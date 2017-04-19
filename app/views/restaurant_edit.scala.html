@@ -196,11 +196,6 @@ attachpaymenttags = function() {
   showAutocompleteOnFocus: true
  }) 
 }
-
-window.onload = function() {
-  setTimeout(attachtokenfield , 900);
-  setTimeout(attachpaymenttags , 900);
-}
           </script>
           
           </br>
@@ -394,6 +389,8 @@ window.onload = function() {
      window.onload = function() {
       document.getElementsByName('picture')[0].onchange = customUploadValidator;
       document.getElementsByName('logopicture')[0].onchange = customUploadValidator;
+      setTimeout(attachtokenfield , 900);
+      setTimeout(attachpaymenttags , 900);
     }
       
     </script>      
