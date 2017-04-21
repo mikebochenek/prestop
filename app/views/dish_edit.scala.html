@@ -237,7 +237,6 @@ attachTags = function(elemId, tagsArray) {
       
   </div>
 
-
     <!--Load the AJAX API - example from https://developers.google.com/chart/interactive/docs/quick_start -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -258,6 +257,11 @@ attachTags = function(elemId, tagsArray) {
     var chart = new google.visualization.BarChart(document.getElementById('bar_chart_div'));
     chart.draw(mdata, {'title':'@Messages("restedit.barchart.title")', 'width':600, 'height':300, 'colors': ['#FF4D5E']});
   }
+  </script>
+ 
+  }
+
+  <script type="text/javascript">
 
   window.onload = function() {
     document.getElementsByName('picture')[0].onchange = customUploadValidator;
@@ -269,8 +273,7 @@ attachTags = function(elemId, tagsArray) {
     setTimeout(attachTags('#meatorigin', @Html(play.api.libs.json.Json.toJson(Tag.findAll.filter(_.status == 36).map(_.name)).toString)) , 900);
   }
 
-}
-		</script>
+  </script>
 
 </div><!-- /.container -->
 }

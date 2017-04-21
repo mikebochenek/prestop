@@ -172,12 +172,12 @@ object Tag {
     // add new tags 
 		for (tag <- tagsArray) {
 		  if (!oldtags.contains(tag.trim.toLowerCase) && tag.trim.length > 0) {
-		    val f = alltags.find(_.name.equals(tag.trim.toLowerCase))
-		    if (f.isDefined && status.contains(f.get.status)) {
-			    TagRef.create(new TagRef(-1, f.get.id, id, f.get.status, null))
-			    if (f.get.status < 0) {
-			      Tag.update(f.get.id.toInt, f.get.name, f.get.en_text.getOrElse(""), f.get.de_text.getOrElse(""), 
-			          f.get.it_text.getOrElse(""), f.get.fr_text.getOrElse(""), status(0)) // this doesn't do anything since refactoring - Sept 17
+		    val f = alltags.filter { x => x.name.equals(tag.trim.toLowerCase) && status.contains(x.status)}
+		    if (f.size > 0 && status.contains(f(0).status)) {
+			    TagRef.create(new TagRef(-1, f(0).id, id, f(0).status, null))
+			    if (f(0).status < 0) {
+			      Tag.update(f(0).id.toInt, f(0).name, f(0).en_text.getOrElse(""), f(0).de_text.getOrElse(""), 
+			          f(0).it_text.getOrElse(""), f(0).fr_text.getOrElse(""), status(0)) // this doesn't do anything since refactoring - Sept 17
 			    }
 		    } else {
           // instead of ignoring the tag, we create it (OR reactivate with if status < 0 above!)
