@@ -39,7 +39,8 @@ object Recommendation {
   
   
   def recommend(user: UserFull, latitude: Double, longitude: Double, maxDistance: Double, minPrice: Double, 
-      maxPrice: Double, openNow: Boolean, lastDishID: Long, maxDishes: Long, avoid: String, keyword: String, onlyShow: String) = {
+      maxPrice: Double, openNow: Boolean, lastDishID: Long, maxDishes: Long, avoid: String, keyword: String, 
+      onlyShow: String, showOnlyCuisines: String, sortBy: String) = {
     val random = new java.util.Random
     val dishesAlreadyRecommendedActivities = ActivityLog.findRecentByUserType(user.id, 7).reverse
     
@@ -227,7 +228,11 @@ object Recommendation {
       }
     }
     
-    var sortedResult = result.dishes.sortBy(_.score).reverse
+    var sortedResult = (sortBy) match {
+      case "price" => result.dishes.sortWith(RecommendationUtils.sortWithPrice)
+      case "distance" => result.dishes.sortWith(RecommendationUtils.sortWithDistance)
+      case _ => result.dishes.sortBy(_.score).reverse
+    }
     
     // after we sort, we can skip the dishes which were already shown (recently?) to the user
     var startIdx = 0
@@ -248,7 +253,7 @@ object Recommendation {
     // we can also reorganize the dishes: swap if subsequent dishes are from the same restaurant (for the first 100 dishes or so)
     var prevRestaurantID = 0L
     for (i <- 0 until sortedResult.length) {
-      if (sortedResult(i).restaurantID == prevRestaurantID) {
+      if (sortedResult(i).restaurantID == prevRestaurantID && !("distance".equals(sortBy)) && !("price".equals(sortBy))) {
         //Logger.debug(" we should probably swap " + i)
         var swapDone = false;
         for (j <- i until sortedResult.length) { // only compare to restaurants after duplicate

@@ -159,4 +159,29 @@ object RecommendationUtils {
     if (p == 0.0) "" 
     else /*"CHF " + */ priceFormat.format(p)
   }
+
+  def parseDouble(s: String) = try { (s.toDouble) } catch { case _ => 0.0 }
+
+  def sortWithPrice(s1: RecommendationItem, s2: RecommendationItem) = {
+    parseDouble(s1.price) < parseDouble(s2.price)
+  }
+  
+  def parseDistance(s: String) = { 
+    Logger.debug (" distance ---> " + s);
+    val t = s.split(" ")
+    if (t.size >= 2) {
+      var dist = t(0).toDouble
+      if ("km".equalsIgnoreCase(t(1))) {
+        dist *= 1000
+      }
+      dist
+    } else {
+      0.0
+    }
+  }
+  
+  def sortWithDistance(s1: RecommendationItem, s2: RecommendationItem) = {
+    Logger.debug (parseDistance(s1.distance) + "   " +  parseDistance(s2.distance))
+    parseDistance(s1.distance) < parseDistance(s2.distance)
+  }
 }
