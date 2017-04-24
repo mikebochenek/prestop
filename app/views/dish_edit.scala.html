@@ -61,18 +61,34 @@
         }
 
           <div class="input-group top5">
-            <span class="input-group-addon input-group-addon-label" id="basic-addon1">@Messages("dishedit.tags")</span>
-            <input class="form-control span4" type="text" name="searchtags" id="searchtags" value="@searchTags">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Main ingredients</span>
+            <input class="form-control span4" type="text" name="itags" id="itags" value="@tags">
             <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
                <span class="badge" title="@Messages("dishedit.tags.tooltip")">?</span>
             </span>
           </div>
 
           <div class="input-group top5">
-            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Ingredients</span>
-            <input class="form-control span4" type="text" name="itags" id="itags" value="@tags">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Course</span>
+            <input class="form-control span4" type="text" name="dishtype" id="dishtype" value="@dishtype">
             <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
                <span class="badge" title="@Messages("dishedit.tags.tooltip")">?</span>
+            </span>
+          </div>
+
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Diet type</span>
+            <input class="form-control span4" type="text" name="greenscoretags" id="greenscoretags" value="@greenscoretags">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+               <span class="badge" title="diet tags">?</span>
+            </span>
+          </div>
+
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Allergens</span>
+            <input class="form-control span4" type="text" name="diet" id="diet" value="@diet">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+               <span class="badge" title="Diet (food categories)">?</span>
             </span>
           </div>
 
@@ -81,6 +97,14 @@
             <textarea class="form-control span4" type="text" name="description" id="description" cols=80 rows=5>@dish.description</textarea> 
             <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
               <span class="badge " title="full dish description">?</span>
+            </span>
+          </div>
+
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Keywords</span>
+            <input class="form-control span4" type="text" name="searchtags" id="searchtags" value="@searchTags">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+               <span class="badge" title="@Messages("dishedit.tags.tooltip")">?</span>
             </span>
           </div>
 
@@ -94,19 +118,29 @@
           </div>
         }
 
-          <div class="input-group top5">
-            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Diet</span>
-            <input class="form-control span4" type="text" name="greenscoretags" id="greenscoretags" value="@greenscoretags">
-            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
-               <span class="badge" title="diet tags">?</span>
-            </span>
-          </div>
         
         <div id="moreoptionslink"><a href="#" 
-             onclick="$('#moreoptionslink').hide(800);$('#advancedsettings').show(800);return false">
+             onclick="$('#moreoptionslink').hide(80);$('#advancedsettings').show(80);return false">
              <small>advanced settings</small></a></div>
 
        <div id="advancedsettings" style="display: none">
+       
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Origin of meat/fish</span>
+            <input class="form-control span4" type="text" name="meatorigin" id="meatorigin" value="@meatorigin">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+               <span class="badge" title="@Messages("dishedit.tags.tooltip")">?</span>
+            </span>
+          </div>
+
+          <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Serving size</span>
+            <input class="form-control span4" type="text" name="serving" id="serving" value="@dish.serving">
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="Serving size">?</span>
+            </span>
+          </div>
+       
           <div class="input-group top5">
             <span class="input-group-addon input-group-addon-label" id="basic-addon1">Greenscore</span>
             <input class="form-control span4" type="text" name="greenscore" id="greenscore" readonly value="@dish.greenScore">
@@ -127,31 +161,14 @@
           <input class="hidden form-control span4" type="text" name="restaurant_id" id="restaurant_id" value="@dish.restaurant_id">
         }	
 
-          <div class="input-group top5">
-            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Food types</span>
-            <input class="form-control span4" type="text" name="diet" id="diet" value="@diet">
+         <div class="input-group top5">
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Source</span>
+            <input class="form-control span4" type="text" name="source" id="source" value="@dish.source">
             <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
-               <span class="badge" title="Diet (food categories)">?</span>
+              <span class="badge " title="Source">?</span>
             </span>
           </div>
-          
-
-          <div class="input-group top5">
-            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Dish type</span>
-            <input class="form-control span4" type="text" name="dishtype" id="dishtype" value="@dishtype">
-            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
-               <span class="badge" title="@Messages("dishedit.tags.tooltip")">?</span>
-            </span>
-          </div>
-          
-          <div class="input-group top5">
-            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Meat origin</span>
-            <input class="form-control span4" type="text" name="meatorigin" id="meatorigin" value="@meatorigin">
-            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
-               <span class="badge" title="@Messages("dishedit.tags.tooltip")">?</span>
-            </span>
-          </div>
-
+ 
           <div class="input-group top5">
             <span class="input-group-addon input-group-addon-label" id="basic-addon1">Status</span>
             <select class="form-control span4" type="text" name="status" id="status" value="@dish.status">
@@ -174,22 +191,6 @@ attachTags = function(elemId, tagsArray) {
  }) 
 }
           </script>
-
-          <div class="input-group top5">
-            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Serving</span>
-            <input class="form-control span4" type="text" name="serving" id="serving" value="@dish.serving">
-            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
-              <span class="badge " title="Serving size">?</span>
-            </span>
-          </div>
-
-          <div class="input-group top5">
-            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Source</span>
-            <input class="form-control span4" type="text" name="source" id="source" value="@dish.source">
-            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
-              <span class="badge " title="Source">?</span>
-            </span>
-          </div>
           
         </div>
           
