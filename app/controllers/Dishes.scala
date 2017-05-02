@@ -448,8 +448,7 @@ object Dishes extends Controller with Secured {
   def getAllBasic() = Action {
     implicit request => {
       val dishes = Dish.findAll().filter { x => x.status == 0 } // only active
-      val basicDishes = dishes.map { dish => BasicDish(dish.id, dish.name, 
-          Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url) }
+      val basicDishes = dishes.map { dish => BasicDish(dish.id, dish.name) }
       Ok(Json.prettyPrint(Json.toJson(basicDishes.sortBy { _.name })))
     }
   }
@@ -465,7 +464,10 @@ object Dishes extends Controller with Secured {
           Recommend.parseLatitude(longitude), Recommend.parseLongitude(latitude))
         val distance = RecommendationUtils.makeCityDistanceString(dist, r.city)
 
-        val details = DistanceDetailDish(dish(0).id, dish(0).name, dish(0).description.getOrElse(""), dish(0).price, ingredients, distance, dist * 1000)
+        val details = DistanceDetailDish(dish(0).id, dish(0).name, dish(0).description.getOrElse(""), 
+            dish(0).price, ingredients, distance, dist * 1000, 
+            Image.findByDish(dish(0).id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+            r.name, r.city)
         json = Json.prettyPrint(Json.toJson(details))
       } else {
         json = Json.prettyPrint(Json.toJson(ErrorJSONResponse("dish not found", "" + id)))
