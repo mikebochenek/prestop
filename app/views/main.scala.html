@@ -58,7 +58,7 @@
           <ul class="nav navbar-nav navbar-right">
           
 @session.get("email").map { user =>
-            <li><a href="@Html("mailto:feedback@presto.ch?subject=Admin%20Panel%20Feedback")">Feedback</a></li>
+            <li><a href="https://www.presto.ch/customer-feedback">Feedback</a></li>
             <li><a href="/settings">@Messages("menu.settings")</a></li>
             <li><a href="/logout">@Messages("menu.logout")</a></li>
 }.getOrElse{
