@@ -448,7 +448,8 @@ object Dishes extends Controller with Secured {
   def getAllBasic() = Action {
     implicit request => {
       val dishes = Dish.findAll().filter { x => x.status == 0 } // only active
-      val basicDishes = dishes.map { x => BasicDish(x.id, x.name) }
+      val basicDishes = dishes.map { dish => BasicDish(dish.id, dish.name, 
+          Image.findByDish(dish.id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url) }
       Ok(Json.prettyPrint(Json.toJson(basicDishes.sortBy { _.name })))
     }
   }
