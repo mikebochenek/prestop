@@ -172,9 +172,9 @@ object Restaurants extends Controller with Secured {
       "website" -> text,
       "latitudelongitude" -> text,
       "schedule" -> text,
-      "restype" -> text,
       "status" -> text,
       "owner" -> text,
+      "currentPaymentPlan" -> text,
       "ptags" -> text,
       "google_places_id" -> text,
       "ctags" -> text))
@@ -183,7 +183,7 @@ object Restaurants extends Controller with Secured {
     implicit request => { 
       var validationErrors = ""
       val (id, name, phone, email, address, city, postalcode, state, country, website, latitudelongitude, 
-          schedule, restype, status, owner, ptags, google_places_id, ctags) = restaurantForm.bindFromRequest.get
+          schedule, status, owner, currentPaymentPlan, ptags, google_places_id, ctags) = restaurantForm.bindFromRequest.get
       
       if (!latitudelongitude.contains(",")) {
         validationErrors += "Should contain double,double"
@@ -207,6 +207,10 @@ object Restaurants extends Controller with Secured {
           Restaurant.softlyDeleteOwner(id.toLong)
           Restaurant.createOwner(id.toLong, owner.toLong, "") // should it be more like insert/update?
         }
+        
+        if (!"-1".equals(currentPaymentPlan)) {
+          Logger.debug("setting payment plan to: " + currentPaymentPlan)
+        }
       }
       
       val fullUser = User.getFullUser(username).get
@@ -217,7 +221,7 @@ object Restaurants extends Controller with Secured {
       } */
       
       if (validationErrors.length() == 0) {
-        Restaurant.update(id.toLong, name, city, address, longitude, latitude, schedule, restype.toInt, newStatus, 
+        Restaurant.update(id.toLong, name, city, address, longitude, latitude, schedule, 0, newStatus, 
           phone, email, postalcode, state, country, website, google_places_id)
         Tag.updateTags(id.toLong, ptags, 12)
         Tag.updateTags(id.toLong, ctags, 21)
