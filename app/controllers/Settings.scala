@@ -50,7 +50,7 @@ object Settings extends Controller with Secured {
       val userSettings = getPreviousSettingsSafely(fullUser)
       
       val url = Image.findByUser(fullUser.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
-
+      
       Ok(views.html.settings(settingsForm, me, userSettings, url))
     }
   }
@@ -59,7 +59,24 @@ object Settings extends Controller with Secured {
     tuple(
       "stripeToken" -> text,
       "stripeEmail" -> text))
-  
+
+      
+  def getPaymentPlans = {
+    com.stripe.Stripe.apiKey = "sk_test_nwF8xCp9GNWg7du3C0VYwH3n" //TODO Test Secret Key should come from properties..
+    val params = new java.util.HashMap[String,Object]()
+
+    try {
+      val /*PlanCollection*/ pl = Plan.list(params)
+      val plans = pl.getData()
+      val list = List.fromArray(plans.toArray)
+      Logger.info("trying to getPaymentPlans: " + list)
+    } catch {
+      case ex: Exception => {
+        Logger.error("" + ex)
+      }
+    }
+  }
+
   def acceptpayment = IsAuthenticated { username =>
     implicit request => { 
       val errors = MutableList.empty[String] 
