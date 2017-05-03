@@ -65,15 +65,22 @@ object Settings extends Controller with Secured {
     com.stripe.Stripe.apiKey = "sk_test_nwF8xCp9GNWg7du3C0VYwH3n" //TODO Test Secret Key should come from properties..
     val params = new java.util.HashMap[String,Object]()
 
+    val list = MutableList.empty[com.stripe.model.Plan]
+    
     try {
       val /*PlanCollection*/ pl = Plan.list(params)
       val plans = pl.getData()
-      val list = List.fromArray(plans.toArray)
+      val pplans = /* List.fromArray*/ (plans.toArray)
+      for (p <- pplans) {
+        list += p.asInstanceOf[com.stripe.model.Plan]
+      }
       Logger.info("trying to getPaymentPlans: " + list)
+      list
     } catch {
       case ex: Exception => {
         Logger.error("" + ex)
       }
+      list
     }
   }
 

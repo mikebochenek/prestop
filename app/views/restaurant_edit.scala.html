@@ -1,4 +1,4 @@
-@(form: Form[(String,String,String,String,String,String,String,String,String,String,String,String,String,String,String,String,String,String)], restaurant: Restaurant, url: String, logourl: String, tags: String, cuisines: String, reservations: Seq[Reservation], children: Seq[Restaurant], currentOwnerEmail: String, owners: Seq[UserFull])(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String,String,String,String,String,String,String,String,String,String,String,String,String)], restaurant: Restaurant, url: String, logourl: String, tags: String, cuisines: String, reservations: Seq[Reservation], children: Seq[Restaurant], currentOwnerEmail: String, owners: Seq[UserFull], currentPaymentPlan: String, paymentPlans: Seq[com.stripe.model.Plan])(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -148,6 +148,24 @@
             </select>
             <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
               <span class="badge " title="person who can also edit this restaurant">?</span>
+            </span>
+          </div>
+ 
+ 
+          @if(session.get("usertype").getOrElse("").toString.equals("7")) {
+           <div class="input-group top5">
+          } else {
+           <div class="input-group top5 hidden">
+          }
+            <span class="input-group-addon input-group-addon-label" id="basic-addon1">Payment Plan</span>
+            <select class="form-control span4" type="text" name="currentPaymentPlan" id="currentPaymentPlan" value="@currentPaymentPlan">
+              <option value="-1">Free! (no payment plan currently assigned)</option>
+              @for(plan <- paymentPlans) {
+                <option value="@plan.getId" @if(plan.getId.equals(currentPaymentPlan)) { selected } >@plan.getName (@(plan.getAmount/100) @plan.getCurrency - @plan.getId)</option>
+              }	
+            </select>
+            <span class="input-group-addon input-group-addon-tooltip" id="basic-addon1">
+              <span class="badge " title="payment plan per restaurant">?</span>
             </span>
           </div>
           

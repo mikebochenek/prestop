@@ -53,7 +53,7 @@ object Restaurants extends Controller with Secured {
           Seq.empty[RestaurantFriends], misc)
       
       Ok(views.html.restaurant_edit(restaurantForm, r, "", "", "", "", 
-          Reservation.findAllByRestaurant(id), Restaurant.findAllByParent(id), "", Seq.empty))
+          Reservation.findAllByRestaurant(id), Restaurant.findAllByParent(id), "", Seq.empty, "", Seq.empty))
     }
   }
 
@@ -143,13 +143,18 @@ object Restaurants extends Controller with Secured {
         case true => adminOption.get.email
         case false => ""
       }
+      val currentPaymentPlan = adminOption.isDefined match {
+        case true => "premium_monthly" //adminOption.get.settings
+        case false => ""
+      }
       Logger.debug("currentAdminEmail: " + currentAdminEmail)
       
       if ("".equals(all(0).phone.getOrElse(""))) { all(0).phone = Option("+41") }
       if ("".equals(all(0).city)) { all(0).city = "Zürich" }
       if ("".equals(all(0).state.getOrElse(""))) { all(0).state = Option("Zürich") }
       if ("".equals(all(0).misc.country.getOrElse(""))) { all(0).misc.country = Option("Switzerland") }
-      Ok(views.html.restaurant_edit(restaurantForm, all(0), url, logourl, tags, cuisines, reservations, childRestaurants, currentAdminEmail, adminUsers))
+      Ok(views.html.restaurant_edit(restaurantForm, all(0), url, logourl, tags, cuisines, reservations, childRestaurants, 
+          currentAdminEmail, adminUsers, currentPaymentPlan, Settings.getPaymentPlans))
     }
   }
 
