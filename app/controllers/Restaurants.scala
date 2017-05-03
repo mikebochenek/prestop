@@ -208,12 +208,15 @@ object Restaurants extends Controller with Secured {
           Restaurant.createOwner(id.toLong, owner.toLong, "") // should it be more like insert/update?
         }
         
-        if (!"-1".equals(currentPaymentPlan)) {
+        if (true) {
           Logger.debug("userID: " + owner + " - setting payment plan to: " + currentPaymentPlan)
           val fullUser = User.getFullUser(owner.toInt)
           val previousSettings = Settings.getPreviousSettingsSafely(fullUser)
           if (previousSettings != null) {
-            previousSettings.currentPaymentPlan = Option(currentPaymentPlan)
+            previousSettings.currentPaymentPlan = (!"-1".equals(currentPaymentPlan)) match {
+              case true => Option(currentPaymentPlan)
+              case false => Option.empty[String]
+            }
             val settingsJson = Json.toJson(previousSettings).toString
             User.update(fullUser, fullUser.email, settingsJson)
             Logger.debug("updating user settings: " + settingsJson)
