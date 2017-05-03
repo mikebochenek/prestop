@@ -85,8 +85,6 @@ object Settings extends Controller with Secured {
   }
 
   def getPaymentPlan(settings: UserSettings) = {
-    //val fullUser = User.getFullUser(username).get
-    //val settings = Settings.getPreviousSettingsSafely(fullUser)
     val cp = settings.currentPaymentPlan.getOrElse("")
     val allPlans = getPaymentPlans
     val found = allPlans.find { plan => cp.equals(plan.getId()) }
@@ -102,18 +100,22 @@ object Settings extends Controller with Secured {
       
       Logger.debug("email:" + email + " stripeToken:" + stripeToken + " stripeEmail:" + stripeEmail)
 
+      val paymentPlan = getPaymentPlan(getPreviousSettingsSafely(fullUser)).get
+      Logger.debug("using paymentPlan: " + paymentPlan)
+      
       com.stripe.Stripe.apiKey = "sk_test_nwF8xCp9GNWg7du3C0VYwH3n" //TODO Test Secret Key should come from properties..
-      val amount = 2990
+      val amount = paymentPlan.getAmount.toLong
       
       val params = new java.util.HashMap[String,Object]{ 
-        put("amount", new java.lang.Long(amount)); 
-        put("currency","chf"); 
+        //put("amount", new java.lang.Long(amount)); 
+        //put("currency", paymentPlan.getCurrency); 
+        put("plan", paymentPlan.getId); 
         put("source",stripeToken); 
         put("description", ("charge from user: " + fullUser.id + " " + fullUser.email)); 
       }
       
       try {
-        val charge = Charge.create(params)
+        val charge = Customer.create(params)
         val history = PaymentHistory(new Date(), amount, "November 2016", "SUCCESSFUL", charge.getId, "")
         val id = ActivityLog.create(fullUser.id, 5, amount, Json.toJson(history).toString)
         Logger.info("ActivityLog type=5 created - id: "+ id.get +  " user: " + fullUser.id)
