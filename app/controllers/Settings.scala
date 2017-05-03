@@ -51,7 +51,7 @@ object Settings extends Controller with Secured {
       
       val url = Image.findByUser(fullUser.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
       
-      Ok(views.html.settings(settingsForm, me, userSettings, url))
+      Ok(views.html.settings(settingsForm, me, userSettings, url, getPaymentPlan(userSettings)))
     }
   }
 
@@ -84,6 +84,16 @@ object Settings extends Controller with Secured {
     }
   }
 
+  def getPaymentPlan(settings: UserSettings) = {
+    //val fullUser = User.getFullUser(username).get
+    //val settings = Settings.getPreviousSettingsSafely(fullUser)
+    val cp = settings.currentPaymentPlan.getOrElse("")
+    val allPlans = getPaymentPlans
+    val found = allPlans.find { plan => cp.equals(plan.getId()) }
+    Logger.debug("found: " + found)
+    found
+  }
+  
   def acceptpayment = IsAuthenticated { username =>
     implicit request => { 
       val errors = MutableList.empty[String] 
@@ -115,7 +125,8 @@ object Settings extends Controller with Secured {
       
       if (errors.length > 0) {
         val url = Image.findByUser(fullUser.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
-        BadRequest(views.html.settings(settingsForm.withGlobalError(errors.head), User.findByEmail(username), getPreviousSettingsSafely(fullUser), url))
+        BadRequest(views.html.settings(settingsForm.withGlobalError(errors.head), User.findByEmail(username), getPreviousSettingsSafely(fullUser), 
+            url, getPaymentPlan(getPreviousSettingsSafely(fullUser))))
       } else {
         Redirect(routes.Settings.load).flashing("success" -> ("Payment entered successfully at " + RecommendationUtils.currentTime()))
       }
@@ -178,7 +189,8 @@ object Settings extends Controller with Secured {
       if (settingsForm.hasGlobalErrors || settingsForm.hasErrors || errors.size > 0) {
         Logger.debug("MyValidationError - sending BadRequest: " + errors.head)
         val url = Image.findByUser(fullUser.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
-        BadRequest(views.html.settings(settingsForm.withGlobalError(errors.head), User.findByEmail(username), getPreviousSettingsSafely(fullUser), url))
+        BadRequest(views.html.settings(settingsForm.withGlobalError(errors.head), User.findByEmail(username), 
+            getPreviousSettingsSafely(fullUser), url, getPaymentPlan(getPreviousSettingsSafely(fullUser))))
       } else {
         Redirect(routes.Settings.load).flashing("success" -> ("Changes saved successfully at " + RecommendationUtils.currentTime()))
       }

@@ -1,4 +1,4 @@
-@(form: Form[(String,String,String,String,String,String)], me: User, settings: UserSettings, url: String)(implicit flash: Flash, session: Session, lang: Lang)
+@(form: Form[(String,String,String,String,String,String)], me: User, settings: UserSettings, url: String, plan: Option[com.stripe.model.Plan])(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -20,7 +20,7 @@
       </div>
     }
 
-@if(session.get("usertype").getOrElse("").toString.equals("7")) {
+@if(plan.isDefined) {
 
     <h3 class="top50">@Messages("settings.billing")</h3>
 
@@ -34,12 +34,12 @@
        <script
          src="https://checkout.stripe.com/checkout.js" class="stripe-button"
          data-key="pk_test_3sGi769vVGymo9PSif5A17al"
-         data-amount="2990"
+         data-amount="@plan.get.getAmount"
          data-name="Presto"
-         data-description="Subscription Fee"
+         data-description="@plan.get.getName"
          data-image="../img/icon_presto.png"
          data-locale="auto"
-         data-currency="chf">
+         data-currency="@plan.get.getCurrency">
         </script>
        </form>
       </div>
