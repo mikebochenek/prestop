@@ -144,7 +144,7 @@ object Restaurants extends Controller with Secured {
         case false => ""
       }
       val currentPaymentPlan = adminOption.isDefined match {
-        case true => "premium_monthly" //adminOption.get.settings
+        case true => Settings.getPreviousSettingsSafely(adminOption.get).currentPaymentPlan.getOrElse("")
         case false => ""
       }
       Logger.debug("currentAdminEmail: " + currentAdminEmail)
@@ -209,7 +209,15 @@ object Restaurants extends Controller with Secured {
         }
         
         if (!"-1".equals(currentPaymentPlan)) {
-          Logger.debug("setting payment plan to: " + currentPaymentPlan)
+          Logger.debug("userID: " + owner + " - setting payment plan to: " + currentPaymentPlan)
+          val fullUser = User.getFullUser(owner.toInt)
+          val previousSettings = Settings.getPreviousSettingsSafely(fullUser)
+          if (previousSettings != null) {
+            previousSettings.currentPaymentPlan = Option(currentPaymentPlan)
+            val settingsJson = Json.toJson(previousSettings).toString
+            User.update(fullUser, fullUser.email, settingsJson)
+            Logger.debug("updating user settings: " + settingsJson)
+          }
         }
       }
       
