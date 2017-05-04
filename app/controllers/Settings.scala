@@ -50,6 +50,8 @@ object Settings extends Controller with Secured {
       val userSettings = getPreviousSettingsSafely(fullUser)
       
       val url = Image.findByUser(fullUser.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+
+      getInvoices
       
       Ok(views.html.settings(settingsForm, me, userSettings, url, getPaymentPlan(userSettings)))
     }
@@ -60,7 +62,21 @@ object Settings extends Controller with Secured {
       "stripeToken" -> text,
       "stripeEmail" -> text))
 
-      
+  /** https://stripe.com/docs/api#list_invoices */
+  def getInvoices = {
+    com.stripe.Stripe.apiKey = "sk_test_nwF8xCp9GNWg7du3C0VYwH3n" //TODO Test Secret Key should come from properties..
+    val params = new java.util.HashMap[String,Object]() {
+      put("limit", new java.lang.Long(100));
+      put("customer", "cus_Aagi19amdGo8k7"); 
+    }
+
+    val invoices /* com.stripe.model.InvoiceCollection */ = Invoice.list(params).getData()
+    Logger.debug("getInvoices: " + invoices)
+    // http://grepcode.com/file/repo1.maven.org/maven2/com.stripe/stripe-java/1.16.0/com/stripe/model/Invoice.java#Invoice
+    invoices
+  }      
+  
+  
   def getPaymentPlans = {
     com.stripe.Stripe.apiKey = "sk_test_nwF8xCp9GNWg7du3C0VYwH3n" //TODO Test Secret Key should come from properties..
     val params = new java.util.HashMap[String,Object]()
@@ -115,7 +131,7 @@ object Settings extends Controller with Secured {
       }
       
       try {
-        val charge = Customer.create(params)
+        val charge = Customer.create(params) //TODO we probably should store unique customer ID in our DBs somewhere? //https://stripe.com/docs/api#retrieve_customer
         val history = PaymentHistory(new Date(), amount, "November 2016", "SUCCESSFUL", charge.getId, "")
         val id = ActivityLog.create(fullUser.id, 5, amount, Json.toJson(history).toString)
         Logger.info("ActivityLog type=5 created - id: "+ id.get +  " user: " + fullUser.id)
