@@ -51,9 +51,7 @@ object Settings extends Controller with Secured {
       
       val url = Image.findByUser(fullUser.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
 
-      getInvoices(fullUser)
-      
-      Ok(views.html.settings(settingsForm, me, userSettings, url, getPaymentPlan(userSettings)))
+      Ok(views.html.settings(settingsForm, me, userSettings, url, getPaymentPlan(userSettings), getInvoices(fullUser)))
     }
   }
 
@@ -169,7 +167,7 @@ object Settings extends Controller with Secured {
       if (errors.length > 0) {
         val url = Image.findByUser(fullUser.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
         BadRequest(views.html.settings(settingsForm.withGlobalError(errors.head), User.findByEmail(username), getPreviousSettingsSafely(fullUser), 
-            url, getPaymentPlan(getPreviousSettingsSafely(fullUser))))
+            url, getPaymentPlan(getPreviousSettingsSafely(fullUser)), getInvoices(fullUser)))
       } else {
         Redirect(routes.Settings.load).flashing("success" -> ("Payment entered successfully at " + RecommendationUtils.currentTime()))
       }
@@ -233,7 +231,7 @@ object Settings extends Controller with Secured {
         Logger.debug("MyValidationError - sending BadRequest: " + errors.head)
         val url = Image.findByUser(fullUser.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
         BadRequest(views.html.settings(settingsForm.withGlobalError(errors.head), User.findByEmail(username), 
-            getPreviousSettingsSafely(fullUser), url, getPaymentPlan(getPreviousSettingsSafely(fullUser))))
+            getPreviousSettingsSafely(fullUser), url, getPaymentPlan(getPreviousSettingsSafely(fullUser)), getInvoices(fullUser)))
       } else {
         Redirect(routes.Settings.load).flashing("success" -> ("Changes saved successfully at " + RecommendationUtils.currentTime()))
       }
