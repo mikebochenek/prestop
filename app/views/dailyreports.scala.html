@@ -3,7 +3,7 @@
 	restaurantDrafts: Seq[Restaurant], dishDrafts: Seq[Dish]
 	)
 
-      	<h3>Calls to /api/recommend grouped by user the last 24h (@recommendCalls.foldLeft(0)(_ + _.count.toInt))</h3>
+      	<h3>Daily Unique Users: calls to /api/recommend grouped by user the last 24h (@recommendCalls.foldLeft(0)(_ + _.count.toInt))</h3>
       	<table class="table table-striped" border="1">
       	@for((call, index) <- recommendCalls.zipWithIndex)  {	
 		  <tr>
@@ -40,7 +40,7 @@
 		  }
 		</table>
 
-      	<h3>New dish likes in the last 24h (@activities.size)</h3>
+      	<h3>New dish likes in the last 24h (@activities.filter(x => x.activity_type == 11).size)</h3>
       	<table class="table table-striped" border="1">
       	@for((activity, index) <- activities.filter{x => x.activity_type == 11}.zipWithIndex)  {	
 		  <tr>

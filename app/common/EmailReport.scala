@@ -21,7 +21,7 @@ object EmailReport {
   
   def sendemail(user: UserFull) {
     Logger.debug ("processing sendemail to email:" + user.email + "  " + user.ttype)
-    if ("7".equals(user.ttype) && (user.email.contains("sebastian") || user.email.contains("mike"))) {
+    if ("7".equals(user.ttype) && (user.email.contains("sebastian") || user.email.contains("mike") || user.email.contains("arodriguez"))) {
   
       val dateStr = prettySdf.format(new Date(System.currentTimeMillis()-24*60*60*1000))
   
