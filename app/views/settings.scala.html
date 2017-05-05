@@ -56,17 +56,19 @@
       	    <tr>
       	       <td>@Messages("settings.amount")</td>
       	       <td>@Messages("settings.date")</td>
-      	       <td>@Messages("settings.billingperiod")</td>
-      	       <td>@Messages("settings.status")</td>
+      	       <td class="hidden">@Messages("settings.billingperiod")</td>
+      	       <td>paid</td>
+      	       <td>ID</td>
       	    </tr>
       	  </thead>
       	  <tbody>
             @for((payment, index) <- invoices.zipWithIndex)  {	
  		    <tr>
-		       <td>@(payment.getTotal / 100)</td>
-		       <td>@payment.getDate</td>
+		       <td>@("%.2f".format(payment.getTotal / 100.0)) @payment.getCurrency</td>
+		       <td>@Settings.formatPaymentDate(payment.getDate)</td>
+		       <td class="hidden">@Settings.formatPaymentDate(payment.getPeriodStart) - @Settings.formatPaymentDate(payment.getPeriodEnd)</td>
 		       <td>@payment.getPaid</td>
-		       <td>@payment.getPaid</td>
+		       <td>@payment.getId</td>
 		    </tr>
 		    }
       	  </tbody>

@@ -178,6 +178,9 @@ object Settings extends Controller with Secured {
     ActivityLog.findAllByUserType(id, 5).map { x => Json.parse(x.activity_details).validate[PaymentHistory].get }
   }
   
+  def formatPaymentDate(d: Long) = {
+     (new java.text.SimpleDateFormat("dd.MM.YYYY")).format(new java.util.Date(d * 1000L))
+  }
 
   val settingsForm = Form(
     tuple(
