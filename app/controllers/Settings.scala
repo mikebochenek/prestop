@@ -51,7 +51,7 @@ object Settings extends Controller with Secured {
       
       val url = Image.findByUser(fullUser.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
 
-      getInvoices
+      getInvoices(fullUser)
       
       Ok(views.html.settings(settingsForm, me, userSettings, url, getPaymentPlan(userSettings)))
     }
@@ -63,20 +63,39 @@ object Settings extends Controller with Secured {
       "stripeEmail" -> text))
 
   /** https://stripe.com/docs/api#list_invoices */
-  def getInvoices = {
-    com.stripe.Stripe.apiKey = "sk_test_nwF8xCp9GNWg7du3C0VYwH3n" //TODO Test Secret Key should come from properties..
-    val params = new java.util.HashMap[String,Object]() {
-      put("limit", new java.lang.Long(100));
-      put("customer", "cus_Aagi19amdGo8k7"); 
-    }
+  def getInvoices(fullUser: UserFull) = {
+    val list = MutableList.empty[com.stripe.model.Invoice]
 
-    val invoices /* com.stripe.model.InvoiceCollection */ = Invoice.list(params).getData()
-    Logger.debug("getInvoices: " + invoices)
-    // http://grepcode.com/file/repo1.maven.org/maven2/com.stripe/stripe-java/1.16.0/com/stripe/model/Invoice.java#Invoice
-    invoices
+    val paymentActivities =  showPaymentHistory(fullUser.id) //Seq[PaymentHistory]
+    if (paymentActivities.size > 0 && paymentActivities(0).stripeCustomerID.isDefined) {
+
+      com.stripe.Stripe.apiKey = "sk_test_nwF8xCp9GNWg7du3C0VYwH3n" //TODO Test Secret Key should come from properties..
+      val params = new java.util.HashMap[String,Object]() {
+        put("limit", new java.lang.Long(100));
+        put("customer", "cus_Aagi19amdGo8k7"); 
+      }
+
+      try {
+        val invoices /* com.stripe.model.InvoiceCollection */ = Invoice.list(params).getData() // http://grepcode.com/file/repo1.maven.org/maven2/com.stripe/stripe-java/1.16.0/com/stripe/model/Invoice.java#Invoice
+        val invoicesArray = invoices.toArray
+        for (p <- invoicesArray) {
+          list += p.asInstanceOf[com.stripe.model.Invoice]
+        }
+        Logger.debug("trying to getInvoices: " + list)
+        list
+      } catch {
+        case ex: Exception => {
+          Logger.error("" + ex)
+        }
+      }
+    } else {
+      Logger.debug("no paymentActivities found for: " + fullUser)
+    }
+    
+    list
   }      
   
-  
+  /** https://stripe.com/docs/api#plans */
   def getPaymentPlans = {
     com.stripe.Stripe.apiKey = "sk_test_nwF8xCp9GNWg7du3C0VYwH3n" //TODO Test Secret Key should come from properties..
     val params = new java.util.HashMap[String,Object]()
@@ -90,7 +109,7 @@ object Settings extends Controller with Secured {
       for (p <- pplans) {
         list += p.asInstanceOf[com.stripe.model.Plan]
       }
-      Logger.info("trying to getPaymentPlans: " + list)
+      Logger.debug("trying to getPaymentPlans: " + list)
       list
     } catch {
       case ex: Exception => {
@@ -108,6 +127,12 @@ object Settings extends Controller with Secured {
     found
   }
   
+  /** https://stripe.com/docs/api#cancel_subscription */
+  def cancelSubscription(settings: UserSettings) = {
+    //TODO
+  }
+
+  /** https://stripe.com/docs/recipes/subscription-signup  https://stripe.com/docs/api#subscriptions */
   def acceptpayment = IsAuthenticated { username =>
     implicit request => { 
       val errors = MutableList.empty[String] 
