@@ -69,7 +69,7 @@ object Settings extends Controller with Secured {
     val paymentActivities =  showPaymentHistory(fullUser.id) //Seq[PaymentHistory]
     if (paymentActivities.size > 0 && paymentActivities(0).stripeCustomerID.isDefined) {
 
-      com.stripe.Stripe.apiKey = "sk_test_nwF8xCp9GNWg7du3C0VYwH3n" //TODO Test Secret Key should come from properties..
+      com.stripe.Stripe.apiKey = Application.stripePrivateKey
       val params = new java.util.HashMap[String,Object]() {
         put("limit", new java.lang.Long(100));
         put("customer", "cus_Aagi19amdGo8k7"); 
@@ -97,7 +97,7 @@ object Settings extends Controller with Secured {
   
   /** https://stripe.com/docs/api#plans */
   def getPaymentPlans = {
-    com.stripe.Stripe.apiKey = "sk_test_nwF8xCp9GNWg7du3C0VYwH3n" //TODO Test Secret Key should come from properties..
+    com.stripe.Stripe.apiKey = Application.stripePrivateKey
     val params = new java.util.HashMap[String,Object]()
 
     val list = MutableList.empty[com.stripe.model.Plan]
@@ -144,7 +144,7 @@ object Settings extends Controller with Secured {
       val paymentPlan = getPaymentPlan(getPreviousSettingsSafely(fullUser)).get
       Logger.debug("using paymentPlan: " + paymentPlan)
       
-      com.stripe.Stripe.apiKey = "sk_test_nwF8xCp9GNWg7du3C0VYwH3n" //TODO Test Secret Key should come from properties..
+      com.stripe.Stripe.apiKey = Application.stripePrivateKey
       val amount = paymentPlan.getAmount.toLong
       
       val params = new java.util.HashMap[String,Object]{ 
@@ -156,7 +156,7 @@ object Settings extends Controller with Secured {
       }
       
       try {
-        val charge = Customer.create(params) //TODO we probably should store unique customer ID in our DBs somewhere? //https://stripe.com/docs/api#retrieve_customer
+        val charge = Customer.create(params) //we probably should store unique customer ID in our DBs somewhere? //https://stripe.com/docs/api#retrieve_customer
         val history = PaymentHistory(new Date(), amount, "", "SUCCESSFUL", charge.getId, "", Option(charge.getId))
         val id = ActivityLog.create(fullUser.id, 5, amount, Json.toJson(history).toString)
         Logger.info("ActivityLog type=5 created - id: "+ id.get +  " user: " + fullUser.id)

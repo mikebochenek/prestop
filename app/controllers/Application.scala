@@ -124,6 +124,10 @@ object Application extends Controller {
   def privateKey(): String = {
     current.configuration.getString("recaptcha.privatekey").getOrElse("6Lcpy9YSAAAAANlSJ-iw9GDSKFYX5HktGbs-oG7D")
   }
+  def stripePrivateKey(): String = {
+    current.configuration.getString("stripe.secretkey").getOrElse("")
+  }
+  
   def renderCaptcha(secure: Boolean): String = { 
     if (secure) {
       ReCaptchaFactory.newSecureReCaptcha(publicKey(), privateKey(), false).createRecaptchaHtml(null, new java.util.Properties)
