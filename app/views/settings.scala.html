@@ -30,6 +30,9 @@
           The subscription fee of @(plan.get.getAmount / 100) @plan.get.getCurrency will be charged once per @plan.get.getInterval
         </div>
 
+    @if(invoices.size > 0) {
+      <button class="span4 btn btn-primary" type="submit" id="cancelsubscription">Cancel Subscription</button>
+    } else {
       <div class="col-sm-2 col-md-offset-6">
        <form action="/acceptpayment" method="POST">
        <script
@@ -45,6 +48,7 @@
        </form>
       </div>
      </div>
+    }
 
     @if(invoices.size > 0) {
 
