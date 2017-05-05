@@ -132,7 +132,7 @@ object Settings extends Controller with Secured {
       
       try {
         val charge = Customer.create(params) //TODO we probably should store unique customer ID in our DBs somewhere? //https://stripe.com/docs/api#retrieve_customer
-        val history = PaymentHistory(new Date(), amount, "November 2016", "SUCCESSFUL", charge.getId, "")
+        val history = PaymentHistory(new Date(), amount, "", "SUCCESSFUL", charge.getId, "", Option(charge.getId))
         val id = ActivityLog.create(fullUser.id, 5, amount, Json.toJson(history).toString)
         Logger.info("ActivityLog type=5 created - id: "+ id.get +  " user: " + fullUser.id)
       } catch {
