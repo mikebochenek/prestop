@@ -163,6 +163,7 @@ object Settings extends Controller with Secured {
         val pa = Json.parse(activity.activity_details).validate[PaymentHistory].get
         if (pa.stripeCustomerID.isDefined) {
           pa.stripeCustomerID = Option.empty[String]
+          pa.status = "CANCELLED"
           val updatedActivityDetais = Json.toJson(pa).toString
           Logger.debug("updatedActivityDetais: " + updatedActivityDetais)
           ActivityLog.updateActivityDetails(updatedActivityDetais, activity.id)
