@@ -125,9 +125,47 @@ object Settings extends Controller with Secured {
     found
   }
   
+  def cancelSubscriptionFormSubmit() = IsAuthenticated { username =>
+    implicit request => {
+      val me = User.findByEmail(username)
+      val fullUser = User.getFullUser(username).get
+      
+      Logger.info("trying to cancelSubscription: " + fullUser.email)
+      cancelSubscription(fullUser)
+      
+      val userSettings = getPreviousSettingsSafely(fullUser)
+      val url = Image.findByUser(fullUser.id).headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url
+      Ok(views.html.settings(settingsForm, me, userSettings, url, getPaymentPlan(userSettings), getInvoices(fullUser)))
+    }
+  }
+  
+  
   /** https://stripe.com/docs/api#cancel_subscription */
-  def cancelSubscription(settings: UserSettings) = {
-    //TODO
+  def cancelSubscription(fullUser: UserFull) = {
+    val paymentActivities =  showPaymentHistory(fullUser.id) //Seq[PaymentHistory]
+    if (paymentActivities.size > 0 && paymentActivities(0).stripeCustomerID.isDefined) {
+
+      val invoices = getInvoices(fullUser)
+      val subscriptionID = invoices(0).getSubscription 
+      Logger.debug("subscriptionID: " + subscriptionID)
+
+      // remove subscription or change type in our activity log
+      val activities = ActivityLog.findAllByUserType(fullUser.id, 5)
+      paymentActivities(0).stripeCustomerID = Option.empty[String]
+      val updatedActivityDetais = Json.toJson(paymentActivities(0)).toString
+      Logger.debug("updatedActivityDetais: " + updatedActivityDetais)
+      ActivityLog.updateActivityDetails(updatedActivityDetais, activities(0).id)
+
+      
+    
+      // call Stripe cancel API
+      val sub = Subscription.retrieve(subscriptionID)
+      val returnValue = sub.cancel(new java.util.HashMap[String,Object]())
+      Logger.debug("sub.cancel() returns: " + returnValue)
+      
+    } else {
+      Logger.debug("nothing found to cancel..")
+    }
   }
 
   /** https://stripe.com/docs/recipes/subscription-signup  https://stripe.com/docs/api#subscriptions */

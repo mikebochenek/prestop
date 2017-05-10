@@ -96,6 +96,7 @@ POST    /login                              controllers.Application.authenticate
 # GET     /testlogin/:id                      controllers.Application.authenticateTest(id: String)
 GET     /logout                             controllers.Application.logout
 
+GET     /cancelsubscription                 controllers.Settings.cancelSubscriptionFormSubmit
 POST    /acceptpayment                      controllers.Settings.acceptpayment
 GET     /reports                            controllers.Reports.load(mode: String ?= "")
 GET     /analytics                          controllers.Reports.analytics

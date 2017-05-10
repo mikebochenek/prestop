@@ -47,6 +47,14 @@ object ActivityLog {
     }
   }
   
+  def updateActivityDetails(activity_details: String, id: Long) = {
+    DB.withConnection { implicit connection =>
+      SQL("update activity_log set activity_details = {activity_details} where id = {id} ").on(
+          'id -> id,
+          'activity_details -> activity_details).executeUpdate
+    }
+  }
+  
   def delete(user_id: Long, activity_subtype: Long): Long = {
     DB.withConnection { implicit connection =>
       SQL("delete from activity_log where user_id = {user_id} and activity_subtype = {activity_subtype}").on(
