@@ -9,7 +9,7 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
 case class DistanceDetailDish (id: Long, name: String, desc: String, price: Double, 
-    ingredients: String, distance: String, exactDistance: Double,
+    ingredients: String, distance: String, exactDistance: Double, longitude: Double, latitude: Double,
     url: String, restaurant: String, city: String)
 
 object DistanceDetailDish {
