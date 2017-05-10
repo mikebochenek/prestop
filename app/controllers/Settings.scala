@@ -64,8 +64,7 @@ object Settings extends Controller with Secured {
   def getInvoices(fullUser: UserFull) = {
     val list = MutableList.empty[com.stripe.model.Invoice]
 
-    val paymentActivities =  showPaymentHistory(fullUser.id) //Seq[PaymentHistory]
-    if (paymentActivities.size > 0 && paymentActivities(0).stripeCustomerID.isDefined) {
+    if (firstStripeCustomerID(fullUser).isDefined) {
 
       com.stripe.Stripe.apiKey = Application.stripePrivateKey
       val params = new java.util.HashMap[String,Object]() {
@@ -139,11 +138,20 @@ object Settings extends Controller with Secured {
     }
   }
   
+  def firstStripeCustomerID(fullUser: UserFull) = {
+    var ret = Option.empty[String]
+    val paymentActivities =  showPaymentHistory(fullUser.id) //?.reverse //Seq[PaymentHistory]
+    for (pa <- paymentActivities) {
+      if (pa.stripeCustomerID.isDefined) {
+        ret = pa.stripeCustomerID
+      }
+    }
+    ret
+  }
   
   /** https://stripe.com/docs/api#cancel_subscription */
   def cancelSubscription(fullUser: UserFull) = {
-    val paymentActivities =  showPaymentHistory(fullUser.id) //Seq[PaymentHistory]
-    if (paymentActivities.size > 0 && paymentActivities(0).stripeCustomerID.isDefined) {
+    if (firstStripeCustomerID(fullUser).isDefined) {
 
       val invoices = getInvoices(fullUser)
       val subscriptionID = invoices(0).getSubscription 
@@ -151,17 +159,24 @@ object Settings extends Controller with Secured {
 
       // remove subscription or change type in our activity log
       val activities = ActivityLog.findAllByUserType(fullUser.id, 5)
-      paymentActivities(0).stripeCustomerID = Option.empty[String]
-      val updatedActivityDetais = Json.toJson(paymentActivities(0)).toString
-      Logger.debug("updatedActivityDetais: " + updatedActivityDetais)
-      ActivityLog.updateActivityDetails(updatedActivityDetais, activities(0).id)
-
-      
+      for (activity <- activities) {
+        val pa = Json.parse(activity.activity_details).validate[PaymentHistory].get
+        if (pa.stripeCustomerID.isDefined) {
+          pa.stripeCustomerID = Option.empty[String]
+          val updatedActivityDetais = Json.toJson(pa).toString
+          Logger.debug("updatedActivityDetais: " + updatedActivityDetais)
+          ActivityLog.updateActivityDetails(updatedActivityDetais, activity.id)
+        }
+      }
     
       // call Stripe cancel API
-      val sub = Subscription.retrieve(subscriptionID)
-      val returnValue = sub.cancel(new java.util.HashMap[String,Object]())
-      Logger.debug("sub.cancel() returns: " + returnValue)
+      if (!invoices(0).getClosed()) {
+        val sub = Subscription.retrieve(subscriptionID)
+        val returnValue = sub.cancel(new java.util.HashMap[String,Object]())
+        Logger.debug("sub.cancel() returns: " + returnValue)
+      } else {
+        Logger.debug("already closed! " + subscriptionID)
+      }
       
     } else {
       Logger.debug("nothing found to cancel..")
