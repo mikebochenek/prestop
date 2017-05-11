@@ -466,7 +466,7 @@ object Dishes extends Controller with Secured {
 
         val details = DistanceDetailDish(dish(0).id, dish(0).name, dish(0).description.getOrElse(""), 
             dish(0).price, ingredients, distance, dist * 1000, r.longitude, r.latitude, 
-            Image.findByDish(dish(0).id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url,
+            Image.findByDish(dish(0).id).filter{x => x.width.get == 750}.headOption.getOrElse(Image.blankImage).asInstanceOf[Image].url.replace("http:", "https:"),
             r.name, r.city)
         json = Json.prettyPrint(Json.toJson(details))
       } else {
