@@ -448,7 +448,7 @@ object Dishes extends Controller with Secured {
   def getAllBasic() = Action {
     implicit request => {
       val dishes = Dish.findAll().filter { x => x.status == 0 } // only active
-      val basicDishes = dishes.map { dish => BasicDish(dish.id, dish.name) }
+      val basicDishes = dishes.map { dish => BasicDish(dish.id, dish.name, Restaurant.findById("", dish.restaurant_id)(0).name) }
       Ok(Json.prettyPrint(Json.toJson(basicDishes.sortBy { _.name })))
     }
   }

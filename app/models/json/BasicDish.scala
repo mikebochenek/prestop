@@ -9,7 +9,7 @@ import play.api.libs.json.JsString
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-case class BasicDish (id: Long, name: String)
+case class BasicDish (id: Long, name: String, restaurantName: String)
 
 object BasicDish {
   implicit val basicDishReads = Json.reads[BasicDish]
