@@ -128,6 +128,7 @@ object Recommendation {
     val dishesAlreadyRecommended = getDishesAlreadyRecommended()
     val dishesRecentlyRecommended = getDishesRecentlyRecommended()
     
+    val startTSAllDishes = System.currentTimeMillis
     val allDishes = (keyword != null && keyword.trim.length > 0) match {
       case true => {
         val dishesWithKeyword = TagRef.findByENTagText(keyword.replaceAll("'","''")).map { x => x.refid }
@@ -140,6 +141,7 @@ object Recommendation {
       }
       case false => Dish.findAll
     } // NB: this is a little bit hacky, because we fill allDishes with either all, or already filtered by keyword search
+    Logger.info("Recommend.allDishes took: " + (System.currentTimeMillis - startTSAllDishes) + " ms -> allDishes.size: " + allDishes.size)
     
     var dishes = allDishes //Dish.findAll() //TODO !!! use local allDishes // getAllDishes()
       .filter { x => RecommendationUtils.within(maxDistance, restaurants, x.restaurant_id, longitude, latitude) } // filter by distance
