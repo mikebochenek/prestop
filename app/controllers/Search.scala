@@ -39,7 +39,7 @@ object Search extends Controller with Secured {
     for (u <- unmerged) {
       val mfilter = merged.filter { x => u.tag.equalsIgnoreCase(x.tag) }
       if (mfilter.isEmpty) {
-        merged += SearchTag(u.tag.toLowerCase, u.count)
+        merged += SearchTag(u.tag.toLowerCase.replaceAll("[^A-Za-z0-9 ]", ""), u.count)
       } else {
         mfilter.head.count = mfilter.head.count + u.count
       }
