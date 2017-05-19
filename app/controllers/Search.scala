@@ -22,7 +22,7 @@ object Search extends Controller with Secured {
   
   def index():Seq[SearchTag] = {
     val startTS = System.currentTimeMillis
-    val allDishes = Dish.findAll()
+    val allDishes = Dish.findAll().filter { x => x.status != 4 } 
       
     val dishSearchTags = Tag.findDishSearchTags().map { x => SearchTag(x.en_text.get, x.count.get) }
     val cuisineSearchTags = Tag.findCuisineSearchTags().map { x => SearchTag(x.en_text.get, x.count.get) }
