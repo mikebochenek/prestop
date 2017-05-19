@@ -55,13 +55,22 @@ object Search extends Controller with Secured {
     implicit request => {
       ActivityLog.create(id, ActivityLog.TYPE_SEARCH_SUGGEST, 0, keyword)
       
+      val keywords = keyword.toLowerCase.trim.split(" ")
+      def compare(s: String) = {
+        var contains = false;
+        for (k <- keywords) {
+          contains = contains || s.contains(k)
+        }
+        contains
+      }
+      
       if (keyword.length < 2) {
         val popularSearches = (index()).sortWith(_.count > _.count).take(10)
            .map { x => SearchSuggestion(x.tag, x.count + " dishes") }
         Ok(Json.prettyPrint(Json.toJson(popularSearches)))
       } else {
         val matches = (index()).sortWith(_.count > _.count)
-           .filter { x => x.tag.toLowerCase.contains(keyword.toLowerCase.trim) }
+           .filter { x => compare(x.tag.toLowerCase) }
            .take(10)
            .map { x => SearchSuggestion(x.tag, x.count + " dishes") }
         Ok(Json.prettyPrint(Json.toJson(matches)))
