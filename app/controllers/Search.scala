@@ -82,7 +82,7 @@ object Search extends Controller with Secured {
         Ok(json)
       } catch {
         case e: Exception => {
-          Logger.error("Recommend.getWithFilters(..)", e)
+          Logger.error("Search.getWithFilters(..)", e)
           if ("SqlMappingError(No rows when expecting a single one)".equalsIgnoreCase(e.getMessage)) {
             Ok(Json.toJson(new ErrorJSONResponse("user does not exist", id+"")))
           } else {
