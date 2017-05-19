@@ -18,9 +18,10 @@ import models.json.SearchSuggestion
 
 object Search extends Controller with Secured {
 
-  case class SearchTag(tag: String, count: Long)
+  case class SearchTag(tag: String, var count: Long)
   
   def index():Seq[SearchTag] = {
+    val startTS = System.currentTimeMillis
     val allDishes = Dish.findAll()
       
     val dishSearchTags = Tag.findDishSearchTags().map { x => SearchTag(x.en_text.get, x.count.get) }
@@ -33,7 +34,18 @@ object Search extends Controller with Secured {
 
     val restaurantSearchTags = Restaurant.findAll() //TODO and check against dishes for each restaurant..
     
-    (dishSearchTags ++ cuisineSearchTags ++ dishNameSearchTags)
+    val unmerged = (dishSearchTags ++ cuisineSearchTags ++ dishNameSearchTags)
+    val merged = MutableList.empty[SearchTag]
+    for (u <- unmerged) {
+      val mfilter = merged.filter { x => u.tag.equalsIgnoreCase(x.tag) }
+      if (mfilter.isEmpty) {
+        merged += SearchTag(u.tag.toLowerCase, u.count)
+      } else {
+        mfilter.head.count = mfilter.head.count + u.count
+      }
+    }
+    Logger.info("building search index ... " + (System.currentTimeMillis - startTS) + " ms")
+    merged
   }
   
   /**
