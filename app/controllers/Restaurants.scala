@@ -250,6 +250,14 @@ object Restaurants extends Controller with Secured {
     case _   => Restaurant.findAllByUser(user.id)
   }
 
+  def getAllSimple() = IsAuthenticated { username =>
+    implicit request => {
+      val user = User.getFullUser(username).get
+      val all = getRestaurantsForUser(user)
+      Ok(Json.prettyPrint(Json.toJson(all.map(a => Json.toJson(a)))))
+    }
+  }
+  
   def getAll() = IsAuthenticated { username =>
     implicit request => {
       val user = User.getFullUser(username).get
