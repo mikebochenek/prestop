@@ -58,6 +58,8 @@ CREATE TABLE IF NOT EXISTS `presto`.`dish` (
 ENGINE = InnoDB;
 
 
+/* thats weird, some of my changes are not there... and version history seems to be missing */
+
 CREATE TABLE IF NOT EXISTS `presto`.`image` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `filename` VARCHAR(255) NULL,
@@ -66,8 +68,16 @@ CREATE TABLE IF NOT EXISTS `presto`.`image` (
   `dish_id` INT NOT NULL,
   `status` INT NULL,
   `lastupdate` TIMESTAMP NULL,
+  `user_id` INT NULL,
+  `width` INT NULL,
+  `height` INT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
+
+
+ALTER TABLE `presto`.`image`  ADD `user_id` INT NULL;
+ALTER TABLE `presto`.`image`  ADD `width` INT NULL;
+ALTER TABLE `presto`.`image`  ADD `height` INT NULL;
 
 
 CREATE TABLE IF NOT EXISTS `presto`.`reservation` (
@@ -174,7 +184,70 @@ ALTER TABLE `presto`.`dish` DROP COLUMN gluton;
 ALTER TABLE `presto`.`dish` DROP COLUMN diary;
 ALTER TABLE `presto`.`dish` DROP COLUMN vegetarian;
 
-update user set type = 7;
+/* update user set type = 7; */
+
+
+/* 28.02.2016 - updates for making schedule field longer! */
+ALTER TABLE `presto`.`restaurant`  
+  CHANGE COLUMN `schedulecron` `schedulecron` VARCHAR(1024);
+
+/* 05.03.2016 - add more fields to users table */
+ALTER TABLE `presto`.`user`  ADD `fullname` VARCHAR(45) NULL;
+ALTER TABLE `presto`.`user`  ADD `city` VARCHAR(45) NULL;
+ALTER TABLE `presto`.`user`  ADD `country` VARCHAR(25) NULL;
+ALTER TABLE `presto`.`user`  ADD `state` VARCHAR(25) NULL;
+ALTER TABLE `presto`.`user`  ADD `phone` VARCHAR(35) NULL;
+
+update user set city = 'Zurich', country = 'Switzerland' where id = 1 or id = 2;
+update user set fullname = 'Mike Bochenek' where id = 1;
+
+
+/* uh... oh, what happened to my alter statements for restaurant - such as state etc */
+
+
+CREATE TABLE IF NOT EXISTS `presto`.`restaurant_owner` (
+  `id` INT NOT NULL,
+  `restaurant_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `status` INT NULL,
+  `lastupdate` TIMESTAMP NULL,
+  `settings` VARCHAR(2000) NULL,
+  PRIMARY KEY (`id`, `user_id`, `restaurant_id`))
+ENGINE = InnoDB;
+
+/* 12.04.2016 - adding description and serving size to dish, and adding multiple locations */
+ALTER TABLE `presto`.`dish`  ADD `serving` VARCHAR(255) NULL;
+ALTER TABLE `presto`.`dish`  ADD `description` VARCHAR(2048) NULL;
+
+ALTER TABLE `presto`.`restaurant`  ADD `parent_id` INT NULL;
+ALTER TABLE `presto`.`restaurant`  ADD `website` VARCHAR(255) NULL;
+
+ALTER TABLE `presto`.`restaurant`  ADD `country` VARCHAR(65) NULL;
+
+/* 24.05.2016 - adding dish source */
+ALTER TABLE `presto`.`dish`  ADD `source` VARCHAR(512) NULL;
+
+/* 02.06.2016 - fixing friends limitation */
+ALTER TABLE friend DROP FOREIGN KEY fk_user_has_user_user2;
+alter table friend modify friend_user_id bigint;
+alter table friend add index (friend_user_id);
+
+/* 03.06.2016 - adding misc which can contain country and state etc. */
+ALTER TABLE `presto`.`restaurant` MODIFY  `state` VARCHAR(4096) NULL;
+
+/* 18.06.2016 - adding restaurant google places ID */
+ALTER TABLE `presto`.`restaurant`  ADD `google_places_id` VARCHAR(35) NULL;
+
+/* 13.07.2016 - adding AUTO_INCREMENT to restaurant_owner */
+ALTER TABLE restaurant_owner CHANGE id id INT AUTO_INCREMENT;
+
+/* 02.12.2016 - adding price bucket to dish */
+ALTER TABLE `presto`.`dish`  ADD `price_bucket` VARCHAR(55) NULL;
+
+/* 21.05.2017 - adding index on activity_log */
+CREATE INDEX idx_activity_log_all ON activity_log(user_id, createdate, activity_type);
+
+show index from activity_log;
 
 exit;
 
