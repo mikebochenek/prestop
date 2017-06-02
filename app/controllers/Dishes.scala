@@ -456,7 +456,7 @@ object Dishes extends Controller with Secured {
   def getByID(id: Long, longitude: String, latitude: String) = Action {
     implicit request => {
       var json = ""
-      val dish = Dish.findById("", id)
+      val dish = Dish.findById("", id).filter { x => x.status == 0 }
       if (dish.size > 0) {
         val ingredients = Tag.findByRef(dish(0).id, 11).map(_.name).mkString(",")
         val r = Restaurant.findById("", dish(0).restaurant_id)(0)
