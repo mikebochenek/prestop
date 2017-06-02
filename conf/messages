@@ -149,8 +149,8 @@ restedit.cuisines.tooltip = Cuisines served at this restaurant (i.e. Swiss, Fren
 
 restedit.statistics = Statistics
 restedit.info = Restaurant Info
-restedit.photo = Photo
-restedit.profilepic = Profile Picture
+restedit.photo = Restaurant Photo
+restedit.profilepic = Logo
 restedit.menu = Menu (dishes)
 restedit.locations = Other Locations
 
