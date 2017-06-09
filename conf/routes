@@ -4,6 +4,10 @@ GET      /                      controllers.Application.login
 # Play routes serving HTML to AngularJS start with /views
 GET      /views/*any            controllers.Application.loadPublicHTML(any)
 
+# public APIs for Twilio
+GET      /api/twilio/hello           speech.TwilioController.hello
+GET      /api/twilio/record          speech.TwilioController.record
+
 # public APIs (for mobile development etc.)
 GET      /api/search                 controllers.Search.searchWithFilters(keyword: String ?= "", id: Long ?= 0, longitude: String ?= "", latitude: String ?= "", maxDistance: Double ?= 10, minPrice: Double ?= 0.0, maxPrice: Double ?= 1000.0, openNow: Boolean ?= false, lastDishID: Long ?= 0, maxDishes: Long ?= 100, avoid: String ?= "", onlyShow: String ?= "", showOnlyCuisines: String ?= "", sortBy: String ?= "")
 GET      /api/searchsuggestions      controllers.Search.suggest(keyword: String ?= "", id: Long ?= 0)
