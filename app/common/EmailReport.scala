@@ -69,7 +69,8 @@ object EmailReport {
   
     val mail = use[MailerPlugin].email
     mail.setSubject("google speech trainscript " + prettySdf.format(new Date(System.currentTimeMillis()-24*60*60*1000)))
-    mail.setRecipient("sebastian@presto.ch")
+    mail.setRecipient("sebastian.gubser@hotmail.com")
+    mail.setBcc("sebastian@presto.ch")
     mail.setCc("mike@presto.ch")
     mail.setBcc("mike.bochenek@gmail.com")
     mail.setFrom("info@idone.ch")
