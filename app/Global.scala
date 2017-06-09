@@ -66,8 +66,8 @@ object Global extends WithFilters(LangFromSubdomain, LoggingFilter) {
     play.api.Logger.info("Scheduling jobs...")
 
     val gc = System.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-    val f = new java.io.File(gc)
-    Logger.info("using : " + gc + " exists and can write: " + f.canRead());
+    //val f = new java.io.File(gc)
+    Logger.info("using : " + gc + " exists and can write: ");
     
     import scala.concurrent.duration._
     import play.api.Play.current
