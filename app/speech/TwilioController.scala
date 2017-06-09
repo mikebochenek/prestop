@@ -17,6 +17,7 @@ import controllers.Secured
 import common.FileDownloader
 import actors.EmailJobActor
 import common.EmailReport
+import com.twilio.twiml.Say.Voice
 
 object TwilioController extends Controller with Secured {
   
@@ -35,7 +36,7 @@ object TwilioController extends Controller with Secured {
     implicit request => {
       // Use <Say> to give the caller some instructions
       val instructions = new Say.Builder("Welcome to the Presto booking demo, powered by Google Speech. "
-          + " Please leave a message after the beep.").build();
+          + " Please leave a message after the beep.").voice(Voice.ALICE).build();
 
       // Use <Record> to record the caller's message
       val record = new Record.Builder().build();
