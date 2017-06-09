@@ -32,27 +32,24 @@ object TwilioController extends Controller with Secured {
     }
   }
   
+  val initialPrompt = ("Unfortunately we can not come to the phone right now. "
+          + " Our automated assistant can help you make the reservation. "
+          + " What day is the reservation for?")
+  val pleaseRepeat = new Say.Builder("I'm sorry, I did not understand.  Can you please repeat?").voice(Voice.ALICE).build(); 
+          
   def record() = Action {
     implicit request => {
-      // Use <Say> to give the caller some instructions
-      val instructions = new Say.Builder("Welcome to the Presto booking demo. "
-          + " What date is the reservation for?").voice(Voice.ALICE).build();
+      val instructions = new Say.Builder(initialPrompt).voice(Voice.ALICE).build(); // Use <Say> to give the caller some instructions
 
-      // Use <Record> to record the caller's message
-      val record = new Record.Builder().build();
+      val record = new Record.Builder().build(); // Use <Record> to record the caller's message
 
-      // End the call with <Hangup>
-      val hangup = new Hangup();
-
-      // Create a TwiML builder object
-      val twiml = new VoiceResponse.Builder()
+      val twiml = new VoiceResponse.Builder() // Create a TwiML builder object
         .say(instructions)
         .record(record)
-        .hangup(hangup)
+        .say(pleaseRepeat)
         .build();
 
-      val xml = twiml.toXml();
-      Ok(xml).as("text/xml");
+      Ok(twiml.toXml()).as("text/xml");
     }
   }
 
