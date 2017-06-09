@@ -58,9 +58,10 @@ object TwilioController extends Controller with Secured {
   def handleRecording() = Action {
     implicit request => {
       Thread.sleep(10000)
-      Logger.info("HTTP post to /api/record: " + request.body.asJson.get)
+      Logger.info("HTTP post to /api/record: " + request.body.asFormUrlEncoded)
       
       val url = request.body.asFormUrlEncoded.get("RecordingUrl")
+      val from = request.body.asFormUrlEncoded.get("From")
       val filename = "/tmp/speech-" + System.currentTimeMillis + ".wav" 
       
       Logger.info("downloading " + url + " to " + filename)
@@ -71,7 +72,7 @@ object TwilioController extends Controller with Secured {
         val transcript = Quickstart.process(filename)
         Logger.info("transcript: " + transcript)
         
-        EmailReport.sendtranscript(transcript)
+        EmailReport.sendtranscript(transcript, from.head)
         
       } else {
         Logger.info("no image url")

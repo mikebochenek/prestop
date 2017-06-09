@@ -58,9 +58,11 @@ object EmailReport {
     }
   }
   
-  def sendtranscript(email: String) = {
+  def sendtranscript(email: String, from: String) = {
 
     var html = "<html><body><h1>Hello</h1>"
+    html += "<br>call from: "
+    html += from
     html += "<br>google speech transcribed: "
     html += email
     html += "</body></html>"
