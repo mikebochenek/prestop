@@ -98,7 +98,7 @@ object Restaurants extends Controller with Secured {
     Logger.info(".. looks like need to populate restaurant info from Google Places: " + id)
     val url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + id + 
               "&key=AIzaSyCmRHTsV4bmezqHapCyv3kHSIW6qxwVTCM" //TODO move key to properties
-    val resp = io.Source.fromURL(url).mkString
+    val resp = scala.io.Source.fromURL(url).mkString
     val googlePlaces = GooglePlacesResponse.getInstance(resp)
     googlePlaces
   }
