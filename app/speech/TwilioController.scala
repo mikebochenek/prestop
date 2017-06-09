@@ -35,8 +35,8 @@ object TwilioController extends Controller with Secured {
   def record() = Action {
     implicit request => {
       // Use <Say> to give the caller some instructions
-      val instructions = new Say.Builder("Welcome to the Presto booking demo, powered by Google Speech. "
-          + " Please leave a message after the beep.").voice(Voice.ALICE).build();
+      val instructions = new Say.Builder("Welcome to the Presto booking demo. "
+          + " What date is the reservation for?").voice(Voice.ALICE).build();
 
       // Use <Record> to record the caller's message
       val record = new Record.Builder().build();
