@@ -21,7 +21,8 @@ import java.util.List;
 
 object Quickstart {
   def main(args:Array[String] ):Unit = {
-    System.out.println(process("/tmp/recording.wav"))
+    //System.out.println(process("/tmp/recording.wav"))
+    System.out.println(process("/tmp/test2.wav"))
   }
   
   def process(fileName: String) = {
