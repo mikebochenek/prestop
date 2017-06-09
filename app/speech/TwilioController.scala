@@ -37,22 +37,35 @@ object TwilioController extends Controller with Secured {
           + " What day is the reservation for?")
   val pleaseRepeat = new Say.Builder("I'm sorry, I did not understand.  Can you please repeat?").voice(Voice.ALICE).build(); 
           
-  def record() = Action {
-    implicit request => {
-      val instructions = new Say.Builder(initialPrompt).voice(Voice.ALICE).build(); // Use <Say> to give the caller some instructions
-
-      val record = new Record.Builder().build(); // Use <Record> to record the caller's message
-
-      val twiml = new VoiceResponse.Builder() // Create a TwiML builder object
+  def createFirstPrompt() = {
+    val instructions = new Say.Builder(initialPrompt).voice(Voice.ALICE).build(); // Use <Say> to give the caller some instructions
+    val record = new Record.Builder().build(); // Use <Record> to record the caller's message
+    val twiml = new VoiceResponse.Builder() // Create a TwiML builder object
         .say(instructions)
         .record(record)
         .say(pleaseRepeat)
         .build();
+    twiml
+  }
 
-      Ok(twiml.toXml()).as("text/xml");
+  def record() = Action {
+    implicit request => {
+      Ok(createFirstPrompt.toXml()).as("text/xml");
     }
   }
 
+  def createFinalPrompt() = {
+    val instructions = new Say.Builder("How many people in your party?").voice(Voice.ALICE).build();
+    val record = new Record.Builder().action("https://presto.bochenek.ch/api/twilio/record2").build();
+    val hangup = new Hangup(); // End the call with <Hangup>
+    val twiml = new VoiceResponse.Builder()
+        .say(instructions)
+        .record(record)
+        .hangup(hangup)
+        .build();
+    twiml
+  }
+  
   def handleRecording() = Action {
     implicit request => {
       Thread.sleep(10000)
@@ -76,6 +89,14 @@ object TwilioController extends Controller with Secured {
         Logger.info("no image url")
       }
       
+      Ok(createFinalPrompt.toXml()).as("text/xml");
+    }
+  }
+
+
+  def handleFinalRecording() = Action {
+    implicit request => {
+      Logger.info("HTTP post to /api/record2: " + request.body.asFormUrlEncoded)
       Ok("OK");
     }
   }
