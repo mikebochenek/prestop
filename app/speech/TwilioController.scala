@@ -14,6 +14,9 @@ import models._
 
 import com.twilio.twiml._
 import controllers.Secured
+import common.FileDownloader
+import actors.EmailJobActor
+import common.EmailReport
 
 object TwilioController extends Controller with Secured {
   
@@ -51,4 +54,31 @@ object TwilioController extends Controller with Secured {
       Ok(xml).as("text/xml");
     }
   }
+
+  def handleRecording() = Action {
+    implicit request => {
+      Thread.sleep(10000)
+      Logger.info("HTTP post to /api/record: " + request.body.asJson.get)
+      
+      val url = request.body.asFormUrlEncoded.get("RecordingUrl")
+      val filename = "/tmp/speech-" + System.currentTimeMillis + ".wav" 
+      
+      Logger.info("downloading " + url + " to " + filename)
+      
+      if (url.size > 0 ) {
+        FileDownloader.download(url.head, filename)
+        
+        val transcript = Quickstart.process(filename)
+        Logger.info("transcript: " + transcript)
+        
+        EmailReport.sendtranscript(transcript)
+        
+      } else {
+        Logger.info("no image url")
+      }
+      
+      Ok("OK");
+    }
+  }
+  
 }

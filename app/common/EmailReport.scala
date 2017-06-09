@@ -58,6 +58,23 @@ object EmailReport {
     }
   }
   
+  def sendtranscript(email: String) = {
+
+    var html = "<html><body><h1>Hello</h1>"
+    html += "<br>google speech transcribed: "
+    html += email
+    html += "</body></html>"
+  
+    val mail = use[MailerPlugin].email
+    mail.setSubject("google speech trainscript " + prettySdf.format(new Date(System.currentTimeMillis()-24*60*60*1000)))
+    mail.setRecipient("sebastian@presto.ch")
+    mail.setCc("mike@presto.ch")
+    mail.setBcc("mike.bochenek@gmail.com")
+    mail.setFrom("info@idone.ch")
+  
+    mail.sendHtml(html)
+  }
+  
   def sendnewpassword(email: String) = {
     val user = User.getFullUser(email)
     Logger.info (user.isDefined + " - generate new password for : " + email)

@@ -21,11 +21,15 @@ import java.util.List;
 
 object Quickstart {
   def main(args:Array[String] ):Unit = {
+    System.out.println(process("/tmp/recording.wav"))
+  }
+  
+  def process(fileName: String) = {
     // Instantiates a client
     val speech = SpeechClient.create()
     
     // The path to the audio file to transcribe
-    val fileName = "/home/mike/Downloads-1/audio.raw"; // brooklyn.flac ? 
+    // val fileName = "/home/mike/Downloads-1/audio.raw"; // brooklyn.flac ? 
 
     // Reads the audio file into memory
     val path = Paths.get(fileName);
@@ -35,7 +39,7 @@ object Quickstart {
     // Builds the sync recognize request
     val config = RecognitionConfig.newBuilder()
         .setEncoding(AudioEncoding.LINEAR16)
-        .setSampleRateHertz(16000)
+        //.setSampleRateHertz(16000)
         .setLanguageCode("en-US")
         .build();
     val audio = RecognitionAudio.newBuilder()
@@ -46,16 +50,19 @@ object Quickstart {
     val response = speech.recognize(config, audio)
     val results = response.getResultsList().toArray // List<SpeechRecognitionResult>
 
+    var output = "";
     for (result <- results) {
       val alternatives = result.asInstanceOf[SpeechRecognitionResult].getAlternativesList().toArray // List<SpeechRecognitionAlternative> 
 
       for (alternative <- alternatives) {
         val transcript = alternative.asInstanceOf[SpeechRecognitionAlternative]
-        System.out.printf("Transcription: %s%n", transcript);
+        output = transcript.getTranscript();
+        val confidence = transcript.getConfidence();
       }
     }
     
     speech.close();
+    output;
   }
 }
 // [END speech_quickstart]
