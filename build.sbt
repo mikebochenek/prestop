@@ -16,4 +16,6 @@ libraryDependencies += "com.stripe" % "stripe-java" % "2.7.0"
 
 libraryDependencies += "com.google.cloud" % "google-cloud-speech" % "0.17.1-alpha"
 
+libraryDependencies += "com.twilio.sdk" % "twilio-java-sdk" % "7.0.0-rc-7"
+
 play.Project.playScalaSettings
