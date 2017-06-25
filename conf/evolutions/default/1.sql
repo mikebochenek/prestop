@@ -88,6 +88,8 @@ CREATE TABLE IF NOT EXISTS `presto`.`reservation` (
   `guestcount` INT NULL,
   `special_requests` VARCHAR(255) NULL,
   `status` INT NULL,
+  `source` INT NULL,
+  `source_id` VARCHAR(128) NULL,
   `lastupdate` TIMESTAMP NULL,
   PRIMARY KEY (`id`, `user_id`, `restaurant_id`),
   INDEX `fk_user_has_restaurant_restaurant1_idx` (`restaurant_id` ASC),
@@ -102,6 +104,16 @@ CREATE TABLE IF NOT EXISTS `presto`.`reservation` (
     REFERENCES `presto`.`restaurant` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `presto`.`restaurant_seating` (
+  `tables` INT NOT NULL,
+  `restaurant_id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `lastupdate` TIMESTAMP NULL,
+  `misc` VARCHAR(8192) NULL,
+  PRIMARY KEY (`id`, `restaurant_id`),
+  INDEX `fk_rest_seating_restaurant1_idx` (`restaurant_id` ASC))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `presto`.`activity_log` (
