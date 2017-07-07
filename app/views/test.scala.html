@@ -4,10 +4,45 @@
 
 @main(title = "settings") {
 <div class="container">
+  <div class="starter-template">
 
+    @helper.form(routes.Reservations.test) {
+    <h3>Test Reservation</h3>
+
+      <div class="row ">
+        <div class="col-sm-8 col-md-offset-2">
+          
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Restaurant</span>
+            <input class="form-control span4" type="text" name="restaurantID" id="restaurantID" value="@id">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">@Messages("test.userid")</span>
+            <input class="form-control span4" type="text" name="userID" id="userID" value="@id">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Time and Date</span>
+            <input class="form-control span4" type="text" name="time" id="time" value="@id">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Guest Count</span>
+            <input class="form-control span4" type="text" name="guestCount" id="guestCount" value="@id">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Comments</span>
+            <input class="form-control span4" type="text" name="comments" id="comments" value="@id">
+          </div>
+
+          </br>
+                      
+          <button class="span4 btn btn-primary" type="submit" id="reservationsbutton">@Messages("test")</button>
+          <button class="span4 btn btn-primary" type="reset" id="resreset">@Messages("reset")</button>
+        </div>
+      </div>
+    }
+    
     @helper.form(routes.Recommend.testsubmit) {
 
-  <div class="starter-template">
     <h3>@Messages("test.header")</h3>
 
       <div class="row ">

@@ -73,6 +73,7 @@ POST	 /dish						 controllers.Dishes.upload(id: Long)
 
 GET      /test            controllers.Recommend.test
 GET      /testsubmit      controllers.Recommend.testsubmit
+GET      /testReservation controllers.Reservations.test
 
 GET     /restaurant                         controllers.Restaurants.index
 GET     /restaurantedit/:id                 controllers.Restaurants.edit(id: Long)

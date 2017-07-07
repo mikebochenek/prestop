@@ -25,14 +25,24 @@ object Reservations extends Controller with Secured {
     }
   }
 
-  val settingsForm = Form(
+  val testForm = Form(
     tuple(
-      "email" -> text,
-      "language" -> text,
-      "password" -> text,
-      "passwordnew1" -> text,
-      "passwordnew2" -> text,
-      "additionalsettings" -> text))
+      "restaurantID" -> text,
+      "userID" -> text,
+      "time" -> text,
+      "guestCount" -> text,
+      "comments" -> text))
+
+  def test() = IsAuthenticated { username =>
+    implicit request => {
+      var validationErrors = ""
+      val (restaurantID, userID, time, guestCount, comments) = testForm.bindFromRequest.get
+      Logger.info("test reservation: " + testForm.bindFromRequest.get)
+      
+      Ok(views.html.test(Recommend.testForm, null, null, null, User.getFullUser(username).get.id.toString, 
+          "47.385740", "8.518084", "false", "10", "0.0", "100.0", "100", "", "-1"))
+    }
+  }
   
   def getByUser(id: Long) = Action { 
     implicit request => {
@@ -67,6 +77,20 @@ object Reservations extends Controller with Secured {
       Logger.info("Reservation created - id: " + id.get + " user: " + user_id + " restaurant: " + restaurant_id)
       Ok("ok")
     }
+  }
+  
+  def makeReservation() = {
+    //TODO validate inputs
+    
+    //TODO check time against restaurant schedule
+    
+    //TODO check if table with sufficient seating is available at this time
+    
+    //TODO create reservation
+    
+    //TODO update availability for particular restaurant
+    
+    //TODO feedback: email, sms, e-mail restaurant?.. 
   }
 
   def update() = Action {
