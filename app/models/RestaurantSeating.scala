@@ -41,6 +41,13 @@ object RestaurantSeating {
     }
   }
 
+  def getSettingsByRestaurant(id: Long): Option[RestaurantSeating] = {
+    DB.withConnection { implicit connection =>
+      SQL(selectSQL + " where reservation_id = 0 and status > 0 and restaurant_id = {restaurant_id}").on(
+        'restaurant_id -> id).as(RestaurantSeating.simple.singleOpt)
+    }
+  }
+  
   def findByRestaurant(id: Long): Seq[RestaurantSeating] = {
     DB.withConnection { implicit connection =>
       SQL(selectSQL + " where status > 0 and restaurant_id = {restaurant_id}").on(

@@ -76,7 +76,7 @@ object Reservation {
     }
   }
 
-  def findById(username: String, id: Long): Seq[Reservation] = {
+  def findById(id: Long): Seq[Reservation] = {
     DB.withConnection { implicit connection =>
       SQL("select id, user_id, restaurant_id, reservationtime, guestcount, special_requests, lastupdate, status from reservation where id = {id}").on(
         'id -> id).as(Reservation.simple *)

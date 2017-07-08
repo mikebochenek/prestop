@@ -109,7 +109,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `presto`.`restaurant_seating` (
   `tables` INT NOT NULL,
   `restaurant_id` INT NOT NULL,
-  `reservation_id` INT,
+  `reservation_id` INT DEFAULT 0,
+  `status` INT,
   `day` DATE,
   `id` INT NOT NULL AUTO_INCREMENT,
   `lastupdate` TIMESTAMP NULL,
