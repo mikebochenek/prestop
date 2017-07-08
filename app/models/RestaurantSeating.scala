@@ -14,7 +14,7 @@ import play.api.libs.json.JsString
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-case class RestaurantSeating(tables: Long, id: Long, restaurant_id: Long, reservation_id: Long, 
+case class RestaurantSeating(tables: Long, var id: Long, restaurant_id: Long, reservation_id: Long, 
     status: Int, day: Date, lastupdate: Date, misc: String)
 
 object RestaurantSeating {
@@ -33,12 +33,61 @@ object RestaurantSeating {
       }
   }
 
+  def create(seating: RestaurantSeating): Option[Long] = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          insert into restaurant_seating (tables, restaurant_id, reservation_id, status, day, lastupdate, misc) values (
+          {tables}, {restaurant_id}, {reservation_id}, {status}, {day}, {lastupdate}, {misc}
+          )
+        """).on(
+          'tables -> seating.tables,
+          'restaurant_id -> seating.restaurant_id,
+          'reservation_id -> seating.reservation_id,
+          'status -> seating.status,
+          'day-> seating.day,
+          'lastupdate -> new Date(),
+          'misc -> seating.misc).executeInsert()
+    }
+  }
+
+
+  def update(seating: RestaurantSeating) = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+         update restaurant_seating set tables = {tables}, restaurant_id = {restaurant_id},  
+         reservation_id = {reservation_id}, lastupdate = {lastupdate}, status = {status},
+         day = {day}, misc = {misc} where id = {id}
+        """).on(
+          'id -> seating.id,
+          'tables -> seating.tables,
+          'restaurant_id -> seating.restaurant_id,
+          'reservation_id -> seating.reservation_id,
+          'status -> seating.status,
+          'day-> seating.day,
+          'lastupdate -> new Date(),
+          'misc -> seating.misc).executeUpdate
+    }
+  }
+  
   val selectSQL = "select tables, id, restaurant_id, reservation_id, status, day, lastupdate, misc from restaurant_seating "
   
   def findAll(): Seq[RestaurantSeating] = {
     DB.withConnection { implicit connection =>
       SQL(selectSQL).as(RestaurantSeating.simple *)
     }
+  }
+  
+  def getOrCreateDefault(id: Long) : RestaurantSeating = {
+    val existing = getSettingsByRestaurant(id)
+    existing.getOrElse( { createDefaultInsert(id) })
+  }
+  
+  def createDefaultInsert(id: Long) : RestaurantSeating = { 
+    val r = new RestaurantSeating(25, -1, id, 0, 0, new Date(), null, "")
+    r.id = create(r).get
+    r
   }
 
   def getSettingsByRestaurant(id: Long): Option[RestaurantSeating] = {
