@@ -341,7 +341,7 @@ attachpaymenttags = function() {
             <button class="span4 btn btn-primary" type="submit" id="createlocation" >@Messages("restedit.locations.addbutton")</button>
         }
 
-      	<h3 class="hidden top50">@Messages("restedit.reservations") (@reservations.size)</h3>
+      	<h3 class="top50">@Messages("restedit.reservations")<sup><small>beta</small></sup> (@reservations.size)</h3>
       	<table class="hidden table table-hover">
       	  <thead>
       	    <tr>
@@ -364,6 +364,7 @@ attachpaymenttags = function() {
 		  }
       	  </tbody>
 		</table>
+        <a href="/reservations/@restaurant.id" class="span4 btn btn-primary" type="submit" id="reservationslink" >Reservations Settings</a>
 
  
     <!--Load the AJAX API - example from https://developers.google.com/chart/interactive/docs/quick_start -->
