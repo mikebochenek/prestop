@@ -28,10 +28,14 @@ object Reservations extends Controller with Secured {
   val settingsForm = Form(
     tuple(
       "tables" -> text,
-      "comments" -> text))
+      "phone" -> text))
   
   def save(id: Long) = IsAuthenticated { username =>
     implicit request => {
+      val (tables, phone) = settingsForm.bindFromRequest.get
+      
+      Logger.info("tables: " + tables)
+      
       //TODO check that user is either super admin OR is the restaurant owner
       Ok(views.html.reservations(Restaurant.findById(username, id)(0), Reservation.findAll))
     }
