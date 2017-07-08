@@ -14,8 +14,8 @@ import play.api.libs.json.JsString
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-case class RestaurantSeating(tables: Long, var id: Long, restaurant_id: Long, reservation_id: Long, 
-    status: Int, day: Date, lastupdate: Date, misc: String)
+case class RestaurantSeating(var tables: Long, var id: Long, restaurant_id: Long, reservation_id: Long, 
+    var status: Int, day: Date, lastupdate: Date, var misc: String)
 
 object RestaurantSeating {
 
@@ -27,7 +27,7 @@ object RestaurantSeating {
       get[Int]("restaurant_seating.status") ~
       get[Date]("restaurant_seating.lastupdate") ~
       get[Date]("restaurant_seating.day") ~
-      get[Option[String]]("restaurant_owner.misc") map {
+      get[Option[String]]("restaurant_seating.misc") map {
         case tables ~ id ~ restaurant_id ~ reservation_id ~ status ~ day ~ lastupdate ~ misc => RestaurantSeating(tables, id, 
             restaurant_id, reservation_id, status, day, lastupdate, misc.getOrElse(null))
       }
@@ -92,7 +92,7 @@ object RestaurantSeating {
 
   def getSettingsByRestaurant(id: Long): Option[RestaurantSeating] = {
     DB.withConnection { implicit connection =>
-      SQL(selectSQL + " where reservation_id = 0 and status > 0 and restaurant_id = {restaurant_id}").on(
+      SQL(selectSQL + " where reservation_id = 0 and status >= 0 and restaurant_id = {restaurant_id}").on(
         'restaurant_id -> id).as(RestaurantSeating.simple.singleOpt)
     }
   }

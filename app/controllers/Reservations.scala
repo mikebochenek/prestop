@@ -35,7 +35,9 @@ object Reservations extends Controller with Secured {
       //TODO check that user is either super admin OR is the restaurant owner
       val (tables, phone) = settingsForm.bindFromRequest.get
       
-      val settings = RestaurantSeating.getOrCreateDefault(id)
+      val seating= RestaurantSeating.getOrCreateDefault(id)
+      seating.tables = tables.toLong
+      RestaurantSeating.update(seating)
       
       Logger.info("tables: " + tables + " phone: " + phone)
       
