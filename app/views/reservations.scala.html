@@ -58,11 +58,13 @@
 
 
     <h3 class="top50">Configuration</h3>
+
+   @helper.form(action = routes.Reservations.save(restaurant.id)) {
     
     <div class="row">
       <div class="col-md-6">
         <h4>Basic</h4>
-        <span>I have <input type="text" size=4 id="seats" style="text-align:right;" value="25"> seats in my restaurant</span>
+        <span>I have <input type="text" size=4 id="tables" name="tables" style="text-align:right;" value="25"> seats in my restaurant</span>
         <br>
         <input type="checkbox" checked="checked"> Reservations are automatically approved</input>
         <br>
@@ -70,15 +72,18 @@
         <br>
         <input type="checkbox" checked="checked"> Send me an e-mail each time a reservation is made</input>
       </div>
-    
-    
-
     </div>
     <button class="top10 span4 btn btn-primary" type="submit" id="generalsavebutton">@Messages("save")</button>
+    
+    }
+    
+
 
     <h3 class="top50">Statistics</h3>
+    <div>coming soon...</div>
 
     <h3 class="top50">Test and Preview Reservation Functionality</h3>
+    <div>coming soon...</div>
  
    </div>
 </div><!-- /.container -->

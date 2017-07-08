@@ -115,6 +115,7 @@ GET     /settings_csv_export                controllers.Settings.generateCSV
 GET     /settings_xml_export                controllers.Settings.generateXML
 GET     /settings_json_export               controllers.Settings.generateJSON
 GET     /reservations/:id                   controllers.Reservations.load(id: Long)
+POST    /reservations/:id                   controllers.Reservations.save(id: Long)
 GET     /imagegrabber                       controllers.ImageGrabber.load(name: String ?= "")
 
 #DELETE   /api/donelist/:id   controllers.DoneList.delete(id: Long)
