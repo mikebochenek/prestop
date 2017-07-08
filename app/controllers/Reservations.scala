@@ -36,7 +36,12 @@ object Reservations extends Controller with Secured {
       val (tables, phone) = settingsForm.bindFromRequest.get
       
       val seating= RestaurantSeating.getOrCreateDefault(id)
+      
+      val misc = getPreviousMiscSafely(seating)
+      misc.reservationsPhone = Option(phone)
+      
       seating.tables = tables.toLong
+      seating.misc = Json.toJson(misc).toString
       RestaurantSeating.update(seating)
       
       Logger.info("tables: " + tables + " phone: " + phone)
@@ -44,6 +49,24 @@ object Reservations extends Controller with Secured {
       Ok(views.html.reservations(Restaurant.findById(username, id)(0), Reservation.findAll))
     }
   }
+  
+  def getPreviousMiscSafely(seating: RestaurantSeating) = {
+    seating.misc match {
+      case null => RestaurantSeatingMisc.default()
+      case "" => RestaurantSeatingMisc.default()
+      case _ => {
+        try {
+          Json.parse(seating.misc).validate[RestaurantSeatingMisc].get
+        } catch {
+          case e: Exception => {
+            Logger.info("failed to parse seating.misc, will use default instead " + e)
+            RestaurantSeatingMisc.default()
+          }
+        }
+      }
+    }
+  }
+  
   
   val testForm = Form(
     tuple(
