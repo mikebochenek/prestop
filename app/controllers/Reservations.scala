@@ -15,6 +15,9 @@ import models._
 import views._
 import java.util.Date
 import models.json.DishLikers
+import common.RecommendationUtils
+import java.util.Calendar
+import java.text.SimpleDateFormat
 
 object Reservations extends Controller with Secured {
 
@@ -127,13 +130,22 @@ object Reservations extends Controller with Secured {
     if (restaurantID > 0 && time != null && guestCount > 1) {
       val r = Restaurant.findById("", restaurantID)
       if (r.size > 0) {
-        r(0).schedule
+        val schedule = r(0).schedule
+        
+        //TODO check time against restaurant schedule
+        val ctime = Calendar.getInstance(RecommendationUtils.timezone)
+        val open = RecommendationUtils.checkScheduleForCalendar(schedule, ctime)
+        
+        Logger.debug("open: " + open)
       }
+      
     }
     
-    //TODO check time against restaurant schedule
     
     //TODO check if table with sufficient seating is available at this time
+    //1. check total available tables
+    val seating = RestaurantSeating.getSettingsByRestaurant(restaurantID)
+    //2. check reservations for this given date AND timeframe
     
     //TODO create reservation
     val timeObj = parseTime(time)
@@ -142,13 +154,14 @@ object Reservations extends Controller with Secured {
     
     //TODO update availability for particular restaurant
     
-    //TODO feedback: email, sms, e-mail restaurant?.. 
+    //TODO notification feedback: email, sms, e-mail restaurant?.. 
           
     id
   }
   
+  val format = new SimpleDateFormat("dd MMMM yyyy - kk:mm")
   def parseTime(t: String) = {
-    new Date(t)
+    format.parse(t)
   }
 
   def update() = Action {
