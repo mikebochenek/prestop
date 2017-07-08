@@ -39,7 +39,9 @@ object RecommendationUtils {
   
   val timezone = TimeZone.getTimeZone("Europe/Copenhagen")
   def checkSchedule(s: String) : Boolean = {
-    val calendar = Calendar.getInstance(timezone)
+    checkScheduleForCalendar(s, Calendar.getInstance(timezone))
+  }
+  def checkScheduleForCalendar(s: String, calendar: Calendar) : Boolean = {
     val day = SUNDAY == calendar.get(DAY_OF_WEEK) match {
       case true => 7
       case default => calendar.get(DAY_OF_WEEK) - 1
