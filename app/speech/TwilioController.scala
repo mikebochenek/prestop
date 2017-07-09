@@ -60,24 +60,13 @@ object TwilioController extends Controller with Secured {
       Thread.sleep(10000)
       Logger.info("HTTP post to /api/record: " + request.body.asFormUrlEncoded)
       
-      val url = request.body.asFormUrlEncoded.get("RecordingUrl")
       val from = request.body.asFormUrlEncoded.get("From")
-      val filename = "/tmp/speech-" + System.currentTimeMillis + ".wav" 
       
-      Logger.info("downloading " + url + " to " + filename)
-      
-      if (url.size > 0 ) {
-        FileDownloader.download(url.head, filename)
+      val transcript = transcribeURL(request.body.asFormUrlEncoded.get("RecordingUrl"))
+      Logger.info("transcript: " + transcript)
         
-        val transcript = Quickstart.process(filename)
-        Logger.info("transcript: " + transcript)
+      //EmailReport.sendtranscript(transcript, from.head)
         
-        //EmailReport.sendtranscript(transcript, from.head)
-        
-      } else {
-        Logger.info("no image url")
-      }
-      
       Ok(createFinalPrompt.toXml()).as("text/xml");
     }
   }
@@ -85,9 +74,29 @@ object TwilioController extends Controller with Secured {
 
   def handleFinalRecording() = Action {
     implicit request => {
+      Thread.sleep(10000)
       Logger.info("HTTP post to /api/record2: " + request.body.asFormUrlEncoded)
+      
+      val transcript = transcribeURL(request.body.asFormUrlEncoded.get("RecordingUrl"))
+      Logger.info("transcript: " + transcript)
+      
       Ok("OK");
     }
   }
-  
+
+  def transcribeURL(url: Seq[String]) = {
+    val filename = "/tmp/speech-" + System.currentTimeMillis + ".wav" 
+      
+    Logger.info("downloading " + url + " to " + filename)
+      
+    if (url.size > 0 ) {
+      FileDownloader.download(url.head, filename)
+        
+      val transcript = Quickstart.process(filename)
+      transcript    
+    } else {
+      Logger.info("no image url")
+      ""
+    }
+  }
 }
