@@ -118,7 +118,7 @@ object TwilioController extends Controller with Secured {
       //TODO based on number being dialed, fetch restaurant, extract text, and create booking
       
       val time = "2017-07-09T12:08:56.235-0700" //TODO
-      val guestCount = 2 //TODO
+      val guestCount = extractGuestCount(transcript)
       val comments = "" //TODO
 
       val reservationsID = Reservations.makeReservation(restaurantID, userID, time, guestCount, comments)
@@ -181,5 +181,19 @@ object TwilioController extends Controller with Secured {
       }
     }
     found
+  }
+  
+  def extractGuestCount(gc: String) = { //TODO hackathon-mode - needs better logic at some point
+    if ("one".equals(gc.toLowerCase)) 1
+    else if ("two".equals(gc.toLowerCase)) 2 
+    else if ("three".equals(gc.toLowerCase)) 3 
+    else if ("four".equals(gc.toLowerCase)) 4 
+    else if ("five".equals(gc.toLowerCase)) 5 
+    else if ("six".equals(gc.toLowerCase)) 6 
+    else if ("seven".equals(gc.toLowerCase)) 7 
+    else if ("eight".equals(gc.toLowerCase)) 8 
+    else if ("nine".equals(gc.toLowerCase)) 9 
+    else if ("ten".equals(gc.toLowerCase)) 10 
+    2
   }
 }
