@@ -22,10 +22,15 @@ import java.text.ParseException
 
 object Reservations extends Controller with Secured {
 
+  val settingsFormat = new SimpleDateFormat("dd.MM.yyyy") //09.07.2017
   def load(id: Long) = IsAuthenticated { username =>
     implicit request => {
       //TODO check that user is either super admin OR is the restaurant owner
-      Ok(views.html.reservations(Restaurant.findById(username, id)(0), Reservation.findAll))
+      val seating = RestaurantSeating.getOrCreateDefault(id)
+      val misc = getPreviousMiscSafely(seating)
+
+      Ok(views.html.reservations(Restaurant.findById(username, id)(0), Reservation.findAllByRestaurant(id), 
+          seating, misc, settingsFormat.format(new Date())))
     }
   }
 
@@ -39,18 +44,18 @@ object Reservations extends Controller with Secured {
       //TODO check that user is either super admin OR is the restaurant owner
       val (tables, phone) = settingsForm.bindFromRequest.get
       
-      val seating= RestaurantSeating.getOrCreateDefault(id)
-      
+      val seating = RestaurantSeating.getOrCreateDefault(id)
       val misc = getPreviousMiscSafely(seating)
-      misc.reservationsPhone = Option(phone)
       
+      misc.reservationsPhone = Option(phone)
       seating.tables = tables.toLong
       seating.misc = Json.toJson(misc).toString
       RestaurantSeating.update(seating)
       
       Logger.info("tables: " + tables + " phone: " + phone)
       
-      Ok(views.html.reservations(Restaurant.findById(username, id)(0), Reservation.findAll))
+      Ok(views.html.reservations(Restaurant.findById(username, id)(0), Reservation.findAllByRestaurant(id), 
+          seating, misc, settingsFormat.format(new Date())))
     }
   }
   

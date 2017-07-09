@@ -1,4 +1,4 @@
-@(restaurant: Restaurant, reservations: Seq[Reservation])(implicit flash: Flash, session: Session, lang: Lang)
+@(restaurant: Restaurant, reservations: Seq[Reservation], seating: RestaurantSeating, misc: RestaurantSeatingMisc, date: String)(implicit flash: Flash, session: Session, lang: Lang)
 
 @main(title = "settings") {
 
@@ -28,6 +28,7 @@
       $( function() {
         $( "#datepicker" ).datepicker({
         	autoSize: true, 
+        	defaultDate: "@date",
         	dateFormat: "dd.mm.yy"
         });
       } );
@@ -64,9 +65,9 @@
     <div class="row">
       <div class="col-md-6">
         <h4>Basic</h4>
-        <span>I have <input type="text" size=4 id="tables" name="tables" style="text-align:right;" value="25"> seats in my restaurant</span>
+        <span>I have <input type="text" size=4 id="tables" name="tables" style="text-align:right;" value="@seating.tables"> seats in my restaurant</span>
         <br>
-        <span>phone <input type="text" size=24 id="phone" name="phone" style="text-align:right;" value="+41 43 508 6995"></span>
+        <span>phone <input type="text" size=24 id="phone" name="phone" style="text-align:right;" value="@misc.reservationsPhone"></span>
         <br>
         <input type="checkbox" checked="checked"> Reservations are automatically approved</input>
         <br>
