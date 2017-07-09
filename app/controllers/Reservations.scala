@@ -133,45 +133,53 @@ object Reservations extends Controller with Secured {
   }
   
   def makeReservation(restaurantID: Long, userID: Long, time: String, guestCount: Long, comments: String) = {
-    //TODO validate inputs
-    if (restaurantID > 0 && time != null && guestCount > 1) {
+    var returnValue = -1L
+    
+    // validate inputs
+    if (restaurantID > 0 && time != null && guestCount >= 1) {
       val r = Restaurant.findById("", restaurantID)
       if (r.size > 0) {
         val schedule = r(0).schedule
         
-        //TODO check time against restaurant schedule
+        val requestedTime = parseTime(time)
+        
+        // check time against restaurant schedule
         val ctime = Calendar.getInstance(RecommendationUtils.timezone)
+        ctime.setTime(requestedTime)
         val open = RecommendationUtils.checkScheduleForCalendar(schedule, ctime)
         
-        Logger.debug("open: " + open)
-      }
-      
-    }
-
-    val requestedTime = parseTime(time)
-
+        Logger.debug("open: " + open) //TODO
+        if (open) {
+          //check if table with sufficient seating is available at this time
+          //1. check total available tables
+          val seating = RestaurantSeating.getOrCreateDefault(restaurantID)
+          //2. check reservations for this given date AND timeframe
+          val existingReservations = Reservation.findByRestaurant(restaurantID, mySQLFormat.format(requestedTime))
     
-    //check if table with sufficient seating is available at this time
-    //1. check total available tables
-    val seating = RestaurantSeating.getOrCreateDefault(restaurantID)
-    //2. check reservations for this given date AND timeframe
-    val existingReservations = Reservation.findByRestaurant(restaurantID, mySQLFormat.format(requestedTime))
+          val seatingAvailable = checkSeating(seating, existingReservations, requestedTime, guestCount)
     
-    val seatingAvailable = checkSeating(seating, existingReservations, requestedTime, guestCount)
+          //create reservation only if seatingAvailable
+          if (seatingAvailable) {
+            returnValue = Reservation.create(userID, restaurantID, requestedTime, guestCount.toInt, comments, 0).get
+            Logger.info("Reservation created - id: " + returnValue + " user: " + userID + " restaurant: " + restaurantID)
     
-    //create reservation only if seatingAvailable
-    if (seatingAvailable) {
-      val id = Reservation.create(userID, restaurantID, requestedTime, guestCount.toInt, comments, 0)
-      Logger.info("Reservation created - id: " + id.get + " user: " + userID + " restaurant: " + restaurantID)
-    
-      //update availability for particular restaurant? probably not needed, since we check all reservations for that day
-    
-      //TODO notification feedback: email, sms, e-mail restaurant?.. 
+            //update availability for particular restaurant? probably not needed, since we check all reservations for that day
+            //TODO notification feedback: email, sms, e-mail restaurant?.. 
           
-      id
-    } else {
-      -1
+          } else {
+            Logger.debug("seating NOT available for: " + guestCount + " at: " + requestedTime)
+          }
+          
+        } else {
+          Logger.debug("not open! " + requestedTime)
+        }
+        
+      } else {
+        Logger.info("restaurant not found: " + restaurantID)
+      }
     }
+    
+    returnValue
   }
   
   def checkSeating(seating: RestaurantSeating, reservations: Seq[Reservation], requestedTime: Date, guestCount: Long) = { 
