@@ -18,6 +18,7 @@ import common.FileDownloader
 import actors.EmailJobActor
 import common.EmailReport
 import com.twilio.twiml.Say.Voice
+import controllers.Reservations
 
 object TwilioController extends Controller with Secured {
 
@@ -86,7 +87,7 @@ object TwilioController extends Controller with Secured {
       val from = request.body.asFormUrlEncoded.get("From")
       val called = request.body.asFormUrlEncoded.get("Called")
       
-      Logger.info("called: " + called + " from: " + from)
+      Logger.info("called: " + called + " from: " + from + " restaurantID: " + identifyRestaurant(called))
       
       //TODO based on caller phone number, fetch or create a user
       //TODO based on number being dialed, fetch restaurant, extract text, and create booking
@@ -109,5 +110,19 @@ object TwilioController extends Controller with Secured {
       Logger.info("no image url")
       ""
     }
+  }
+  
+  def identifyRestaurant(called: Seq[String]) = {
+    var found = -1L
+    if (called.size > 0 && called(0) != null) {
+      val all = RestaurantSeating.findAll()
+      for (seating <- all) { //TODO this should be a do-while not found loop (because duplicate phone numbers create issues
+        val misc = Reservations.getPreviousMiscSafely(seating)
+        if (misc.reservationsPhone.getOrElse("").trim.equals(called(0).trim)) {
+          found = seating.restaurant_id
+        }
+      }
+    }
+    found
   }
 }
