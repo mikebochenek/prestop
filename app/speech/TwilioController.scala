@@ -22,6 +22,8 @@ import com.twilio.twiml.Say.Voice
 import controllers.Reservations
 import controllers.Settings
 import play.api.cache.Cache
+import java.util.Calendar
+import java.text.SimpleDateFormat
 
 object TwilioController extends Controller with Secured {
 
@@ -121,7 +123,7 @@ object TwilioController extends Controller with Secured {
       //TODO based on caller phone number, fetch or create a user
       //TODO based on number being dialed, fetch restaurant, extract text, and create booking
       
-      val time = Cache.get("recording1" + from(0)).getOrElse("2017-07-09T12:08:56.235-0700").toString //TODO
+      val time = extractTime(Cache.get("recording1" + from(0)))
       val guestCount = extractGuestCount(transcript)
       val comments = "" //TODO
 
@@ -137,8 +139,6 @@ object TwilioController extends Controller with Secured {
       } else {
          Ok(successful("OK.  Reservation created." + reservationsID).toXml()).as("text/xml"); //final response should be using Alice's voice
       }
-
-      
     }
   }
 
@@ -185,6 +185,16 @@ object TwilioController extends Controller with Secured {
       }
     }
     found
+  }
+  
+  val suDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")// 2017-07-20T16:00
+  val suDefaultDateFormat = new SimpleDateFormat("yyyy-MM-dd")
+  def extractTime(tstring: Option[Any]) = {
+    val t = tstring.getOrElse("2017-07-09T12:08:56.235-0700").toString //TODO
+    Logger.debug("extractTime: " + tstring)
+    val extracted = SUTime.extract(t, suDefaultDateFormat.format(Calendar.getInstance))
+    Logger.debug("extracted: " + extracted)
+    extracted
   }
   
   def extractGuestCount(gc: String) = { //TODO hackathon-mode - needs better logic at some point
