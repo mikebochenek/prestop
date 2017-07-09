@@ -206,6 +206,7 @@ object Reservations extends Controller with Secured {
   // "yyyy-MM-dd'T'HH:mm:ss.SSSZ"	2001-07-04T12:08:56.235-0700
   val format = Array(new SimpleDateFormat("dd MMMM yyyy - kk:mm"),
       new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z"),
+      new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"),
       new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
   def parseTime(t: String) = {
     var parsedDate = null: Date
