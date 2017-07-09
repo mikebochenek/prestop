@@ -18,6 +18,8 @@ libraryDependencies += "com.google.cloud" % "google-cloud-speech" % "0.17.1-alph
 
 libraryDependencies += "com.twilio.sdk" % "twilio-java-sdk" % "7.0.0-rc-7"
 
-libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "3.8.0"
+libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "3.8.0" 
+
+libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "3.8.0" classifier "models"
 
 play.Project.playScalaSettings
