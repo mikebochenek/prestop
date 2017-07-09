@@ -11,10 +11,43 @@ import edu.stanford.nlp.util.CoreMap;
 
 object SUTime {
 
+  def main(args: Array[String]) {
+    for (a <- args) {
+      println(extract(a, "2017-07-09"))
+    }
+  }
+
+  def extract(text: String, base: String) = {
+    var ret = "";
+    
+    val props = new Properties();
+    val pipeline = new AnnotationPipeline();
+    pipeline.addAnnotator(new TokenizerAnnotator(false));
+    pipeline.addAnnotator(new WordsToSentencesAnnotator(false));
+    pipeline.addAnnotator(new POSTaggerAnnotator(false));
+    pipeline.addAnnotator(new TimeAnnotator("sutime", props));
+    
+    val annotation = new Annotation(text);
+    annotation.set(classOf[CoreAnnotations.DocDateAnnotation], base); //"2013-07-14"
+    pipeline.annotate(annotation);
+    //System.out.println(annotation.get(classOf[CoreAnnotations.TextAnnotation]));
+    /*List<CoreMap>*/ val timexAnnsAll = annotation.get(classOf[TimeAnnotations.TimexAnnotations]);
+    for (cm <- timexAnnsAll.toArray) {
+       /*List<CoreLabel>*/ val tokens = cm.asInstanceOf[Annotation].get(classOf[CoreAnnotations.TokensAnnotation]);
+       System.out.println(cm + " [from char offset " +
+            tokens.get(0).get(classOf[CoreAnnotations.CharacterOffsetBeginAnnotation]) +
+            " to " + tokens.get(tokens.size() - 1).get(classOf[CoreAnnotations.CharacterOffsetEndAnnotation]) + ']' +
+            " --> " + cm.asInstanceOf[Annotation].get(classOf[TimeExpression.Annotation]).getTemporal());
+       ret = cm.asInstanceOf[Annotation].get(classOf[TimeExpression.Annotation]).getTemporal().toString
+    }
+    ret
+  }
+  
+  
   /**
    * https://www.garysieling.com/blog/extracting-dates-times-text-stanford-nlp-scala
    */
-  def main(args: Array[String]) {
+  def main1(args: Array[String]) {
     val props = new Properties();
     props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
 
@@ -30,13 +63,16 @@ object SUTime {
     
     val timexAnnotations = doc.get(classOf[TimeAnnotations.TimexAnnotations])
     for (timexAnn <- timexAnnotations.toArray) {
-      val timeExpr = timexAnn.asInstanceOf[CoreLabel].get(classOf[TimeExpression.Annotation])
+      val timeExpr = timexAnn.asInstanceOf[Annotation].get(classOf[TimeExpression.Annotation])
       val temporal = timeExpr.getTemporal()
       val range = temporal.getRange()
  
       println(temporal)
       println(range)
-    }    
+    }
+    
+    println("--------------------")
+    main2(args)
   }
   
   /** Example usage:
@@ -63,7 +99,7 @@ object SUTime {
         System.out.println(cm + " [from char offset " +
             tokens.get(0).get(classOf[CoreAnnotations.CharacterOffsetBeginAnnotation]) +
             " to " + tokens.get(tokens.size() - 1).get(classOf[CoreAnnotations.CharacterOffsetEndAnnotation]) + ']' +
-            " --> " + cm.asInstanceOf[CoreLabel].get(classOf[TimeExpression.Annotation]).getTemporal());
+            " --> " + cm.asInstanceOf[Annotation].get(classOf[TimeExpression.Annotation]).getTemporal());
       }
       System.out.println("--");
     }
