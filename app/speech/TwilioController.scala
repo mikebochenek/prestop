@@ -55,10 +55,6 @@ object TwilioController extends Controller with Secured {
   }
 
   def createFirstPromptWithString(p: String) = { 
-    val item = Cache.get("item.key")
-    Logger.info("----- from cache: " + item)
-    Cache.set("item.key", "yes")
-    
     val instructions = new Say.Builder(p).voice(Voice.ALICE).build(); // Use <Say> to give the caller some instructions
     val record = new Record.Builder().timeout(timeoutSeconds).build(); // Use <Record> to record the caller's message
     val twiml = new VoiceResponse.Builder() // Create a TwiML builder object
@@ -97,6 +93,8 @@ object TwilioController extends Controller with Secured {
       val transcript = transcribeURL(request.body.asFormUrlEncoded.get("RecordingUrl"))
       Logger.info("transcript: " + transcript)
         
+      Cache.set("recording1" + from(0), transcript)
+
       //EmailReport.sendtranscript(transcript, from.head)
         
       Ok(createFinalPrompt.toXml()).as("text/xml");
@@ -123,7 +121,7 @@ object TwilioController extends Controller with Secured {
       //TODO based on caller phone number, fetch or create a user
       //TODO based on number being dialed, fetch restaurant, extract text, and create booking
       
-      val time = "2017-07-09T12:08:56.235-0700" //TODO
+      val time = Cache.get("recording1" + from(0)).getOrElse("2017-07-09T12:08:56.235-0700").toString //TODO
       val guestCount = extractGuestCount(transcript)
       val comments = "" //TODO
 
