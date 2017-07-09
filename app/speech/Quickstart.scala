@@ -22,16 +22,17 @@ import java.util.List;
 object Quickstart {
   def main(args:Array[String] ):Unit = {
     //System.out.println(process("/tmp/recording.wav"))
-    System.out.println(process("/tmp/test2.wav"))
+    if (args.length > 0) {
+      System.out.println(process(args(0)))
+    } else {
+      System.out.println(process("/tmp/speech-1497024871640.wav"))
+    }
   }
   
   def process(fileName: String) = {
     // Instantiates a client
     val speech = SpeechClient.create()
     
-    // The path to the audio file to transcribe
-    // val fileName = "/home/mike/Downloads-1/audio.raw"; // brooklyn.flac ? 
-
     // Reads the audio file into memory
     val path = Paths.get(fileName);
     val data = Files.readAllBytes(path);
@@ -57,7 +58,7 @@ object Quickstart {
 
       for (alternative <- alternatives) {
         val transcript = alternative.asInstanceOf[SpeechRecognitionAlternative]
-        output = transcript.getTranscript();
+        output += transcript.getTranscript();
         val confidence = transcript.getConfidence();
       }
     }
