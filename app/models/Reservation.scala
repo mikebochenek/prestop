@@ -76,23 +76,23 @@ object Reservation {
     }
   }
 
+  val selectSQL = "select id, user_id, restaurant_id, reservationtime, guestcount, special_requests, lastupdate, status from reservation  "
   def findById(id: Long): Seq[Reservation] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, user_id, restaurant_id, reservationtime, guestcount, special_requests, lastupdate, status from reservation where id = {id}").on(
+      SQL(selectSQL + " where id = {id}").on(
         'id -> id).as(Reservation.simple *)
     }
   }
   
   def findAll(): Seq[Reservation] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, user_id, restaurant_id, reservationtime, guestcount, special_requests, lastupdate, status from reservation  "
-          + " order by id asc").on().as(Reservation.simple *)
+      SQL(selectSQL + " order by id asc").on().as(Reservation.simple *)
     }
   }
   
   def findAllByRestaurant(restaurant_id: Long): Seq[Reservation] = {
     DB.withConnection { implicit connection =>
-      SQL("select id, user_id, restaurant_id, reservationtime, guestcount, special_requests, lastupdate, status from reservation where restaurant_id = {restaurant_id}"
+      SQL(selectSQL + " where restaurant_id = {restaurant_id}"
           + " order by id asc").on('restaurant_id -> restaurant_id).as(Reservation.simple *)
     }
   }  
