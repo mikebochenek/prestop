@@ -29,9 +29,31 @@ object TwilioController extends Controller with Secured {
           + " Our automated assistant can help you make the reservation. "
           + " What day is the reservation for?")
   val pleaseRepeat = new Say.Builder("I'm sorry, I did not understand.  Can you please repeat?").voice(Voice.ALICE).build(); 
-          
+  
+  def errorNoFreeTables() = {
+    createFirstPromptWithString("There is no availability at this time.  Please try again.  What day is the reservation for?")
+  }
+
+  def errorClosed() = {
+    createFirstPromptWithString("We are closed at this time.  Please try again.  What day is the reservation for?")
+  }
+
+  def error() = {
+    createFirstPromptWithString("I did not understand.  Please try again.  What day is the reservation for?")
+  }
+  
+  def successful(p: String) = {
+    val hangup = new Hangup(); // End the call with <Hangup>
+    val instructions = new Say.Builder(p).voice(Voice.ALICE).build()
+    new VoiceResponse.Builder().say(instructions).hangup(hangup).build()
+  }
+  
   def createFirstPrompt() = {
-    val instructions = new Say.Builder(initialPrompt).voice(Voice.ALICE).build(); // Use <Say> to give the caller some instructions
+    createFirstPromptWithString(initialPrompt)
+  }
+
+  def createFirstPromptWithString(p: String) = {
+    val instructions = new Say.Builder(p).voice(Voice.ALICE).build(); // Use <Say> to give the caller some instructions
     val record = new Record.Builder().timeout(timeoutSeconds).build(); // Use <Record> to record the caller's message
     val twiml = new VoiceResponse.Builder() // Create a TwiML builder object
         .say(instructions)
@@ -50,11 +72,9 @@ object TwilioController extends Controller with Secured {
   def createFinalPrompt() = {
     val instructions = new Say.Builder("How many people in your party?").voice(Voice.ALICE).build();
     val record = new Record.Builder().action("https://presto.bochenek.ch/api/twilio/record2").timeout(timeoutSeconds).build();
-    val hangup = new Hangup(); // End the call with <Hangup>
     val twiml = new VoiceResponse.Builder()
         .say(instructions)
         .record(record)
-        .hangup(hangup)
         .build();
     twiml
   }
@@ -97,15 +117,22 @@ object TwilioController extends Controller with Secured {
       //TODO based on number being dialed, fetch restaurant, extract text, and create booking
       
       val time = "" //TODO
-      val guestCount = 8 //TODO
+      val guestCount = 2 //TODO
       val comments = "" //TODO
 
-      /*
       val reservationsID = Reservations.makeReservation(restaurantID, userID, time, guestCount, comments)
       Logger.info("Reservations.makeReservation: " + reservationsID)
-      */
+      
+      if (reservationsID == Reservations.NO_FREE_TABLES) {
+         Ok(errorNoFreeTables.toXml()).as("text/xml");
+      } else  if (reservationsID == Reservations.NOT_OPEN) {
+         Ok(errorClosed.toXml()).as("text/xml");
+      } else  if (reservationsID == Reservations.ERROR) {
+         Ok(error.toXml()).as("text/xml");
+      } else {
+         Ok(successful("OK.  Reservation created." + reservationsID).toXml()).as("text/xml"); //final response should be using Alice's voice
+      }
 
-      Ok("OK"); //TODO final response should be using Alice's voice
       
     }
   }

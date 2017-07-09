@@ -132,8 +132,12 @@ object Reservations extends Controller with Secured {
     }
   }
   
+  def NOT_OPEN = -2L
+  def NO_FREE_TABLES = -3L
+  def ERROR = -1L
+  
   def makeReservation(restaurantID: Long, userID: Long, time: String, guestCount: Long, comments: String) = {
-    var returnValue = -1L
+    var returnValue = ERROR
     
     // validate inputs
     if (restaurantID > 0 && userID > 0 && time != null && guestCount >= 1) {
@@ -158,6 +162,8 @@ object Reservations extends Controller with Secured {
     
           val seatingAvailable = checkSeating(seating, existingReservations, requestedTime, guestCount)
     
+          //TODO also check that we don't create bookings in the past (requestedTime > NOW!)
+          
           //create reservation only if seatingAvailable
           if (seatingAvailable) {
             returnValue = Reservation.create(userID, restaurantID, requestedTime, guestCount.toInt, comments, 0).get
@@ -168,10 +174,12 @@ object Reservations extends Controller with Secured {
           
           } else {
             Logger.debug("seating NOT available for: " + guestCount + " at: " + requestedTime)
+            returnValue = NO_FREE_TABLES 
           }
           
         } else {
           Logger.debug("not open! " + requestedTime)
+          returnValue = NOT_OPEN
         }
         
       } else {
