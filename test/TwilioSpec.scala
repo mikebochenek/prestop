@@ -22,6 +22,11 @@ class TwilioSpec extends Specification {
       System.out.println("createFirstPrompt: " + xml)
       xml must contain ("<Response>")
     }
+
+    "be able to extract date from string to Twilio" in new WithApplication{
+      val dateString = TwilioController.extractTime(Option("Monday July 11th at 8:00pm"))
+      System.out.println("extractTime: " + dateString)
+    }
     
   }
 }

@@ -196,9 +196,9 @@ object TwilioController extends Controller with Secured {
   def extractTime(tstring: Option[Any]) = {
     val startTS = System.currentTimeMillis
     val t = tstring.getOrElse("2017-07-09T12:08:56.235-0700").toString //TODO
-    Logger.debug("extractTime: " + tstring)
-    val extracted = SUTime.extract(t, suDefaultDateFormat.format(Calendar.getInstance))
-    Logger.debug("extracted: " + extracted + "    " + (System.currentTimeMillis()-startTS) + "ms")
+    Logger.info("tstring: " + tstring)
+    val extracted = SUTime.extract(t, suDefaultDateFormat.format(Calendar.getInstance.getTime))
+    Logger.info("extracted: " + extracted + "    " + (System.currentTimeMillis()-startTS) + "ms")
     extracted
   }
   
