@@ -82,6 +82,11 @@ object TwilioController extends Controller with Secured {
       
       val transcript = transcribeURL(request.body.asFormUrlEncoded.get("RecordingUrl"))
       Logger.info("transcript: " + transcript)
+
+      val from = request.body.asFormUrlEncoded.get("From")
+      val called = request.body.asFormUrlEncoded.get("Called")
+      
+      Logger.info("called: " + called + " from: " + from)
       
       //TODO based on caller phone number, fetch or create a user
       //TODO based on number being dialed, fetch restaurant, extract text, and create booking
