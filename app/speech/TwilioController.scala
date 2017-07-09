@@ -84,7 +84,7 @@ object TwilioController extends Controller with Secured {
     twiml
   }
   
-  val sleepMS = 5000
+  val sleepMS = 3000
   def handleRecording() = Action {
     implicit request => {
       Thread.sleep(sleepMS)
@@ -152,8 +152,7 @@ object TwilioController extends Controller with Secured {
       FileDownloader.download(url.head, filename)
         
       val transcript = Quickstart.process(filename)
-      Logger.debug("transcript: " + transcript + "    " + (System.currentTimeMillis()-startTS) + "ms")
-      
+      Logger.info("Quickstart transcript: " + transcript + "    " + (System.currentTimeMillis()-startTS) + "ms")
       
       transcript    
     } else {
