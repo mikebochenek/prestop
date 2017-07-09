@@ -23,13 +23,14 @@ import java.text.ParseException
 object Reservations extends Controller with Secured {
 
   val settingsFormat = new SimpleDateFormat("dd.MM.yyyy") //09.07.2017
+  val mySQLFormat = new SimpleDateFormat("yyyy-MM-dd") //"2017-07-11"
   def load(id: Long) = IsAuthenticated { username =>
     implicit request => {
       //TODO check that user is either super admin OR is the restaurant owner
       val seating = RestaurantSeating.getOrCreateDefault(id)
       val misc = getPreviousMiscSafely(seating)
 
-      Ok(views.html.reservations(Restaurant.findById(username, id)(0), Reservation.findAllByRestaurant(id), 
+      Ok(views.html.reservations(Restaurant.findById(username, id)(0), Reservation.findByRestaurant(id, mySQLFormat.format(new Date())), 
           seating, misc, settingsFormat.format(new Date())))
     }
   }
@@ -54,7 +55,7 @@ object Reservations extends Controller with Secured {
       
       Logger.info("tables: " + tables + " phone: " + phone)
       
-      Ok(views.html.reservations(Restaurant.findById(username, id)(0), Reservation.findAllByRestaurant(id), 
+      Ok(views.html.reservations(Restaurant.findById(username, id)(0), Reservation.findByRestaurant(id, mySQLFormat.format(new Date())), 
           seating, misc, settingsFormat.format(new Date())))
     }
   }
@@ -152,6 +153,7 @@ object Reservations extends Controller with Secured {
     //1. check total available tables
     val seating = RestaurantSeating.getSettingsByRestaurant(restaurantID)
     //2. check reservations for this given date AND timeframe
+    val existingReservations = Reservation.findByRestaurant(restaurantID, mySQLFormat.format(new Date()))
     
     //TODO create reservation
     val timeObj = parseTime(time)

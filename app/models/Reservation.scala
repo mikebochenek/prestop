@@ -96,6 +96,16 @@ object Reservation {
           + " order by id asc").on('restaurant_id -> restaurant_id).as(Reservation.simple *)
     }
   }  
+
+  def findByRestaurant(restaurant_id: Long, reservationTime: String): Seq[Reservation] = {
+    DB.withConnection { implicit connection =>
+      SQL(selectSQL + " where restaurant_id = {restaurant_id} "
+          + " and reservationtime between {reservationtime_from} and {reservationtime_to} "
+          + " order by id asc").on('restaurant_id -> restaurant_id,
+              'reservationtime_from -> (reservationTime + " 00:00:00"),
+              'reservationtime_to -> (reservationTime + " 23:59:59")).as(Reservation.simple *)
+    }
+  }  
   
   def findAllByUser(user_id: Long): Seq[Reservation] = {
     DB.withConnection { implicit connection =>
