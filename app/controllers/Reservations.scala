@@ -167,13 +167,15 @@ object Reservations extends Controller with Secured {
       new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
   def parseTime(t: String) = {
     var parsedDate = null: Date
+    var idx = 0;
     do {
       try {
-        parsedDate = format(0).parse(t)
+        idx = idx + 1
+        parsedDate = format(idx-1).parse(t)
       } catch {
         case e: ParseException => Logger.debug("text: " + t + "exception caught: " + e);
       }      
-    } while (parsedDate == null)
+    } while (parsedDate == null && idx < (format.size))
       
     parsedDate  
   }
