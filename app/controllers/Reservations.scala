@@ -18,6 +18,7 @@ import models.json.DishLikers
 import common.RecommendationUtils
 import java.util.Calendar
 import java.text.SimpleDateFormat
+import java.text.ParseException
 
 object Reservations extends Controller with Secured {
 
@@ -159,9 +160,22 @@ object Reservations extends Controller with Secured {
     id
   }
   
-  val format = new SimpleDateFormat("dd MMMM yyyy - kk:mm")
+  // "yyyy.MM.dd G 'at' HH:mm:ss z"	2001.07.04 AD at 12:08:56 PDT
+  // "yyyy-MM-dd'T'HH:mm:ss.SSSZ"	2001-07-04T12:08:56.235-0700
+  val format = Array(new SimpleDateFormat("dd MMMM yyyy - kk:mm"),
+      new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z"),
+      new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
   def parseTime(t: String) = {
-    format.parse(t)
+    var parsedDate = null: Date
+    do {
+      try {
+        parsedDate = format(0).parse(t)
+      } catch {
+        case e: ParseException => Logger.debug("text: " + t + "exception caught: " + e);
+      }      
+    } while (parsedDate == null)
+      
+    parsedDate  
   }
 
   def update() = Action {
