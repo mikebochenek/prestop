@@ -143,6 +143,7 @@ object TwilioController extends Controller with Secured {
   }
 
   def transcribeURL(url: Seq[String]) = {
+    val startTS = System.currentTimeMillis
     val filename = "/tmp/speech-" + System.currentTimeMillis + ".wav" 
       
     Logger.info("downloading " + url + " to " + filename)
@@ -151,6 +152,9 @@ object TwilioController extends Controller with Secured {
       FileDownloader.download(url.head, filename)
         
       val transcript = Quickstart.process(filename)
+      Logger.debug("transcript: " + transcript + "    " + (System.currentTimeMillis()-startTS) + "ms")
+      
+      
       transcript    
     } else {
       Logger.info("no wav/sound url")
@@ -190,10 +194,11 @@ object TwilioController extends Controller with Secured {
   val suDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")// 2017-07-20T16:00
   val suDefaultDateFormat = new SimpleDateFormat("yyyy-MM-dd")
   def extractTime(tstring: Option[Any]) = {
+    val startTS = System.currentTimeMillis
     val t = tstring.getOrElse("2017-07-09T12:08:56.235-0700").toString //TODO
     Logger.debug("extractTime: " + tstring)
     val extracted = SUTime.extract(t, suDefaultDateFormat.format(Calendar.getInstance))
-    Logger.debug("extracted: " + extracted)
+    Logger.debug("extracted: " + extracted + "    " + (System.currentTimeMillis()-startTS) + "ms")
     extracted
   }
   
