@@ -147,24 +147,43 @@ object Reservations extends Controller with Secured {
       }
       
     }
+
+    val requestedTime = parseTime(time)
+
     
-    
-    //TODO check if table with sufficient seating is available at this time
+    //check if table with sufficient seating is available at this time
     //1. check total available tables
-    val seating = RestaurantSeating.getSettingsByRestaurant(restaurantID)
+    val seating = RestaurantSeating.getOrCreateDefault(restaurantID)
     //2. check reservations for this given date AND timeframe
-    val existingReservations = Reservation.findByRestaurant(restaurantID, mySQLFormat.format(new Date()))
+    val existingReservations = Reservation.findByRestaurant(restaurantID, mySQLFormat.format(requestedTime))
     
-    //TODO create reservation
-    val timeObj = parseTime(time)
-    val id = Reservation.create(userID, restaurantID, timeObj, guestCount.toInt, comments, 0)
-    Logger.info("Reservation created - id: " + id.get + " user: " + userID + " restaurant: " + restaurantID)
+    val seatingAvailable = checkSeating(seating, existingReservations, requestedTime, guestCount)
     
-    //TODO update availability for particular restaurant
+    //create reservation only if seatingAvailable
+    if (seatingAvailable) {
+      val id = Reservation.create(userID, restaurantID, requestedTime, guestCount.toInt, comments, 0)
+      Logger.info("Reservation created - id: " + id.get + " user: " + userID + " restaurant: " + restaurantID)
     
-    //TODO notification feedback: email, sms, e-mail restaurant?.. 
+      //update availability for particular restaurant? probably not needed, since we check all reservations for that day
+    
+      //TODO notification feedback: email, sms, e-mail restaurant?.. 
           
-    id
+      id
+    } else {
+      -1
+    }
+  }
+  
+  def checkSeating(seating: RestaurantSeating, reservations: Seq[Reservation], requestedTime: Date, guestCount: Long) = { 
+    var runningTotal = 0;
+    for (r <- reservations) {
+      Logger.debug("id: " + r.id + " time: " + r.reservationtime + " guests: " + r.guestcount)
+      if (requestedTime.getHours == r.reservationtime.getHours) { //TODO this needs a better check
+        runningTotal += r.guestcount
+      }
+    }
+    Logger.debug("runningTotal: " + runningTotal)
+    (runningTotal + guestCount < seating.tables)
   }
   
   // "yyyy.MM.dd G 'at' HH:mm:ss z"	2001.07.04 AD at 12:08:56 PDT
