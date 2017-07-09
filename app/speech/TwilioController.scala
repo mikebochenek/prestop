@@ -88,13 +88,25 @@ object TwilioController extends Controller with Secured {
       val from = request.body.asFormUrlEncoded.get("From")
       val called = request.body.asFormUrlEncoded.get("Called")
       
+      val restaurantID = identifyRestaurant(called) 
+      val userID = identifyOrCreateUser(from)
       Logger.info("called: " + called + " from: " + from + " restaurantID: " 
-          + identifyRestaurant(called) + " userID: " + identifyOrCreateUser(from))
+          + restaurantID + " userID: " + userID)
       
       //TODO based on caller phone number, fetch or create a user
       //TODO based on number being dialed, fetch restaurant, extract text, and create booking
       
+      val time = "" //TODO
+      val guestCount = 8 //TODO
+      val comments = "" //TODO
+
+      /*
+      val reservationsID = Reservations.makeReservation(restaurantID, userID, time, guestCount, comments)
+      Logger.info("Reservations.makeReservation: " + reservationsID)
+      */
+
       Ok("OK"); //TODO final response should be using Alice's voice
+      
     }
   }
 
@@ -115,6 +127,7 @@ object TwilioController extends Controller with Secured {
   }
   
   def identifyRestaurant(called: Seq[String]) = {
+    //TODO I wounder if I should check restuarant status (to disallow bookings for deleted restaurants!)
     var found = -1L
     if (called.size > 0 && called(0) != null) {
       val all = RestaurantSeating.findAll()
