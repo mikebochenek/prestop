@@ -75,6 +75,7 @@ object TwilioController extends Controller with Secured {
     val twiml = new VoiceResponse.Builder()
         .say(instructions)
         .record(record)
+        .say(pleaseRepeat)
         .build();
     twiml
   }
@@ -116,7 +117,7 @@ object TwilioController extends Controller with Secured {
       //TODO based on caller phone number, fetch or create a user
       //TODO based on number being dialed, fetch restaurant, extract text, and create booking
       
-      val time = "" //TODO
+      val time = "2017-07-09T12:08:56.235-0700" //TODO
       val guestCount = 2 //TODO
       val comments = "" //TODO
 
@@ -148,7 +149,7 @@ object TwilioController extends Controller with Secured {
       val transcript = Quickstart.process(filename)
       transcript    
     } else {
-      Logger.info("no image url")
+      Logger.info("no wav/sound url")
       ""
     }
   }
