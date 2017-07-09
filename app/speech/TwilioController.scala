@@ -20,6 +20,8 @@ import common.EmailReport
 import com.twilio.twiml.Say.Voice
 
 object TwilioController extends Controller with Secured {
+
+  val timeoutSeconds = 3
   
   val initialPrompt = ("Unfortunately we can not come to the phone right now. "
           + " Our automated assistant can help you make the reservation. "
@@ -28,7 +30,7 @@ object TwilioController extends Controller with Secured {
           
   def createFirstPrompt() = {
     val instructions = new Say.Builder(initialPrompt).voice(Voice.ALICE).build(); // Use <Say> to give the caller some instructions
-    val record = new Record.Builder().build(); // Use <Record> to record the caller's message
+    val record = new Record.Builder().timeout(timeoutSeconds).build(); // Use <Record> to record the caller's message
     val twiml = new VoiceResponse.Builder() // Create a TwiML builder object
         .say(instructions)
         .record(record)
@@ -45,7 +47,7 @@ object TwilioController extends Controller with Secured {
 
   def createFinalPrompt() = {
     val instructions = new Say.Builder("How many people in your party?").voice(Voice.ALICE).build();
-    val record = new Record.Builder().action("https://presto.bochenek.ch/api/twilio/record2").build();
+    val record = new Record.Builder().action("https://presto.bochenek.ch/api/twilio/record2").timeout(timeoutSeconds).build();
     val hangup = new Hangup(); // End the call with <Hangup>
     val twiml = new VoiceResponse.Builder()
         .say(instructions)
@@ -81,7 +83,10 @@ object TwilioController extends Controller with Secured {
       val transcript = transcribeURL(request.body.asFormUrlEncoded.get("RecordingUrl"))
       Logger.info("transcript: " + transcript)
       
-      Ok("OK");
+      //TODO based on caller phone number, fetch or create a user
+      //TODO based on number being dialed, fetch restaurant, extract text, and create booking
+      
+      Ok("OK"); //TODO final response should be using Alice's voice
     }
   }
 
