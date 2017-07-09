@@ -81,7 +81,7 @@ ALTER TABLE `presto`.`image`  ADD `height` INT NULL;
 
 
 CREATE TABLE IF NOT EXISTS `presto`.`reservation` (
-  `user_id` INT NOT NULL,
+  `user_id` INT,
   `restaurant_id` INT NOT NULL,
   `id` INT NOT NULL AUTO_INCREMENT,
   `reservationtime` TIMESTAMP NULL,
@@ -94,11 +94,6 @@ CREATE TABLE IF NOT EXISTS `presto`.`reservation` (
   PRIMARY KEY (`id`, `user_id`, `restaurant_id`),
   INDEX `fk_user_has_restaurant_restaurant1_idx` (`restaurant_id` ASC),
   INDEX `fk_user_has_restaurant_user1_idx` (`user_id` ASC),
-  CONSTRAINT `fk_user_has_restaurant_user1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `presto`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_has_restaurant_restaurant1`
     FOREIGN KEY (`restaurant_id`)
     REFERENCES `presto`.`restaurant` (`id`)
