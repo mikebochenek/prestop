@@ -19,6 +19,7 @@ import actors.EmailJobActor
 import common.EmailReport
 import com.twilio.twiml.Say.Voice
 import controllers.Reservations
+import controllers.Settings
 
 object TwilioController extends Controller with Secured {
 
@@ -87,7 +88,8 @@ object TwilioController extends Controller with Secured {
       val from = request.body.asFormUrlEncoded.get("From")
       val called = request.body.asFormUrlEncoded.get("Called")
       
-      Logger.info("called: " + called + " from: " + from + " restaurantID: " + identifyRestaurant(called))
+      Logger.info("called: " + called + " from: " + from + " restaurantID: " 
+          + identifyRestaurant(called) + " userID: " + identifyOrCreateUser(from))
       
       //TODO based on caller phone number, fetch or create a user
       //TODO based on number being dialed, fetch restaurant, extract text, and create booking
@@ -121,6 +123,20 @@ object TwilioController extends Controller with Secured {
         if (misc.reservationsPhone.getOrElse("").trim.equals(called(0).trim)) {
           found = seating.restaurant_id
         }
+      }
+    }
+    found
+  }
+  
+  def identifyOrCreateUser(from: Seq[String]) = {
+    var found = -1L
+    if (from.size > 0 && from(0) != null) {
+      val userByPhone = User.getFullUserByPhone(Settings.cleanPhoneString(from(0)))
+      
+      if (userByPhone.size > 0) {
+        found = userByPhone(0).id
+      } else {
+        //TODO could not identifyUserBy phone, we should create a place holder user
       }
     }
     found
