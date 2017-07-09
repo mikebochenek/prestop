@@ -21,17 +21,6 @@ import com.twilio.twiml.Say.Voice
 
 object TwilioController extends Controller with Secured {
   
-  def hello() = Action {
-    implicit request => {
-      // Create a TwiML response and add our friendly message.
-      val voiceResponse = new VoiceResponse.Builder()
-                .say(new Say.Builder("Hello Monkey").build())
-                .build();
-      val xml = voiceResponse.toXml();
-      Ok(xml).as("application/xml");
-    }
-  }
-  
   val initialPrompt = ("Unfortunately we can not come to the phone right now. "
           + " Our automated assistant can help you make the reservation. "
           + " What day is the reservation for?")
@@ -83,7 +72,7 @@ object TwilioController extends Controller with Secured {
         val transcript = Quickstart.process(filename)
         Logger.info("transcript: " + transcript)
         
-        EmailReport.sendtranscript(transcript, from.head)
+        //EmailReport.sendtranscript(transcript, from.head)
         
       } else {
         Logger.info("no image url")
