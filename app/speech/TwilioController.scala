@@ -55,9 +55,10 @@ object TwilioController extends Controller with Secured {
     twiml
   }
   
+  val sleepMS = 5000
   def handleRecording() = Action {
     implicit request => {
-      Thread.sleep(10000)
+      Thread.sleep(sleepMS)
       Logger.info("HTTP post to /api/record: " + request.body.asFormUrlEncoded)
       
       val from = request.body.asFormUrlEncoded.get("From")
@@ -74,7 +75,7 @@ object TwilioController extends Controller with Secured {
 
   def handleFinalRecording() = Action {
     implicit request => {
-      Thread.sleep(10000)
+      Thread.sleep(sleepMS)
       Logger.info("HTTP post to /api/record2: " + request.body.asFormUrlEncoded)
       
       val transcript = transcribeURL(request.body.asFormUrlEncoded.get("RecordingUrl"))

@@ -11,7 +11,7 @@
     </rollingPolicy>
     <encoder>
        <pattern>%date [%level] %thread %n%message%n%xException%n</pattern>
-       <immediateFlush>false</immediateFlush>
+       <immediateFlush>true</immediateFlush>
     </encoder>
   </appender>
   
