@@ -10,6 +10,7 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.libs.functional.syntax._
+import play.api.Play.current
 import models._
 
 import com.twilio.twiml._
@@ -20,6 +21,7 @@ import common.EmailReport
 import com.twilio.twiml.Say.Voice
 import controllers.Reservations
 import controllers.Settings
+import play.api.cache.Cache
 
 object TwilioController extends Controller with Secured {
 
@@ -52,7 +54,11 @@ object TwilioController extends Controller with Secured {
     createFirstPromptWithString(initialPrompt)
   }
 
-  def createFirstPromptWithString(p: String) = {
+  def createFirstPromptWithString(p: String) = { 
+    val item = Cache.get("item.key")
+    Logger.info("----- from cache: " + item)
+    Cache.set("item.key", "yes")
+    
     val instructions = new Say.Builder(p).voice(Voice.ALICE).build(); // Use <Say> to give the caller some instructions
     val record = new Record.Builder().timeout(timeoutSeconds).build(); // Use <Record> to record the caller's message
     val twiml = new VoiceResponse.Builder() // Create a TwiML builder object
