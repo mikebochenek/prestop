@@ -97,8 +97,6 @@ object TwilioController extends Controller with Secured {
         
       Cache.set("recording1" + from(0), transcript)
 
-      //EmailReport.sendtranscript(transcript, from.head)
-        
       Ok(createFinalPrompt.toXml()).as("text/xml");
     }
   }
@@ -137,7 +135,16 @@ object TwilioController extends Controller with Secured {
       } else  if (reservationsID == Reservations.ERROR) {
          Ok(error.toXml()).as("text/xml");
       } else {
-         Ok(successful("OK.  Reservation created." + reservationsID).toXml()).as("text/xml"); //final response should be using Alice's voice
+         EmailReport.sendtranscript(Cache.get("recording1" + from(0)).getOrElse("") 
+             + "<br>" + transcript
+             + "<br>" + "parsed time: " + time
+             + "<br>" + "parsed guest count: " + guestCount
+             + "<br>" + "restaurantID: " + restaurantID
+             + "<br>" + "userID (based on phone): " + userID
+             + "<br>" + "reservationsID: " + reservationsID
+             , from.head)
+
+         Ok(successful("OK.  Reservation created successfully.  Your reservation ID is " + reservationsID).toXml()).as("text/xml"); //final response should be using Alice's voice
       }
     }
   }
