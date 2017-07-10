@@ -40,7 +40,7 @@ object SUTime {
             " --> " + cm.asInstanceOf[Annotation].get(classOf[TimeExpression.Annotation]).getTemporal());
        ret = cm.asInstanceOf[Annotation].get(classOf[TimeExpression.Annotation]).getTemporal().toString
     }
-    ret.replaceAll("-WXX-1", "")
+    ret.replaceAll("-WXX-.", "")
   }
   
   
