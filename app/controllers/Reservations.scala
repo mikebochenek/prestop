@@ -30,7 +30,8 @@ object Reservations extends Controller with Secured {
       val seating = RestaurantSeating.getOrCreateDefault(id)
       val misc = getPreviousMiscSafely(seating)
 
-      Ok(views.html.reservations(Restaurant.findById(username, id)(0), Reservation.findByRestaurant(id, mySQLFormat.format(new Date())), 
+      //Ok(views.html.reservations(Restaurant.findById(username, id)(0), Reservation.findByRestaurant(id, mySQLFormat.format(new Date())), 
+      Ok(views.html.reservations(Restaurant.findById(username, id)(0), Reservation.findAllByRestaurant(id), 
           seating, misc, settingsFormat.format(new Date())))
     }
   }
