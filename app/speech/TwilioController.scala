@@ -24,6 +24,10 @@ import controllers.Settings
 import play.api.cache.Cache
 import java.util.Calendar
 import java.text.SimpleDateFormat
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 object TwilioController extends Controller with Secured {
 
@@ -92,15 +96,19 @@ object TwilioController extends Controller with Secured {
       
       val from = request.body.asFormUrlEncoded.get("From")
       
-      val transcript = transcribeURL(request.body.asFormUrlEncoded.get("RecordingUrl"))
-      Logger.info("transcript: " + transcript)
-        
-      Cache.set("recording1" + from(0), transcript)
+      future = Future {
+        val transcript = transcribeURL(request.body.asFormUrlEncoded.get("RecordingUrl"))
+        Logger.info("transcript: " + transcript)
+        Cache.set("recording1" + from(0), transcript)
+        val extracted = SUTime.extract(transcript, suDefaultDateFormat.format(Calendar.getInstance.getTime))
+        extracted
+      }
 
       Ok(createFinalPrompt.toXml()).as("text/xml");
     }
   }
-
+  
+  var future: Future[String] = null
 
   def handleFinalRecording() = Action {
     implicit request => {
@@ -120,13 +128,16 @@ object TwilioController extends Controller with Secured {
       
       //TODO based on caller phone number, fetch or create a user
       //TODO based on number being dialed, fetch restaurant, extract text, and create booking
-      
-      val time = extractTime(Cache.get("recording1" + from(0)))
+
+      val time = Await.result(future, 1 nano)
+      Logger.info("result from future thread: " + time)
+      Logger.info("old extractTime(" + Cache.get("recording1" + from(0)))
       val guestCount = extractGuestCount(transcript)
       val comments = "" //TODO
 
       val reservationsID = Reservations.makeReservation(restaurantID, userID, time, guestCount, comments)
       Logger.info("Reservations.makeReservation: " + reservationsID)
+      
       
       if (reservationsID == Reservations.NO_FREE_TABLES) {
          Ok(errorNoFreeTables.toXml()).as("text/xml");
@@ -144,10 +155,15 @@ object TwilioController extends Controller with Secured {
              + "<br>" + "reservationsID: " + reservationsID
              , from.head)
 
-         Ok(successful("OK.  Reservation created successfully.  Your reservation ID is " + reservationsID).toXml()).as("text/xml"); //final response should be using Alice's voice
+                   
+
+         Ok(successful("OK.  Reservation created successfully for " 
+             + guestCount + " guests, on " + responseFormat.format(Reservations.parseTime(time)) 
+             + ".  Your reservation ID is " + reservationsID).toXml()).as("text/xml"); //final response should be using Alice's voice
       }
     }
   }
+  def responseFormat = new SimpleDateFormat("EEEEEEEEEEEEEEE, MMMMMMMMM d, 'at' K:mm a")
 
   def transcribeURL(url: Seq[String]) = {
     val startTS = System.currentTimeMillis
