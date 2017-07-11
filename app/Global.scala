@@ -79,7 +79,7 @@ object Global extends WithFilters(LangFromSubdomain, LoggingFilter) {
     //Akka.system.scheduler.schedule(0.seconds, 1.minutes, actor, "send")
     
     play.api.Logger.info("training stanford NLP...")
-    speech.SUTime.main(Array("18 Feb 1997" ,"the 20th of july at 4pm", "4 days from today at 19:00", "thursday at 7pm"))
+    speech.SUTime.extract("the 20th of july at 4pm","2017-07-09") //Array("18 Feb 1997" ,"the 20th of july at 4pm", "4 days from today at 19:00", "thursday at 7pm"))
 }
 
   /**
