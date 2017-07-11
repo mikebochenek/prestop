@@ -33,21 +33,21 @@ object TwilioController extends Controller with Secured {
 
   val timeoutSeconds = 3
   
-  val initialPrompt = ("Unfortunately we can not come to the phone right now. "
+  val initialPrompt = ("Hello!  Welcome to Alice Choo!  Unfortunately we can not come to the phone right now. "
           + " Our automated assistant can help you make the reservation. "
-          + " What day is the reservation for?")
+          + " What date and time is the reservation for?")
   val pleaseRepeat = new Say.Builder("I'm sorry, I did not understand.  Can you please repeat?").voice(Voice.ALICE).build(); 
   
   def errorNoFreeTables() = {
-    createFirstPromptWithString("There is no availability at this time.  Please try again.  What day is the reservation for?")
+    createFirstPromptWithString("There is no availability at this time.  Please try again.  What date and time is the reservation for?")
   }
 
   def errorClosed() = {
-    createFirstPromptWithString("We are closed at this time.  Please try again.  What day is the reservation for?")
+    createFirstPromptWithString("We are closed at this time.  Please try again.  What date and time is the reservation for?")
   }
 
   def error() = {
-    createFirstPromptWithString("I did not understand.  Please try again.  What day is the reservation for?")
+    createFirstPromptWithString("I did not understand.  Please try again.  What date and time is the reservation for?")
   }
   
   def successful(p: String) = {
@@ -138,7 +138,6 @@ object TwilioController extends Controller with Secured {
       val reservationsID = Reservations.makeReservation(restaurantID, userID, time, guestCount, comments)
       Logger.info("Reservations.makeReservation: " + reservationsID)
       
-      
       if (reservationsID == Reservations.NO_FREE_TABLES) {
          Ok(errorNoFreeTables.toXml()).as("text/xml");
       } else  if (reservationsID == Reservations.NOT_OPEN) {
@@ -154,8 +153,6 @@ object TwilioController extends Controller with Secured {
              + "<br>" + "userID (based on phone): " + userID
              + "<br>" + "reservationsID: " + reservationsID
              , from.head)
-
-                   
 
          Ok(successful("OK.  Reservation created successfully for " 
              + guestCount + " guests, on " + responseFormat.format(Reservations.parseTime(time)) 

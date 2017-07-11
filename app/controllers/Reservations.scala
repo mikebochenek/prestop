@@ -140,7 +140,7 @@ object Reservations extends Controller with Secured {
     var returnValue = ERROR
     
     // validate inputs
-    if (restaurantID > 0 && userID > 0 && time != null && guestCount >= 1) {
+    if (restaurantID > 0 && /*userID > 0 && */time != null && guestCount >= 1) {
       val r = Restaurant.findById("", restaurantID)
       if (r.size > 0) {
         val schedule = r(0).schedule
