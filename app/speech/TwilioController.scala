@@ -209,16 +209,13 @@ object TwilioController extends Controller with Secured {
   }
   
   def extractGuestCount(gc: String) = { //TODO hackathon-mode - needs better logic at some point
-    if ("one".equals(gc.toLowerCase)) 1
-    else if ("two".equals(gc.toLowerCase)) 2 
-    else if ("three".equals(gc.toLowerCase)) 3 
-    else if ("four".equals(gc.toLowerCase)) 4 
-    else if ("five".equals(gc.toLowerCase)) 5 
-    else if ("six".equals(gc.toLowerCase)) 6 
-    else if ("seven".equals(gc.toLowerCase)) 7 
-    else if ("eight".equals(gc.toLowerCase)) 8 
-    else if ("nine".equals(gc.toLowerCase)) 9 
-    else if ("ten".equals(gc.toLowerCase)) 10 
-    2
+    val c = try {
+      gc.toLong
+    } catch {
+      case ex: NumberFormatException => { 2 }
+    } finally {
+      2
+    }
+    c
   }
 }
