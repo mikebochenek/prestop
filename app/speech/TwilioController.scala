@@ -88,7 +88,7 @@ object TwilioController extends Controller with Secured {
     twiml
   }
   
-  val sleepMS = 2000
+  val sleepMS = 3000
   def handleRecording() = Action {
     implicit request => {
       Logger.info("HTTP post to /api/record: " + request.body.asFormUrlEncoded)
@@ -121,13 +121,12 @@ object TwilioController extends Controller with Secured {
       val from = request.body.asFormUrlEncoded.get("From")
       val called = request.body.asFormUrlEncoded.get("Called")
       
+      //based on number being dialed, fetch restaurant, extract text, and create booking
       val restaurantID = identifyRestaurant(called) 
+      //based on caller phone number, fetch or create a user
       val userID = identifyOrCreateUser(from)
       Logger.info("called: " + called + " from: " + from + " restaurantID: " 
           + restaurantID + " userID: " + userID)
-      
-      //TODO based on caller phone number, fetch or create a user
-      //TODO based on number being dialed, fetch restaurant, extract text, and create booking
 
       val time = Await.result(future, 1 nano)
       Logger.info("result from future thread: " + time)
@@ -135,7 +134,10 @@ object TwilioController extends Controller with Secured {
       val guestCount = extractGuestCount(transcript)
       val comments = "" //TODO
 
-      val reservationsID = Reservations.makeReservation(restaurantID, userID, time, guestCount, comments)
+      val reservationsID = (Reservations.parseTime(time) match {
+        case null => Reservations.ERROR
+        case _    => Reservations.makeReservation(restaurantID, userID, time, guestCount, comments)
+      })
       Logger.info("Reservations.makeReservation: " + reservationsID)
       
       if (reservationsID == Reservations.NO_FREE_TABLES) {
