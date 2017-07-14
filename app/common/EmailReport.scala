@@ -89,10 +89,10 @@ object EmailReport {
   
     val mail = use[MailerPlugin].email
     mail.setSubject("Twilio native speech trainscript " + prettySdf.format(new Date(System.currentTimeMillis()-24*60*60*1000)))
-    //mail.setBcc("sebastian@presto.ch")
+    mail.setBcc("sebastian@presto.ch")
     mail.setCc("mike@presto.ch")
     mail.setRecipient("mike.bochenek@gmail.com")
-    //mail.setBcc("sebastian.gubser@hotmail.com")
+    mail.setBcc("sebastian.gubser@hotmail.com")
     mail.setFrom("info@idone.ch")
   
     mail.sendHtml(html)
