@@ -9,6 +9,9 @@ GET      /api/twilio/record          speech.TwilioController.record
 POST     /api/twilio/record          speech.TwilioController.handleRecording
 GET      /api/twilio/record2         speech.TwilioController.handleFinalRecording
 POST     /api/twilio/record2         speech.TwilioController.handleFinalRecording
+GET      /api/twilio/recordNative    speech.TwilioController.recordNative
+POST     /api/twilio/recordNative    speech.TwilioController.handleRecordingNative
+POST     /api/twilio/handleTrans     speech.TwilioController.handleNativeTrans
 
 # public APIs (for mobile development etc.)
 GET      /api/search                 controllers.Search.searchWithFilters(keyword: String ?= "", id: Long ?= 0, longitude: String ?= "", latitude: String ?= "", maxDistance: Double ?= 10, minPrice: Double ?= 0.0, maxPrice: Double ?= 1000.0, openNow: Boolean ?= false, lastDishID: Long ?= 0, maxDishes: Long ?= 100, avoid: String ?= "", onlyShow: String ?= "", showOnlyCuisines: String ?= "", sortBy: String ?= "")

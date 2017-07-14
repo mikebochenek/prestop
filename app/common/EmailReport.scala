@@ -77,6 +77,26 @@ object EmailReport {
   
     mail.sendHtml(html)
   }
+
+  def sendTwilioTranscript(email: String, from: String) = {
+
+    var html = "<html><body><h1>Hello</h1>"
+    html += "<br>call from: "
+    html += from
+    html += "<br>Twilio speech transcribed: "
+    html += email
+    html += "</body></html>"
+  
+    val mail = use[MailerPlugin].email
+    mail.setSubject("Twilio native speech trainscript " + prettySdf.format(new Date(System.currentTimeMillis()-24*60*60*1000)))
+    //mail.setBcc("sebastian@presto.ch")
+    mail.setCc("mike@presto.ch")
+    mail.setRecipient("mike.bochenek@gmail.com")
+    //mail.setBcc("sebastian.gubser@hotmail.com")
+    mail.setFrom("info@idone.ch")
+  
+    mail.sendHtml(html)
+  }
   
   def sendnewpassword(email: String) = {
     val user = User.getFullUser(email)

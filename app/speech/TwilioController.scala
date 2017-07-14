@@ -233,4 +233,55 @@ object TwilioController extends Controller with Secured {
     }
     c
   }
+  
+  
+  /** native Twilio transcription service implementation */
+  
+  def recordNative() = Action {
+    implicit request => {
+      Ok(createNativePrompt.toXml()).as("text/xml");
+    }
+  }
+
+  def createNativePrompt() = {
+    val instructions = new Say.Builder("Let's try native transcription quality and speed.  What date and time is the reservation for?").voice(Voice.ALICE).build();
+    val record = new Record.Builder().transcribe(true)
+       .transcribeCallback("https://presto.bochenek.ch/api/twilio/handleTrans")
+       .action("https://presto.bochenek.ch/api/twilio/recordNative").timeout(timeoutSeconds).build();
+    val twiml = new VoiceResponse.Builder()
+        .say(instructions)
+        .record(record)
+        .say(pleaseRepeat)
+        .build();
+    twiml
+  }
+  
+  def handleRecordingNative() = Action {
+    implicit request => {
+      Logger.info("HTTP post to /api/recordNative: " + request.body.asFormUrlEncoded)
+      Ok(successful("Thank you").toXml()).as("text/xml")
+    }
+  }
+  
+  def handleNativeTrans() = Action {
+    implicit request => {
+      Logger.info("HTTP post to /api/handleTrans: " + request.body.asFormUrlEncoded)
+  
+      val from = request.body.asFormUrlEncoded.get("From")
+      
+      future = Future {
+        Thread.sleep(sleepMS)
+        val transcript = request.body.asFormUrlEncoded.get("TranscriptionText")
+        Logger.info("native transcript: " + transcript)
+        EmailReport.sendTwilioTranscript(transcript.head, from.head)
+        val extracted = SUTime.extract(transcript.head, suDefaultDateFormat.format(Calendar.getInstance.getTime))
+        Logger.info("native extracted: " + extracted)
+        extracted
+      }
+      
+      Ok("OK")
+    }
+  }
+
+
 }
