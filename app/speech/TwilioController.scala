@@ -62,7 +62,8 @@ object TwilioController extends Controller with Secured {
 
   def createFirstPromptWithString(p: String) = { 
     val instructions = new Say.Builder(p).voice(Voice.ALICE).build(); // Use <Say> to give the caller some instructions
-    val record = new Record.Builder().timeout(timeoutSeconds).build(); // Use <Record> to record the caller's message
+    val record = new Record.Builder().action("https://presto.bochenek.ch/api/twilio/record")
+        .playBeep(false).timeout(timeoutSeconds).build(); // Use <Record> to record the caller's message
     val twiml = new VoiceResponse.Builder() // Create a TwiML builder object
         .say(instructions)
         .record(record)
@@ -79,7 +80,8 @@ object TwilioController extends Controller with Secured {
 
   def createFinalPrompt() = {
     val instructions = new Say.Builder("How many people in your party?").voice(Voice.ALICE).build();
-    val record = new Record.Builder().action("https://presto.bochenek.ch/api/twilio/record2").timeout(timeoutSeconds).build();
+    val record = new Record.Builder().action("https://presto.bochenek.ch/api/twilio/record2")
+        .playBeep(false).timeout(timeoutSeconds).build();
     val twiml = new VoiceResponse.Builder()
         .say(instructions)
         .record(record)
